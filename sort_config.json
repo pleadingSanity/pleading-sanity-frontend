@@ -1,0 +1,10 @@
+{
+  "folders": {
+    "index.html": "pages/home/",
+    "games.html": "pages/games/",
+    "kids.html": "pages/kids/",
+    "movement.html": "pages/movement/",
+    "quote-wall.html": "pages/quote-wall/",
+    "sanityhub.html": "pages/sanityhub/"
+  }
+}
