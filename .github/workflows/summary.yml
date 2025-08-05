@@ -1,34 +1,35 @@
-
 name: Deploy to GitHub Pages
 
 # 1) Trigger on every push to main
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+
+# 2) Grant only the permissions we need
+permissions:
+  pages: write    # for deploy-pages@v4
+  id-token: write # for configure-pages@v5
+  contents: read  # for checkout@v3
 
 jobs:
   deploy:
-    # 2) Ensure we have a runner
     runs-on: ubuntu-latest
 
-    # 3) Grant the Pages permission
-    permissions:
-      pages: write
-      id-token: write
-      contents: read
-
     steps:
-      # 4) Checkout your code
-      - uses: actions/checkout@v3
+      # 3) Pull down your code
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      # 5) Configure Pages (sets up a .github-pages-deploy dir)
-      - uses: actions/configure-pages@v3
+      # 4) Prepare the pages directory
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
 
-      # 6) Upload the entire repo as your site artifact
-      - uses: actions/upload-pages-artifact@v1
+      # 5) Upload the entire repository as the artifact
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./
 
-      # 7) Deploy to GitHub Pages
-      - uses: actions/deploy-pages@v1
+      # 6) Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
