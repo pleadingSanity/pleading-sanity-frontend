@@ -1,0 +1,49 @@
+[build]
+  # Your site files (index.html, style.css, script.js, assets/) live at repo root
+  publish = "."
+  command = ""  # no build step for a pure static site
+
+[build.environment]
+  NODE_VERSION = "22.18.0"
+
+# ---------- PLUGINS: stable + safe ----------
+# Minify HTML to speed up page load
+[[plugins]]
+  package = "netlify-plugin-minify-html"
+
+# Inline above-the-fold CSS so first paint is fast
+[[plugins]]
+  package = "netlify-plugin-inline-critical-css"
+
+# Optimise images on the fly (non-breaking)
+[[plugins]]
+  package = "netlify-plugin-image-optim"
+
+# Copy assets to ensure correct location (avoids missing file paths)
+[[plugins]]
+  package = "netlify-plugin-copy-files"
+  [plugins.inputs]
+    from = "assets"
+    to = "assets"
+
+# Check for broken links (non-fatal; fails only on hard errors)
+[[plugins]]
+  package = "netlify-plugin-checklinks"
+
+# Validate HTML for simple mistakes (non-fatal)
+[[plugins]]
+  package = "netlify-plugin-html-validate"
+
+# ---------- ROUTING ----------
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# ---------- SECURITY HEADERS ----------
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
