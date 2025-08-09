@@ -1,152 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pleading Sanity: Rise From Madness. A mental health movement disguised as streetwear. Find truth, strength, and community.">
+  <meta property="og:title" content="Pleading Sanity | Rise From Madness">
+  <meta property="og:description" content="Join the revolution. From pain to power. Shop apparel, explore survivor stories, and connect with a global tribe.">
+  <meta property="og:image" content="/assets/og-image.webp"> <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.ico"> <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/style.css">
   <title>Pleading Sanity | Rise From Madness</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Arial', sans-serif;
-      background: black;
-      color: white;
-      overflow-x: hidden;
-      background-image: url('https://cdn.pixabay.com/photo/2013/07/18/10/56/space-163491_1280.jpg');
-      background-size: cover;
-      background-attachment: fixed;
-    }
-    header {
-      padding: 30px;
-      text-align: center;
-      font-size: 2.5rem;
-      font-weight: bold;
-      background: rgba(0,0,0,0.7);
-    }
-    .ticker {
-      width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      background: #111;
-      border-top: 1px solid #444;
-      border-bottom: 1px solid #444;
-    }
-    .ticker-text {
-      display: inline-block;
-      padding-left: 100%;
-      animation: ticker 30s linear infinite;
-    }
-    @keyframes ticker {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-100%); }
-    }
-    .hero {
-      text-align: center;
-      padding: 60px 20px;
-    }
-    .hero img {
-      max-width: 300px;
-    }
-    .cta {
-      text-align: center;
-      margin: 30px 0;
-    }
-    .feed, .games {
-      padding: 40px 20px;
-      background: rgba(0,0,0,0.6);
-      margin: 20px;
-      border-radius: 10px;
-    }
-    .video-block {
-      background: #222;
-      padding: 20px;
-      margin: 10px 0;
-      border-radius: 8px;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 0.9rem;
-      background: rgba(0,0,0,0.8);
-      border-top: 1px solid #333;
-    }
-  </style>
-  <body>
-  <header>
-    <h1>PLEADING SANITY</h1>
-    <p>Rise From Madness</p>
-  </header>
-
-  <div class="ticker">
-    <div class="ticker-text">
-      We are not broken. We are becoming. — You are not alone. — Rise with us. — Pleading Sanity is a movement.
-    </div>
-  </div>
-
-  <div class="hero">
-    <img src="https://cdn-icons-png.flaticon.com/512/3286/3286191.png" alt="Brain Icon">
-    <div class="cta">
-      <h2>Join the Movement</h2>
-      <p>Real stories. Real healing. Real power.</p>
-      <a href="#feed" style="color: cyan;">Scroll Down</a>
-    </div>
-  </div>
-
-  <div id="feed" class="feed">
-    <div class="video-block">
-      <h3>🔥 Crying Brain Hoodie Drop</h3>
-      <video src="https://cdn.pixabay.com/video/2023/03/14/157171-811231902_tiny.mp4" controls width="100%"></video>
-    </div>
-    <div class="video-block">
-      <h3>🎤 Survivor Story – The Comeback</h3>
-      <video src="https://cdn.pixabay.com/video/2023/06/21/170347-839006632_tiny.mp4" controls width="100%"></video>
-    </div>
-    <div class="video-block">
-      <h3>💬 Motivation Loop</h3>
-      <video src="https://cdn.pixabay.com/video/2023/03/30/159003-813672798_tiny.mp4" controls width="100%"></video>
-    </div>
-  </div>
-
-  <footer>
-    <p>© 2025 Pleading Sanity | @mentally.inshane</p>
-  </footer>
-  </body>
 </head>
 <body>
+  <section class="intro" id="intro">
+    <div class="space-background"></div> <div class="intro-content">
+      <h1 class="rise-text">RISE FROM MADNESS</h1>
+      <p class="intro-tagline">This is the ignition point of your spiritual OS.</p>
+    </div>
+  </section>
 
-  <header>🧠 PLEADING SANITY: RISE FROM MADNESS</header>
+  <nav class="navbar" id="mainNavbar">
+    <div class="nav-brand">PLEADING SANITY</div>
+    <div class="nav-links">
+      <a href="#intro">Home</a>
+      <a href="#featured-product">Shop</a>
+      <a href="#join-movement">Join</a>
+      <a href="#sanity-hub">Sanity Hub</a>
+      <a href="#games-zone">Games</a>
+    </div>
+    <div class="quote-ticker-container">
+      <div class="quote-ticker" id="quoteTicker"></div>
+    </div>
+  </nav>
 
-  <div class="ticker">
-    <div class="ticker-text">"The pain didn’t kill me — it made me art." • "Only the mad understand the mission." • "You are not alone in your sanity struggle." •</div>
-  </div>
+  <section class="featured-product-section" id="featured-product">
+    <div class="product-display">
+      <img src="/assets/crying-brain-hoodie.webp" alt="Crying Brain Hoodie" class="product-image">
+      <div class="product-details">
+        <h2 class="product-name">The Crying Brain Hoodie</h2>
+        <p class="product-tagline">“The pain didn’t kill me — it made me art. This hoodie carries the tears of those still standing.”</p>
+        <button class="cta-button pulse-effect">Shop The Drop</button>
+      </div>
+    </div>
+  </section>
 
-  <div class="hero">
-    <img src="https://pleadingsanity.co.uk/assets/crying-brain-hoodie.png" alt="Crying Brain Hoodie" />
-    <h2>The Hoodie That Carries a Story</h2>
-    <p>"The pain didn’t kill me — it made me art."</p>
-  </div>
+  <section class="join-movement-section" id="join-movement">
+    <div class="join-content">
+      <h2>Join The Movement</h2>
+      <p>Sign up, get 10% off your first order, and wear your survival out loud. Become part of the tribe.</p>
+      <form class="signup-form">
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit" class="cta-button">Fuel The Revolution</button>
+      </form>
+    </div>
+  </section>
 
-  <div class="cta">
-    <a href="#games" style="font-size:1.2rem;color:cyan;text-decoration:underline;">🎮 Try Our Sanity Games</a>
-  </div>
+  <section class="sanity-hub-preview-section" id="sanity-hub">
+    <h2>Sanity Hub: Live Pulse</h2>
+    <div class="scroll-feed-placeholder">
+      <div class="feed-item-placeholder">
+        <h3>Loading wisdom...</h3>
+        <p>Your journey through raw truth and resilience.</p>
+        <img src="/assets/feed-placeholder-vid.webp" alt="Video Placeholder" class="feed-placeholder-img">
+      </div>
+      <div class="feed-item-placeholder">
+        <h3>Survivor's Echo</h3>
+        <p>"I turned my breakdown into a blueprint."</p>
+        <img src="/assets/feed-placeholder-quote.webp" alt="Quote Placeholder" class="feed-placeholder-img">
+      </div>
+    </div>
+    <a href="#" class="cta-button view-all-feed">Explore Full Sanity Hub</a>
+  </section>
 
-  <div class="feed">
-    <h2>📺 Featured Sanity Feed</h2>
-    <div class="video-block">🔥 Real Talk: How I Turned Madness Into Power</div>
-    <div class="video-block">🧘‍♂️ Meditation Track – Calm Your Inner Chaos</div>
-    <div class="video-block">🎤 Spoken Word: “Voices From The Edge”</div>
-  </div>
-
-  <div class="games" id="games">
-    <h2>🎮 Keep Kids Sane Games</h2>
-    <div class="video-block">🧠 Emotion Explorer (Coming Soon)</div>
-    <div class="video-block">🔢 Math Mission (Coming Soon)</div>
-    <div class="video-block">🎨 Word Wizard (Coming Soon)</div>
-    <div class="video-block">🌬️ Breathe Buddy (Coming Soon)</div>
-  </div>
-
-  <footer>
-    © 2025 Pleading Sanity • @mentally.inshane • pleadingsanity.co.uk
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-logo-watermark">PLEADING SANITY</div>
+      <p>"Rise From Madness. Built for Survivors."</p>
+      <div class="social-links">
+        <a href="https://www.tiktok.com/@mentally.inshane" target="_blank" rel="noopener noreferrer">TikTok</a>
+        <a href="https://www.instagram.com/mentally.inshane" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+      <p class="copyright">&copy; 2025 Pleading Sanity. All Rights Reserved.</p>
+    </div>
   </footer>
 
+  <script src="/script.js"></script>
 </body>
 </html>
