@@ -1,0 +1,172 @@
+name: One-Click Site Autofix
+
+on:
+  workflow_dispatch:
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Backup current repo
+        run: |
+          TS=$(date -u +%Y%m%d-%H%M%S)
+          mkdir -p "backup-$TS"
+          shopt -s dotglob
+          for f in *; do
+            case "$f" in
+              .git|backup-*) continue ;;
+              *) mv "$f" "backup-$TS"/ ;;
+            esac
+          done
+          echo "Backed up to backup-$TS/"
+
+      - name: Write site files
+        run: |
+          cat > index.html <<'HTML'
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Pleading Sanity — Sanity Hub</title>
+<meta name="description" content="Pleading Sanity: movement, sanity hub, streetwear, and tools to keep us standing.">
+<link rel="stylesheet" href="./style.css">
+</head><body>
+<section class="intro"><div class="intro-content"><h1>RISE FROM MADNESS</h1><p>Not broken. Rewritten.</p></div></section>
+<header class="header"><div class="brand">🧠 Pleading Sanity</div><nav class="nav-links">
+<a href="#hub">Hub</a><a href="#shop">Shop</a><a href="#join">Join</a></nav></header>
+<section class="hero" id="hub"><div class="hero-copy">
+<h2>Sanity Hub</h2><p>Signal in the noise. Always-on feed of strength.</p>
+<button class="cta-button pulse-effect" data-ai="cta">Join the Movement</button>
+</div><div class="hero-media">
+<video class="hero-video" muted playsinline preload="metadata"
+src="https://filesamples.com/samples/video/mp4/sample_960x400_ocean_with_audio.mp4"
+poster="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1200&q=75"></video>
+</div></section>
+<section class="ticker"><span id="quoteTicker" class="ticker-text"></span></section>
+<main class="feed-grid" aria-live="polite" id="ps-feed">
+<article class="feed-item-placeholder" data-cat="inspiring">
+<video class="feed-video" muted playsinline preload="metadata"
+src="https://cdn.coverr.co/videos/coverr-a-man-standing-on-a-cliff-8527/1080p.mp4"
+poster="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=75"></video>
+<div class="meta"><span>Still Standing</span><span>♥</span></div></article>
+<article class="feed-item-placeholder" data-cat="music">
+<video class="feed-video" muted playsinline preload="metadata"
+src="https://filesamples.com/samples/video/mp4/sample_640x360.mp4"
+poster="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=75"></video>
+<div class="meta"><span>Breathe</span><span>♥</span></div></article>
+<article class="feed-item-placeholder" data-cat="ai">
+<img class="feed-image" alt="Crying Brain"
+src="https://images.unsplash.com/photo-1547038577-da80b6fd63fa?w=1200&q=75"/>
+<div class="meta"><span>Crying Brain</span><span>♥</span></div></article>
+</main>
+<section class="cta" id="join"><h3>Join the Movement</h3>
+<form class="signup-form"><input type="email" placeholder="you@email.com" required />
+<button class="btn" type="submit">I’m In</button></form>
+<p class="tiny">We’ll send drops, quotes & sanity tools. No spam.</p></section>
+<footer class="footer"><p>© Pleading Sanity • Leicester, UK •
+<a href="mailto:pleadingsanity1@gmail.com">pleadingsanity1@gmail.com</a></p>
+<a id="games-link" href="/games">Games</a></footer>
+<script src="./script.js" defer></script><script src="./ai-control.js" defer></script>
+</body></html>
+HTML
+
+          cat > style.css <<'CSS'
+:root{--bg:#0b0b12;--fg:#e8e8f2;--muted:#a8a8c0;--card:#131322;--brand:#7aa8ff;--line:#1e1e30}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:radial-gradient(1200px 800px at 50% 10%,#17172a 0%,#0b0b12 60%,#07070c 100%);color:var(--fg);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+a{color:var(--brand)}img,video{display:block;width:100%;height:auto;background:#000}
+.header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(11,11,18,.8);backdrop-filter:saturate(140%) blur(8px);z-index:10}
+.brand{font-weight:800}.nav-links a{margin-left:14px;text-decoration:none}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:center;padding:20px}
+.cta-button{background:var(--brand);color:#0b0b12;border:0;border-radius:12px;padding:10px 16px;font-weight:700;cursor:pointer}
+.cta-button.pulse-effect{animation:pulse 1.4s infinite;animation-play-state:paused}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.ticker{overflow:hidden;white-space:nowrap;border-block:1px solid var(--line);background:#0e0e18}
+#quoteTicker{display:inline-block;padding:10px 0;border-right:2px solid rgba(255,255,255,.7);min-height:22px}
+.feed-grid{padding:18px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.feed-item-placeholder{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;animation:fadeIn .6s ease both;animation-play-state:paused}
+.feed-image,.feed-video{aspect-ratio:16/9;object-fit:cover;background:#000}
+.meta{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;color:var(--muted);font-size:14px}
+.cta{padding:24px 20px;border-top:1px solid var(--line);background:linear-gradient(180deg,rgba(10,10,18,.0),rgba(10,10,18,.6))}
+.signup-form{display:flex;gap:10px;max-width:520px}
+.signup-form input{flex:1;background:#0e0e17;color:var(--fg);border:1px solid #222238;border-radius:10px;padding:10px}
+.btn{background:var(--brand);color:#0b0b12;border:0;border-radius:10px;padding:10px 16px;font-weight:700}
+.tiny{color:var(--muted);font-size:12px;margin-top:6px}
+.footer{padding:18px;color:var(--muted);text-align:center;border-top:1px solid var(--line)}
+.intro{position:fixed;inset:0;display:grid;place-items:center;background:#0b0b12;z-index:999;transition:opacity .6s ease}
+.intro-content{transition:all .6s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (max-width:900px){.hero{grid-template-columns:1fr}}
+CSS
+
+          cat > script.js <<'JS'
+const $=(s)=>document.querySelector(s), $$=(s)=>document.querySelectorAll(s);
+document.addEventListener('DOMContentLoaded',()=>{
+  const intro=$('.intro'), cta=$('.cta-button.pulse-effect'), introTxt=$('.intro-content');
+  if(introTxt){introTxt.style.opacity=0;introTxt.style.transform='translateY(20px)';}
+  setTimeout(()=>{ if(intro){ intro.style.opacity='0'; intro.addEventListener('transitionend',()=>{ intro.style.display='none'; intro.style.zIndex=-1; if(cta) cta.style.animationPlayState='running';},{once:true}); } else if(cta){ cta.style.animationPlayState='running'; } },5000);
+  $$('.nav-links a').forEach(a=>a.addEventListener('click',e=>{ const href=a.getAttribute('href')||''; if(href.startsWith('#')){ e.preventDefault(); $(href)?.scrollIntoView({behavior:'smooth'}); }}));
+  const quotes=["The pain didn’t kill me — it made me art.","Madness is just misunderstood genius.","You weren’t too much — they were too little.","Sanity isn’t silence — it’s choosing your own noise.","The meds didn’t fix me. I forged myself anyway.","You felt everything because you’re real.","Labels don’t fit gods in disguise.","Healing isn’t soft. It’s war.","Your breakdown was a broadcast.","Not broken. Rewritten."];
+  const ticker=$('#quoteTicker'); let qi=0, idx=0, t1, t2, paused=false, q=quotes[0];
+  function type(){ if(!ticker||paused) return; if(idx<q.length){ ticker.textContent+=q.charAt(idx++); t1=setTimeout(type,60);} else {t1=setTimeout(del,3000);} }
+  function del(){ if(!ticker||paused) return; if(ticker.textContent.length){ ticker.textContent=ticker.textContent.slice(0,-1); t2=setTimeout(del,30);} else { idx=0; qi=(qi+1)%quotes.length; q=quotes[qi]; t1=setTimeout(type,500);} }
+  function startIfIdle(){ if(ticker && !ticker.textContent){ q=quotes[qi]; type(); } }
+  if(ticker){ ticker.addEventListener('mouseenter',()=>{paused=true; clearTimeout(t1); clearTimeout(t2); ticker.style.borderRightColor='transparent';});
+    ticker.addEventListener('mouseleave',()=>{paused=false; ticker.style.borderRightColor='rgba(255,255,255,.7)'; if(idx<q.length) type(); else t2=setTimeout(del,500);});
+    document.addEventListener('visibilitychange',()=>{paused=document.hidden; if(!paused) startIfIdle();}); startIfIdle(); }
+  const items=[...document.querySelectorAll('.feed-item-placeholder')];
+  const IO='IntersectionObserver' in window;
+  function playIfVideo(el){ const v=el.querySelector?.('.feed-video'); if(!v) return; if(!v.dataset.loaded){ v.muted=true; v.playsInline=true; v.load(); v.dataset.loaded='1'; } v.play().catch(()=>{}); }
+  function pauseIfVideo(el){ const v=el.querySelector?.('.feed-video'); if(v && !v.paused) v.pause(); }
+  if(IO && items.length){ const obs=new IntersectionObserver((ents)=>ents.forEach(ent=>{ const it=ent.target; if(ent.isIntersecting){ it.style.animationPlayState='running'; playIfVideo(it);} else { pauseIfVideo(it); } }),{root:null,rootMargin:'0px 0px -10% 0px',threshold:.1}); items.forEach(it=>{ it.style.animationPlayState='paused'; obs.observe(it); }); } else { items.forEach(it=>{ it.style.animationPlayState='running'; playIfVideo(it); }); }
+  if(cta && IO){ const o=new IntersectionObserver((es)=>es.forEach(e=>{ cta.style.animationPlayState=e.isIntersecting?'running':'paused'; }),{threshold:.5}); o.observe(cta); }
+  const form=document.querySelector('.signup-form'); if(form){ form.addEventListener('submit',(e)=>{ e.preventDefault(); const em=form.querySelector('input[type="email"]')?.value?.trim(); if(!em) return; alert('Thank you for joining the movement!'); }); }
+  const gamesLink=$('#games-link'); if(gamesLink){ gamesLink.addEventListener('click',(e)=>{ e.preventDefault(); window.location.href='/games'; }); }
+});
+JS
+
+          cat > ai-control.js <<'JS'
+(function(){
+  const PS=(window.PS=window.PS||{});
+  PS.addFeedItem=function(item){
+    try{
+      const grid=document.getElementById('ps-feed'); if(!grid) return false;
+      const card=document.createElement('article'); card.className='feed-item-placeholder';
+      const meta=document.createElement('div'); meta.className='meta';
+      const left=document.createElement('span'); left.textContent=item.title||'Drop';
+      const right=document.createElement('span'); right.textContent='♥';
+      meta.append(left,right);
+      if(item.type==='video'){
+        const v=document.createElement('video'); v.className='feed-video'; v.muted=true; v.playsInline=true; v.preload='metadata';
+        v.src=item.src; if(item.poster) v.poster=item.poster; card.appendChild(v);
+      } else {
+        const img=document.createElement('img'); img.className='feed-image'; img.alt=item.alt||item.title||'Drop'; img.src=item.src; card.appendChild(img);
+      }
+      card.appendChild(meta); grid.prepend(card); return true;
+    }catch(e){ console.warn('PS.addFeedItem failed',e); return false; }
+  };
+  PS.setQuotes=function(list){ if(Array.isArray(list)&&list.length){ window.PS_QUOTES=list.slice(0,50); return true;} return false; };
+})();
+JS
+
+          cat > _redirects <<'TXT'
+/*    /index.html   200
+TXT
+
+          cat > netlify.toml <<'TOML'
+[build]
+  publish = "."
+  command = ""
+  functions = "netlify/functions"
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+TOML
+
+      - name: Commit changes
+        run: |
+          git config user.name "ps-autofix-bot"
+          git config user.email "ps-bot@noreply.local"
+          git add -A
+          git commit -m "chore(autofix): backup repo and install clean, deploy-ready site" || echo "Nothing to commit"
+          git push
