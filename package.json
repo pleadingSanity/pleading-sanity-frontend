@@ -1,0 +1,14 @@
+{
+  "name": "pleading-sanity-frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "optimize": "node tools/optimizer.mjs"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "csso": "^5.0.5",
+    "glob": "^11.0.0",
+    "terser": "^5.31.0"
+  }
+}

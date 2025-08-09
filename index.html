@@ -1,1 +1,69 @@
-Main homepage HTML
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pleading Sanity — Sanity Hub</title>
+  <meta name="description" content="Pleading Sanity: movement, sanity hub, streetwear, and tools to keep us standing.">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <section class="intro"><div class="intro-content"><h1>RISE FROM MADNESS</h1><p>Not broken. Rewritten.</p></div></section>
+  <header class="header">
+    <div class="brand">🧠 Pleading Sanity</div>
+    <nav class="nav-links"><a href="#hub">Hub</a><a href="#shop">Shop</a><a href="#join">Join</a></nav>
+  </header>
+
+  <section class="hero" id="hub">
+    <div class="hero-copy">
+      <h2>Sanity Hub</h2>
+      <p>Signal in the noise. Always-on feed of strength.</p>
+      <button class="cta-button pulse-effect" data-ai="cta">Join the Movement</button>
+    </div>
+    <div class="hero-media">
+      <video class="hero-video" muted playsinline preload="metadata"
+        src="https://filesamples.com/samples/video/mp4/sample_960x400_ocean_with_audio.mp4"
+        poster="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1200&q=75"></video>
+    </div>
+  </section>
+
+  <section class="ticker"><span id="quoteTicker" class="ticker-text"></span></section>
+
+  <main class="feed-grid" aria-live="polite" id="ps-feed">
+    <article class="feed-item-placeholder" data-cat="inspiring">
+      <video class="feed-video" muted playsinline preload="metadata"
+        src="https://cdn.coverr.co/videos/coverr-a-man-standing-on-a-cliff-8527/1080p.mp4"
+        poster="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=75"></video>
+      <div class="meta"><span>Still Standing</span><span>♥</span></div>
+    </article>
+    <article class="feed-item-placeholder" data-cat="music">
+      <video class="feed-video" muted playsinline preload="metadata"
+        src="https://filesamples.com/samples/video/mp4/sample_640x360.mp4"
+        poster="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=75"></video>
+      <div class="meta"><span>Breathe</span><span>♥</span></div>
+    </article>
+    <article class="feed-item-placeholder" data-cat="ai">
+      <img class="feed-image" alt="Crying Brain"
+        src="https://images.unsplash.com/photo-1547038577-da80b6fd63fa?w=1200&q=75" />
+      <div class="meta"><span>Crying Brain</span><span>♥</span></div>
+    </article>
+  </main>
+
+  <section class="cta" id="join">
+    <h3>Join the Movement</h3>
+    <form class="signup-form">
+      <input type="email" placeholder="you@email.com" required />
+      <button class="btn" type="submit">I’m In</button>
+    </form>
+    <p class="tiny">We’ll send drops, quotes & sanity tools. No spam.</p>
+  </section>
+
+  <footer class="footer">
+    <p>© Pleading Sanity • Leicester, UK • <a href="mailto:pleadingsanity1@gmail.com">pleadingsanity1@gmail.com</a></p>
+    <a id="games-link" href="/games">Games</a>
+  </footer>
+
+  <script src="./script.js" defer></script>
+  <script src="./ai-control.js" defer></script>
+</body>
+</html>
