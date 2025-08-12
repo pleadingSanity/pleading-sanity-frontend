@@ -1,0 +1,165 @@
+name: Pleading Sanity — Autopilot (Fetch → Build → Deploy)
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # every 30 minutes
+  workflow_dispatch: {}
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+env:
+  # Comma-separated YouTube feeds (channel or playlist RSS). Edit anytime.
+  PS_FEEDS: >-
+    https://www.youtube.com/feeds/videos.xml?channel_id=UCiA_kZb0a3n3Z1,
+    https://www.youtube.com/feeds/videos.xml?channel_id=UC_x5XG1OV2P6uZZ5FSM9T
+  # How many latest items to keep on the Hub
+  PS_LIMIT: "18"
+
+jobs:
+  autopilot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Backup (non-destructive)
+      - name: Snapshot backup
+        run: |
+          TS=$(date -u +%Y%m%d-%H%M%S)
+          mkdir -p .arron-backups
+          zip -qr ".arron-backups/backup-$TS.zip" . -x ".git/*" ".arron-backups/*" || true
+
+      # Ensure basic static site skeleton exists (keeps your custom files if present)
+      - name: Ensure site skeleton
+        shell: bash
+        run: |
+          set -e
+          [ -f _redirects ] || echo "/*    /index.html   200" > _redirects
+          if [ ! -f netlify.toml ]; then
+            cat > netlify.toml <<'TOML'
+[build]
+  publish = "."
+  command = ""
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+TOML
+          fi
+          if [ ! -f style.css ]; then
+            cat > style.css <<'CSS'
+:root{--bg:#0b0b12;--fg:#e8e8f2;--muted:#a8a8c0;--brand:#7aa8ff;--line:#1e1e30}
+*{box-sizing:border-box}html,body{margin:0;background:#0b0b12;color:var(--fg);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+.header{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);background:rgba(11,11,18,.8);backdrop-filter:saturate(140%) blur(8px)}
+.brand{font-weight:800}.nav a{margin-left:12px;text-decoration:none;color:var(--fg)}
+.hero{padding:24px 18px;display:grid;gap:14px}
+.btn{background:var(--brand);color:#0b0b12;border:0;border-radius:12px;padding:10px 16px;font-weight:700;cursor:pointer}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));padding:18px}
+.card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#12121f}
+.card iframe,.card img, .card video{width:100%;height:auto;aspect-ratio:16/9;display:block;background:#000}
+.meta{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;color:var(--muted);font-size:14px}
+.footer{padding:18px;text-align:center;color:var(--muted);border-top:1px solid var(--line)}
+CSS
+          fi
+          if [ ! -f index.html ]; then
+            cat > index.html <<'HTML'
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Pleading Sanity — Sanity Hub</title>
+<link rel="stylesheet" href="./style.css">
+</head><body>
+<header class="header">
+  <div class="brand">🧠 Pleading Sanity</div>
+  <nav class="nav"><a href="#hub">Hub</a><a href="#shop">Shop</a><a href="#join">Join</a></nav>
+</header>
+<section class="hero" id="hub">
+  <h1>Rise From Madness</h1>
+  <p>Signal in the noise. Real stories, real strength. Auto-updated by the Hub.</p>
+  <button class="btn" onclick="document.getElementById('join').scrollIntoView({behavior:'smooth'})">Join the Movement</button>
+</section>
+<main id="ps-feed" class="grid"><!-- FEED --></main>
+<section id="join" class="hero">
+  <h2>Join the Movement</h2>
+  <form name="ps-join" method="POST" data-netlify="true"><input type="email" name="email" placeholder="you@email.com" required>
+  <button class="btn" type="submit">I’m in</button></form>
+</section>
+<footer class="footer">© Pleading Sanity • Leicester, UK • pleadingsanity1@gmail.com</footer>
+<script>
+fetch('./content.json?_=' + Date.now()).then(r=>r.json()).then(data=>{
+  const g=document.getElementById('ps-feed'); g.innerHTML='';
+  data.items.forEach(it=>{
+    const a=document.createElement('article'); a.className='card';
+    a.innerHTML = it.embed ? \`<div class="frame">\${it.embed}</div>\` :
+                 it.thumb ? \`<img src="\${it.thumb}" alt="\${it.title||'video'}">\` : '';
+    a.innerHTML += \`<div class="meta"><span>\${it.title||'—'}</span><a class="btn" href="\${it.url}" target="_blank">Open</a></div>\`;
+    g.appendChild(a);
+  });
+}).catch(()=>{document.getElementById('ps-feed').innerHTML='<p>Feed offline.</p>';});
+</script>
+</body></html>
+HTML
+          fi
+
+      # Fetch feeds and build content.json + (optional) lightweight embeds
+      - name: Build Sanity Hub feed (no external libs)
+        shell: bash
+        run: |
+          set -e
+          node - <<'NODE'
+const https=require('https');
+const {parseStringPromise}=require('xml2js');
+
+function get(url){return new Promise((res,rej)=>https.get(url,(r)=>{
+  let d=''; r.on('data',c=>d+=c); r.on('end',()=>res({status:r.statusCode,body:d}));}).on('error',rej));}
+
+async function fetchFeed(url){
+  const r=await get(url);
+  if(r.status!==200) return [];
+  const xml=await parseStringPromise(r.body, {explicitArray:false, ignoreAttrs:false});
+  const feed=(xml.feed||xml.rss||{}); // YouTube gives <feed>
+  const entries = (feed.entry||feed.channel?.item||[]);
+  const arr = Array.isArray(entries)?entries:[entries].filter(Boolean);
+  return arr.map(e=>{
+    // YouTube entry fields
+    const link = e.link?.href || e.link || '';
+    const title = e.title? (typeof e.title==='string'?e.title:e.title._) : 'Untitled';
+    const videoId = e['yt:videoId'] || (/\bv=([^&]+)/.exec(link)||[])[1] || '';
+    const thumb = e['media:group']?.['media:thumbnail']?.url || '';
+    const embed = videoId ? `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}" title="${title}" frameborder="0" allowfullscreen></iframe>` : '';
+    return { title, url: link || (videoId?`https://youtu.be/${videoId}`:''), thumb, embed };
+  });
+}
+
+(async()=>{
+  const feeds=(process.env.PS_FEEDS||'').split(',').map(s=>s.trim()).filter(Boolean);
+  let items=[];
+  for(const f of feeds){
+    try{ items = items.concat(await fetchFeed(f)); }catch(e){}
+  }
+  // de-dup by url
+  const seen=new Set(); items = items.filter(it=>{ if(!it.url||seen.has(it.url)) return false; seen.add(it.url); return true; });
+  // newest first (YouTube feeds are usually newest first already)
+  items = items.slice(0, parseInt(process.env.PS_LIMIT||'18',10));
+  const fs=require('fs'); fs.writeFileSync('content.json', JSON.stringify({ generatedAt:new Date().toISOString(), items }, null, 2));
+  console.log(`Wrote content.json with ${items.length} items`);
+})();
+NODE
+
+      - name: Commit feed & small fixes
+        run: |
+          git config user.name "ps-autopilot"
+          git config user.email "ps@noreply.local"
+          git add -A
+          git commit -m "chore(hub): auto-update content.json and ensure static skeleton" || echo "nothing to commit"
+          git push
+
+      - name: Install Netlify CLI
+        run: npm i -g netlify-cli
+
+      - name: Deploy to Netlify (prod)
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: netlify deploy --dir . --prod --message "Autopilot deploy"
