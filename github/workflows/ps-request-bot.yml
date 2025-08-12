@@ -1,0 +1,121 @@
+name: Arron Request Bot — Apply Change & Deploy
+on:
+  issues:
+    types: [opened, edited, reopened]
+  issue_comment:
+    types: [created]
+permissions:
+  contents: write
+  issues: read
+  pull-requests: write
+
+env:
+  NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+  NETLIFY_SITE_ID:     ${{ secrets.NETLIFY_SITE_ID }}
+
+jobs:
+  apply:
+    if: |
+      github.event_name == 'issues' ||
+      (github.event_name == 'issue_comment' && !github.event.comment.pull_request_url)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Parse request and update files
+        id: apply
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const core = require('@actions/core');
+            const fs = require('fs');
+
+            // 1) Get text: issue body OR latest comment body
+            const payload = context.payload;
+            const isIssue = !!payload.issue && !payload.comment;
+            const text = isIssue ? payload.issue.body : payload.comment.body;
+
+            if(!text || !text.trim()){
+              core.setFailed('No request text found.');
+              return;
+            }
+
+            // 2) Whitelist of editable files
+            const ALLOW = new Set([
+              'index.html','sanityhub.html','style.css','script.js',
+              'content.json','netlify.toml','_redirects','README.md'
+            ]);
+
+            // 3) Supported commands:
+            //    - CODE BLOCKS: ```path=filename\n<content>```
+            //    - Simple commands: REPLACE filename "from" -> "to"
+            //    - CLEAN: keeps only whitelisted files
+            let changes = [];
+
+            // a) Code blocks: ```path=style.css\n<css>```
+            const codeBlockRe = /```(?:path|file)\s*=\s*([^\n]+)\n([\s\S]*?)```/gi;
+            let m;
+            while((m = codeBlockRe.exec(text)) !== null){
+              const file = m[1].trim();
+              const content = m[2];
+              if(!ALLOW.has(file)) continue;
+              fs.writeFileSync(file, content, 'utf8');
+              changes.push(`Wrote ${file} from code block`);
+            }
+
+            // b) Replace: REPLACE filename "from" -> "to"
+            const repRe = /REPLACE\s+([^\s]+)\s+"([\s\S]*?)"\s*->\s*"([\s\S]*?)"/gi;
+            let r;
+            while((r = repRe.exec(text)) !== null){
+              const file = r[1].trim();
+              const from = r[2];
+              const to = r[3];
+              if(!ALLOW.has(file)) continue;
+              const old = fs.existsSync(file) ? fs.readFileSync(file,'utf8') : '';
+              const neu = old.split(from).join(to);
+              fs.writeFileSync(file, neu, 'utf8');
+              changes.push(`Replaced in ${file}`);
+            }
+
+            // c) CLEAN command (optional)
+            if(/^\s*CLEAN\s*$/mi.test(text)){
+              const keep = new Set([...ALLOW, '.github', '.arron-backups', 'CNAME']);
+              const cp = require('child_process');
+              // Snapshot backup
+              cp.execSync('mkdir -p .arron-backups && zip -qr .arron-backups/backup-$(date -u +%Y%m%d-%H%M%S).zip . -x ".git/*" ".arron-backups/*"');
+              // Remove anything not in keep
+              const glob = require('glob');
+              const all = glob.sync('{*,.*}', {dot:true, nodir:false});
+              for(const p of all){
+                if(p === '.' || p === '..') continue;
+                if(keep.has(p)) continue;
+                try { cp.execSync(`rm -rf "${p}"`); } catch {}
+              }
+              changes.push('Repo cleaned (kept whitelist)');
+            }
+
+            if(changes.length === 0){
+              core.setFailed('No changes parsed from request. Use code blocks or REPLACE.');
+              return;
+            }
+
+            core.setOutput('summary', changes.join('\n'));
+
+      - name: Commit changes
+        if: steps.apply.outcome == 'success'
+        run: |
+          git config user.name "arron-bot"
+          git config user.email "arron@noreply.local"
+          git add -A
+          git commit -m "arron-bot: apply request from issue/comment" || echo "Nothing to commit"
+          git push
+
+      - name: Deploy to Netlify
+        if: steps.apply.outcome == 'success'
+        run: |
+          npx netlify-cli deploy --dir . --prod --site "$NETLIFY_SITE_ID" --auth "$NETLIFY_AUTH_TOKEN" --message "Arron bot deploy"
