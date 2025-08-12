@@ -1,0 +1,118 @@
+name: Clean, Build & Deploy to Netlify
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  # Where we publish from after cleaning
+  PUBLISH_DIR: dist
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node (LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Create a clean dist/ with only site files
+      - name: Make clean copy → dist/
+        run: |
+          rm -rf "$PUBLISH_DIR"
+          mkdir -p "$PUBLISH_DIR"
+          rsync -a \
+            --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='node_modules/' \
+            --exclude='*.zip' \
+            --exclude='backup-*/' \
+            --exclude='arron-backups/' \
+            --exclude='**/*.psd' \
+            --exclude='**/*.ai' \
+            ./ "$PUBLISH_DIR"/
+
+      # Ensure Netlify config exists (non-destructive: only creates if missing)
+      - name: Ensure netlify.toml + _redirects exist
+        run: |
+          if [ ! -f "$PUBLISH_DIR/netlify.toml" ]; then
+            cat > "$PUBLISH_DIR/netlify.toml" <<'TOML'
+          [build]
+            publish = "."
+            command = ""
+          [[redirects]]
+            from = "/*"
+            to = "/index.html"
+            status = 200
+          TOML
+          fi
+          if [ ! -f "$PUBLISH_DIR/_redirects" ]; then
+            echo "/*    /index.html   200" > "$PUBLISH_DIR/_redirects"
+          fi
+
+      # Light, safe minification (HTML/CSS/JS). Originals are kept in repo; only dist/ is minified.
+      - name: Install minifiers
+        run: |
+          npm -g i html-minifier-terser clean-css-cli terser
+
+      - name: Minify HTML
+        run: |
+          shopt -s globstar nullglob
+          for f in "$PUBLISH_DIR"/**/*.html; do
+            html-minifier-terser \
+              --collapse-whitespace --remove-comments --remove-optional-tags \
+              --minify-css true --minify-js true \
+              -o "$f.min" "$f" && mv "$f.min" "$f"
+          done
+
+      - name: Minify CSS
+        run: |
+          shopt -s globstar nullglob
+          for f in "$PUBLISH_DIR"/**/*.css; do
+            cleancss -o "$f.min" "$f" && mv "$f.min" "$f"
+          done
+
+      - name: Minify JS
+        run: |
+          shopt -s globstar nullglob
+          for f in "$PUBLISH_DIR"/**/*.js; do
+            # skip already minified
+            case "$f" in *".min.js") continue;; esac
+            terser "$f" -c -m -o "$f.min" || true
+            if [ -s "$f.min" ]; then mv "$f.min" "$f"; else rm -f "$f.min"; fi
+          done
+
+      # Optional: basic lint (won’t fail build)
+      - name: HTML sanity check (non-blocking)
+        continue-on-error: true
+        run: |
+          npx -y html-validate "$PUBLISH_DIR" || true
+
+      # Upload the cleaned site as an artifact (handy for debugging)
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-dist
+          path: ${{ env.PUBLISH_DIR }}
+
+      # Deploy the cleaned build
+      - name: Deploy to Netlify (prod)
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          npm -g i netlify-cli
+          netlify deploy --prod \
+            --auth "$NETLIFY_AUTH_TOKEN" \
+            --site "$NETLIFY_SITE_ID" \
+            --dir "$PUBLISH_DIR"
