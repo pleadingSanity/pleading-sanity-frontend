@@ -1,1 +1,77 @@
-Placeholder content for sanityhub.html
+- name: Build Sanity Hub feed (no external libs)
+        shell: bash
+        run: |
+          set -e
+          node - <<'NODE'
+const https=require('https');
+
+function get(u){return new Promise((res,rej)=>https.get(u,(r)=>{
+  let d=''; r.on('data',c=>d+=c); r.on('end',()=>res({code:r.statusCode,body:d}));}).on('error',rej));}
+
+// very small XML helpers (no dependencies)
+function tagAll(xml, tag){ // returns array of inner xml strings
+  const re=new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`,'g');
+  const out=[]; let m; while((m=re.exec(xml))) out.push(m[1]); return out;
+}
+function attr(xml, tag, attr){ // <tag ... attr="val" ...>
+  const re=new RegExp(`<${tag}[^>]*\\b${attr}="([^"]+)"[^>]*>`);
+  const m=re.exec(xml); return m?m[1]:'';
+}
+function text(xml, tag){ // first <tag>inner</tag>
+  const re=new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`);
+  const m=re.exec(xml); if(!m) return '';
+  return m[1].replace(/<[^>]+>/g,'').trim();
+}
+
+async function fetchYouTubeFeed(url){
+  const {code,body}=await get(url);
+  if(code!==200) return [];
+  // YouTube RSS can be Atom (<feed><entry>) or RSS (<channel><item>)
+  let entries = tagAll(body,'entry');
+  if(entries.length===0) entries = tagAll(body,'item');
+
+  return entries.map(e=>{
+    // try yt:videoId first
+    let vid = text(e,'yt:videoId');
+    // fallback from link
+    let linkHref = attr(e,'link','href');
+    if(!linkHref){
+      const linkTag = text(e,'link') || '';
+      linkHref = /https?:\/\/[^\s<]+/.exec(linkTag)?.[0] || '';
+    }
+    if(!vid && linkHref){
+      const m=/[?&]v=([^&]+)/.exec(linkHref); if(m) vid=m[1];
+    }
+    const title = text(e,'title') || 'Untitled';
+    // media:thumbnail url
+    let thumb='';
+    const thumbMatch = /<media:thumbnail[^>]*\burl="([^"]+)"/.exec(e);
+    if(thumbMatch) thumb=thumbMatch[1];
+
+    const urlOut = linkHref || (vid?`https://youtu.be/${vid}`:'');
+    const embed = vid ? `<iframe width="560" height="315" src="https://www.youtube.com/embed/${vid}" title="${title}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>` : '';
+    return { title, url: urlOut, thumb, embed };
+  });
+}
+
+(async()=>{
+  const feeds=(process.env.PS_FEEDS||'').split(',').map(s=>s.trim()).filter(Boolean);
+  let items=[];
+  for(const f of feeds){
+    try{
+      const arr=await fetchYouTubeFeed(f);
+      items=items.concat(arr);
+    }catch(e){}
+  }
+  // de-dup by url
+  const seen=new Set();
+  items=items.filter(it=>{ if(!it.url||seen.has(it.url)) return false; seen.add(it.url); return true; });
+  // keep newest first (feeds usually are), then limit
+  const limit=parseInt(process.env.PS_LIMIT||'18',10);
+  items=items.slice(0,limit);
+
+  const fs=require('fs');
+  fs.writeFileSync('content.json', JSON.stringify({generatedAt:new Date().toISOString(), items}, null, 2));
+  console.log(`content.json written with ${items.length} items`);
+})();
+NODEPlaceholder content for sanityhub.html
