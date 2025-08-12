@@ -1,77 +1,49 @@
-- name: Build Sanity Hub feed (no external libs)
-        shell: bash
-        run: |
-          set -e
-          node - <<'NODE'
-const https=require('https');
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Pleading Sanity — Sanity Hub</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;padding:16px}
+    .card{background:#131322;border:1px solid #1e1e30;border-radius:12px;overflow:hidden}
+    .card img{width:100%;height:auto;display:block}
+    .card .p{padding:10px 12px;color:#e8e8f2}
+    .muted{color:#a8a8c0;font-size:12px}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="brand">🧠 Pleading Sanity</div>
+    <nav class="nav-links"><a href="/">Home</a></nav>
+  </header>
 
-function get(u){return new Promise((res,rej)=>https.get(u,(r)=>{
-  let d=''; r.on('data',c=>d+=c); r.on('end',()=>res({code:r.statusCode,body:d}));}).on('error',rej));}
+  <main class="grid" id="grid"></main>
 
-// very small XML helpers (no dependencies)
-function tagAll(xml, tag){ // returns array of inner xml strings
-  const re=new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`,'g');
-  const out=[]; let m; while((m=re.exec(xml))) out.push(m[1]); return out;
-}
-function attr(xml, tag, attr){ // <tag ... attr="val" ...>
-  const re=new RegExp(`<${tag}[^>]*\\b${attr}="([^"]+)"[^>]*>`);
-  const m=re.exec(xml); return m?m[1]:'';
-}
-function text(xml, tag){ // first <tag>inner</tag>
-  const re=new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`);
-  const m=re.exec(xml); if(!m) return '';
-  return m[1].replace(/<[^>]+>/g,'').trim();
-}
-
-async function fetchYouTubeFeed(url){
-  const {code,body}=await get(url);
-  if(code!==200) return [];
-  // YouTube RSS can be Atom (<feed><entry>) or RSS (<channel><item>)
-  let entries = tagAll(body,'entry');
-  if(entries.length===0) entries = tagAll(body,'item');
-
-  return entries.map(e=>{
-    // try yt:videoId first
-    let vid = text(e,'yt:videoId');
-    // fallback from link
-    let linkHref = attr(e,'link','href');
-    if(!linkHref){
-      const linkTag = text(e,'link') || '';
-      linkHref = /https?:\/\/[^\s<]+/.exec(linkTag)?.[0] || '';
+  <script>
+    async function load(){
+      try{
+        const res = await fetch('content.json', {cache:'no-store'});
+        const data = await res.json();
+        const el = document.getElementById('grid');
+        (data.items || []).forEach(it=>{
+          const card = document.createElement('article');
+          card.className='card';
+          if(it.thumb){
+            const img = document.createElement('img');
+            img.src = it.thumb; img.alt = it.title || '';
+            card.appendChild(img);
+          }
+          const p = document.createElement('div'); p.className='p';
+          p.innerHTML = `<div>${it.title||''}</div>
+                         <div class="muted"><a href="${it.url}" target="_blank" rel="noopener">Open</a></div>`;
+          card.appendChild(p);
+          el.appendChild(card);
+        });
+      }catch(e){ console.error(e); }
     }
-    if(!vid && linkHref){
-      const m=/[?&]v=([^&]+)/.exec(linkHref); if(m) vid=m[1];
-    }
-    const title = text(e,'title') || 'Untitled';
-    // media:thumbnail url
-    let thumb='';
-    const thumbMatch = /<media:thumbnail[^>]*\burl="([^"]+)"/.exec(e);
-    if(thumbMatch) thumb=thumbMatch[1];
-
-    const urlOut = linkHref || (vid?`https://youtu.be/${vid}`:'');
-    const embed = vid ? `<iframe width="560" height="315" src="https://www.youtube.com/embed/${vid}" title="${title}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>` : '';
-    return { title, url: urlOut, thumb, embed };
-  });
-}
-
-(async()=>{
-  const feeds=(process.env.PS_FEEDS||'').split(',').map(s=>s.trim()).filter(Boolean);
-  let items=[];
-  for(const f of feeds){
-    try{
-      const arr=await fetchYouTubeFeed(f);
-      items=items.concat(arr);
-    }catch(e){}
-  }
-  // de-dup by url
-  const seen=new Set();
-  items=items.filter(it=>{ if(!it.url||seen.has(it.url)) return false; seen.add(it.url); return true; });
-  // keep newest first (feeds usually are), then limit
-  const limit=parseInt(process.env.PS_LIMIT||'18',10);
-  items=items.slice(0,limit);
-
-  const fs=require('fs');
-  fs.writeFileSync('content.json', JSON.stringify({generatedAt:new Date().toISOString(), items}, null, 2));
-  console.log(`content.json written with ${items.length} items`);
-})();
-NODEPlaceholder content for sanityhub.html
+    load();
+  </script>
+</body>
+</html>
