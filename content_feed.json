@@ -1,1 +1,78 @@
-Placeholder content for content_feed.json
+Placeholder content for content_feed.json// netlify/functions/youtube.js
+export default async (req, context) => {
+  try {
+    const base = new URL(req.url);
+    const max = parseInt(base.searchParams.get("max") || "20", 10);
+
+    // Load your content sources from the repo
+    const sourcesResp = await fetch(`${base.origin}/content_feed.json`, { headers: { "cache-control": "no-cache" }});
+    const sources = await sourcesResp.json();
+
+    const channelIds = Array.isArray(sources?.youtube?.channels) ? sources.youtube.channels : [];
+    const keywords   = Array.isArray(sources?.youtube?.keywords) ? sources.youtube.keywords : [];
+    const maxPer     = Math.max(1, Math.min(20, sources?.youtube?.maxPerSource || 5));
+
+    // Build RSS URLs (official YouTube RSS endpoints)
+    const rssUrls = [
+      ...channelIds.map(id => `https://www.youtube.com/feeds/videos.xml?channel_id=${encodeURIComponent(id)}`),
+      ...keywords.map(q => `https://www.youtube.com/feeds/videos.xml?search_query=${encodeURIComponent(q)}`)
+    ];
+
+    const allEntries = [];
+
+    for (const url of rssUrls) {
+      try {
+        const r = await fetch(url, { headers: { "user-agent": "Mozilla/5.0" }});
+        if (!r.ok) continue;
+        const xml = await r.text();
+
+        // very small RSS/Atom parse for <entry>
+        const entries = [];
+        const entryRegex = /<entry>([\s\S]*?)<\/entry>/g;
+        let m;
+        while ((m = entryRegex.exec(xml)) !== null) {
+          const e = m[1];
+
+          const g = (re) => {
+            const mm = re.exec(e);
+            return mm ? mm[1].trim() : null;
+          };
+
+          const title = g(/<title>([\s\S]*?)<\/title>/);
+          const link  = g(/<link rel="alternate" href="([^"]+)"/) || g(/<link>([\s\S]*?)<\/link>/);
+          const id    = g(/<yt:videoId>([\s\S]*?)<\/yt:videoId>/) || g(/<id>([\s\S]*?)<\/id>/);
+          const published = g(/<published>([\s\S]*?)<\/published>/) || g(/<updated>([\s\S]*?)<\/updated>/);
+          const author = g(/<name>([\s\S]*?)<\/name>/);
+          const thumb  = g(/<media:thumbnail url="([^"]+)"/) || g(/<media:content url="([^"]+)"/);
+
+          if (id && link) entries.push({ id, title, link, published, author, thumb, source: url });
+        }
+
+        // Sort newest then take a slice
+        entries.sort((a, b) => (new Date(b.published) - new Date(a.published)));
+        allEntries.push(...entries.slice(0, maxPer));
+      } catch (_) {
+        // ignore individual source failures
+      }
+    }
+
+    // Dedupe by video id
+    const seen = new Set();
+    const merged = [];
+    for (const e of allEntries) {
+      if (seen.has(e.id)) continue;
+      seen.add(e.id);
+      merged.push(e);
+      if (merged.length >= max) break;
+    }
+
+    return new Response(JSON.stringify({ ok: true, items: merged }), {
+      headers: { "content-type": "application/json", "cache-control": "public, max-age=300" }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ ok: false, error: err.message }), {
+      status: 500,
+      headers: { "content-type": "application/json" }
+    });
+  }
+};
