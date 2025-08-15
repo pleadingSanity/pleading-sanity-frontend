@@ -1,44 +1,124 @@
-const $ = (s)=>document.querySelector(s), $$=(s)=>document.querySelectorAll(s);
-document.addEventListener('DOMContentLoaded',()=>{
-  const intro=$('.intro'), cta=$('.cta-button.pulse-effect'), introTxt=$('.intro-content');
-  if(introTxt){introTxt.style.opacity=0;introTxt.style.transform='translateY(20px)';}
-  setTimeout(()=>{ if(intro){ intro.style.opacity='0'; intro.addEventListener('transitionend',()=>{
-      intro.style.display='none'; intro.style.zIndex=-1; if(cta) cta.style.animationPlayState='running';
-  },{once:true}); } else if(cta){ cta.style.animationPlayState='running'; } },5000);
+(function(){
+  // --- Initialization and configuration ---
+  document.getElementById('y').textContent = new Date().getFullYear();
+  const config = JSON.parse(document.getElementById('ps-config').textContent || '{}');
+  const ytFeed = document.getElementById('yt-feed');
+  const ytLoader = document.getElementById('yt-loader');
 
-  $$('.nav-links a').forEach(a=>a.addEventListener('click',e=>{
-    const href=a.getAttribute('href')||''; if(href.startsWith('#')){ e.preventDefault(); $(href)?.scrollIntoView({behavior:'smooth'}); }
-  }));
+  // --- YouTube Feed Logic ---
+  let nextPageToken = '';
+  let loading = false;
+  let exhausted = false;
 
-  const quotes=[
-    "The pain didn’t kill me — it made me art.","Madness is just misunderstood genius.","You weren’t too much — they were too little.",
-    "Sanity isn’t silence — it’s choosing your own noise.","The meds didn’t fix me. I forged myself anyway.","You felt everything because you’re real.",
-    "Labels don’t fit gods in disguise.","Healing isn’t soft. It’s war.","Your breakdown was a broadcast.","Not broken. Rewritten."
-  ];
-  const ticker=$('#quoteTicker'); let qi=0, idx=0, t1, t2, paused=false, q=quotes[0];
-  function type(){ if(!ticker||paused) return; if(idx<q.length){ ticker.textContent+=q.charAt(idx++); t1=setTimeout(type,60);} else {t1=setTimeout(del,3000);} }
-  function del(){ if(!ticker||paused) return; if(ticker.textContent.length){ ticker.textContent=ticker.textContent.slice(0,-1); t2=setTimeout(del,30);} else { idx=0; qi=(qi+1)%quotes.length; q=quotes[qi]; t1=setTimeout(type,500);} }
-  function startIfIdle(){ if(ticker && !ticker.textContent) { q=quotes[qi]; type(); } }
-  if(ticker){
-    ticker.addEventListener('mouseenter',()=>{paused=true; clearTimeout(t1); clearTimeout(t2); ticker.style.borderRightColor='transparent';});
-    ticker.addEventListener('mouseleave',()=>{paused=false; ticker.style.borderRightColor='rgba(255,255,255,.7)'; if(idx<q.length) type(); else t2=setTimeout(del,500);});
-    document.addEventListener('visibilitychange',()=>{paused=document.hidden; if(!paused) startIfIdle();});
-    startIfIdle();
+  async function fetchAndRenderYouTubeVideos() {
+    if (loading || exhausted) return;
+    loading = true;
+    ytLoader.textContent = 'Loading…';
+
+    try {
+      const url = new URL('/.netlify/functions/fetch-videos', location.origin);
+      url.searchParams.set('region', config.region || 'GB');
+      url.searchParams.set('topics', (config.topics || ['mental health']).join(','));
+      url.searchParams.set('pageSize', config.pageSize || 12);
+      if (nextPageToken) url.searchParams.set('pageToken', nextPageToken);
+
+      const response = await fetch(url.toString());
+      if (!response.ok) throw new Error('Failed to fetch YouTube videos');
+      const data = await response.json();
+
+      renderYouTubeVideos(data.items);
+      updatePagination(data.nextPageToken, data.items.length);
+
+    } catch (e) {
+      console.error('YouTube API error:', e);
+      handleYouTubeError();
+    } finally {
+      loading = false;
+    }
   }
 
-  const items=[...document.querySelectorAll('.feed-item-placeholder')];
-  const IO='IntersectionObserver' in window;
-  function playIfVideo(el){ const v=el.querySelector?.('.feed-video'); if(!v) return; if(!v.dataset.loaded){ v.muted=true; v.playsInline=true; v.load(); v.dataset.loaded='1'; } v.play().catch(()=>{}); }
-  function pauseIfVideo(el){ const v=el.querySelector?.('.feed-video'); if(v && !v.paused) v.pause(); }
-  if(IO && items.length){
-    const obs=new IntersectionObserver((entries)=>entries.forEach(ent=>{
-      const it=ent.target; if(ent.isIntersecting){ it.style.animationPlayState='running'; playIfVideo(it);} else { pauseIfVideo(it); }
-    }),{root:null,rootMargin:'0px 0px -10% 0px',threshold:.1});
-    items.forEach(it=>{ it.style.animationPlayState='paused'; obs.observe(it); });
-  } else { items.forEach(it=>{ it.style.animationPlayState='running'; playIfVideo(it); }); }
+  function renderYouTubeVideos(videos) {
+    if (!videos || videos.length === 0) return;
+    const fragment = document.createDocumentFragment();
+    videos.forEach(video => {
+      fragment.appendChild(createVideoCard(video));
+    });
+    ytFeed.appendChild(fragment);
+  }
 
-  if(cta && IO){ const o=new IntersectionObserver((es)=>es.forEach(e=>{ cta.style.animationPlayState=e.isIntersecting?'running':'paused'; }),{threshold:.5}); o.observe(cta); }
+  function createVideoCard(video) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <iframe class="embed" title="${video.title || 'Video'}"
+        src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(video.id)}"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+      </iframe>
+      <div class="small">${video.title || ''}</div>
+    `;
+    return card;
+  }
 
-  const form=document.querySelector('.signup-form');
-  if(form){ form.addEventListener('submit',(e)=>{ e.preventDefault(); const em=form.querySelector('input[type="email"]')?.value?.trim(); if(!em) return; alert('Thank you for joining the movement!'); }); }
-});
+  function updatePagination(newToken, itemCount) {
+    nextPageToken = newToken || '';
+    if (itemCount === 0 || !nextPageToken) {
+      exhausted = true;
+      ytLoader.textContent = 'Up to date.';
+    } else {
+      ytLoader.textContent = 'Scroll for more…';
+    }
+  }
+
+  function handleYouTubeError() {
+    ytLoader.textContent = 'Live feed unavailable. Showing fallback.';
+    if (!ytFeed.hasChildNodes()) {
+      ['kXYiU_JCYtU', '3YxaaGgTQYM', 'ktvTqknDobU'].forEach(id => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `<iframe class="embed" src="https://www.youtube-nocookie.com/embed/${id}" allowfullscreen></iframe>`;
+        ytFeed.appendChild(card);
+      });
+    }
+    exhausted = true;
+  }
+
+  // --- Infinite Scroll Setup ---
+  if ('IntersectionObserver' in window) {
+    const sentinel = document.createElement('div');
+    sentinel.style.height = '1px';
+    ytLoader.after(sentinel);
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          fetchAndRenderYouTubeVideos();
+        }
+      });
+    }, { rootMargin: '1200px 0px 0px 0px' });
+    observer.observe(sentinel);
+  } else {
+    // Fallback for older browsers
+    fetchAndRenderYouTubeVideos();
+  }
+
+  // --- TikTok Renderer ---
+  function renderTikTokFeed() {
+    const ttFeed = document.getElementById('tt-feed');
+    (config.tiktok || []).forEach(url => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `<blockquote class="tiktok-embed" cite="${url}" data-video-id=""><a target="_blank" href="${url}">TikTok</a></blockquote>`;
+      ttFeed.appendChild(card);
+    });
+    if ((config.tiktok || []).length) {
+      const script = document.createElement('script');
+      script.src = 'https://www.tiktok.com/embed.js';
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  }
+
+  // Initial loads
+  fetchAndRenderYouTubeVideos();
+  renderTikTokFeed();
+})();
