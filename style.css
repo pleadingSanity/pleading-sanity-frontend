@@ -1,23 +1,66 @@
-:root{--bg:#0b0b12;--fg:#e8e8f2;--muted:#a8a8c0;--card:#131322;--brand:#7aa8ff;--line:#1e1e30}
-*{box-sizing:border-box}html,body{margin:0;padding:0;background:radial-gradient(1200px 800px at 50% 10%,#17172a 0%,#0b0b12 60%,#07070c 100%);color:var(--fg);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
-a{color:var(--brand)}img,video{display:block;width:100%;height:auto;background:#000}
-.header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(11,11,18,.8);backdrop-filter:saturate(140%) blur(8px);z-index:10}
-.brand{font-weight:800}.nav-links a{margin-left:14px;text-decoration:none}
-.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:center;padding:20px}
-.cta-button{background:var(--brand);color:#0b0b12;border:0;border-radius:12px;padding:10px 16px;font-weight:700;cursor:pointer}
-.cta-button.pulse-effect{animation:pulse 1.4s infinite;animation-play-state:paused}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-.ticker{overflow:hidden;white-space:nowrap;border-block:1px solid var(--line);background:#0e0e18}
-#quoteTicker{display:inline-block;padding:10px 0;border-right:2px solid rgba(255,255,255,.7);min-height:22px}
-.feed-grid{padding:18px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-.feed-item-placeholder{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;animation:fadeIn .6s ease both;animation-play-state:paused}
-.feed-image,.feed-video{aspect-ratio:16/9;object-fit:cover;background:#000}
-.meta{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;color:var(--muted);font-size:14px}
-.cta{padding:24px 20px;border-top:1px solid var(--line);background:linear-gradient(180deg,rgba(10,10,18,.0),rgba(10,10,18,.6))}
-.signup-form{display:flex;gap:10px;max-width:520px}
-.signup-form input{flex:1;background:#0e0e17;color:var(--fg);border:1px solid #222238;border-radius:10px;padding:10px}
-.btn{background:var(--brand);color:#0b0b12;border:0;border-radius:10px;padding:10px 16px;font-weight:700}
-.tiny{color:var(--muted);font-size:12px;margin-top:6px}
-.footer{padding:18px;color:var(--muted);text-align:center;border-top:1px solid var(--line)}
-.intro{position:fixed;inset:0;display:grid;place-items:center;background:#0b0b12;z-index:999;transition:opacity .6s ease}
-.intro-content{transition:all .6s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-@media (max-width:900px){.hero{grid-template-columns:1fr}}
+/*
+ * Updated CSS for better maintainability and accessibility
+ */
+:root {
+  --bg: #0b0b0d;
+  --fg: #e9e9f2;
+  --muted: #a7a7bb;
+  --card: #141421;
+  --ring: #222238;
+  --brand: #7cf2d8;
+  --transition-duration: 0.2s;
+}
+
+/* Base styles and box model are fine. */
+/* Add focus-visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* Nav links improvement */
+.nav a {
+  margin-left: 10px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background var(--transition-duration) ease;
+}
+.nav a:hover {
+  background: #1a1a27;
+}
+
+/* Button styles */
+.btn {
+  display: inline-block;
+  background: var(--brand);
+  color: #0b0b0d;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 10px 14px;
+  transition: transform var(--transition-duration) ease, background var(--transition-duration) ease;
+  border: none;
+  cursor: pointer;
+}
+.btn:hover {
+  background: color-mix(in srgb, var(--brand) 90%, #fff 10%); /* Subtle hover effect */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0.01ms !important;
+  }
+  .btn:hover {
+    transform: none; /* No motion on hover */
+  }
+}
