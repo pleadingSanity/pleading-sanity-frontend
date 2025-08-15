@@ -1,146 +1,208 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Loading…</title>
-<meta name="description" content="A movement to turn pain into power — Sanity Hub, stories, and tools." />
-<meta name="theme-color" content="#0b0b0d" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Pleading Sanity — Sanity Hub</title>
+<meta name="description" content="Turning pain into power. A living feed of the best videos across the net."/>
+<link rel="canonical" href="https://www.pleadingsanity.co.uk/"/>
+<meta name="theme-color" content="#0b0b0d">
+<!-- Social cards -->
+<meta property="og:title" content="Pleading Sanity — Sanity Hub">
+<meta property="og:description" content="Signal in the noise. Daily strength, stories, and tools.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.pleadingsanity.co.uk/">
+<meta property="og:image" content="https://images.unsplash.com/photo-1547038577-da80b6fd63fa?w=1200&q=75">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:,">
 <style>
 :root{--bg:#0b0b0d;--fg:#e9e9f2;--muted:#a7a7bb;--card:#141421;--ring:#222238;--brand:#7cf2d8}
-*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,Segoe UI,Inter,Roboto,Arial,sans-serif}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,Inter,Roboto,Arial,sans-serif}
 a{color:var(--brand);text-decoration:none}
-.wrap{max-width:1100px;margin:0 auto;padding:20px}
-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--ring);position:sticky;top:0;background:rgba(11,11,13,.6);backdrop-filter:blur(8px)}
+.wrap{max-width:1150px;margin:0 auto;padding:20px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--ring);position:sticky;top:0;background:rgba(11,11,13,.6);backdrop-filter:blur(8px);z-index:5}
 .brand{font-weight:800;font-size:1.1rem}
-.nav a{margin-left:14px}
+.nav a{margin-left:10px;padding:6px 10px;border-radius:8px}
+.nav a:hover{background:#1a1a27}
+.pill{border:1px solid var(--ring);border-radius:999px;padding:6px 10px;color:var(--muted);font-size:.85rem}
 .hero{display:grid;gap:18px;grid-template-columns:1.2fr .8fr;align-items:center;padding:20px 0}
 .card{background:var(--card);border:1px solid var(--ring);border-radius:14px;padding:16px}
-.btn{display:inline-block;background:var(--brand);color:#0b0b0d;font-weight:700;border-radius:10px;padding:10px 14px}
-.btn.ghost{background:transparent;border:1px solid var(--ring);color:var(--fg)}
 .note{color:var(--muted);font-size:.95rem}
+.btn{display:inline-block;background:var(--brand);color:#0b0b0d;font-weight:700;border-radius:10px;padding:10px 14px}
 .grid{display:grid;gap:14px}
-@media (max-width:900px){.hero{grid-template-columns:1fr}}
 .embed{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;background:#000}
+.section{margin-top:16px}
+.feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.feed .card iframe,.feed .card img{width:100%;display:block;border-radius:10px}
+.tag{display:inline-block;background:#0e0e16;border:1px solid var(--ring);border-radius:999px;padding:4px 8px;color:var(--muted);font-size:.78rem;margin-top:8px}
+.small{font-size:.88rem;color:var(--muted)}
 .footer{margin-top:24px;padding:20px 0;border-top:1px solid var(--ring);color:var(--muted);text-align:center}
-.input{display:flex;gap:8px;flex-wrap:wrap}
-.input input{flex:1;min-width:220px;background:#0e0e14;border:1px solid var(--ring);color:var(--fg);border-radius:10px;padding:10px}
-.ticker{overflow:hidden;white-space:nowrap;border-block:1px solid var(--ring);background:#0e0e18;margin:16px 0}
-#quoteTicker{display:inline-block;padding:10px 0;border-right:2px solid rgba(255,255,255,.7);min-height:22px}
-.pill{border:1px solid var(--ring);border-radius:999px;padding:6px 10px;color:var(--muted);font-size:.85rem}
+hr{border:none;border-top:1px solid var(--ring);margin:18px 0}
+.loader{opacity:.7;text-align:center;padding:16px}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <div class="brand" id="brand">Loading…</div>
+    <div class="brand" id="brand">Pleading Sanity</div>
     <nav class="nav">
       <a href="#hub">Hub</a>
+      <a href="#yt">YouTube</a>
+      <a href="#tiktok">TikTok</a>
       <a href="#join">Join</a>
-      <a id="shopLink" href="#" rel="nofollow">Shop</a>
     </nav>
   </header>
 
   <section class="hero" id="hub">
     <div class="card">
-      <div class="pill" id="tagline">Rise from madness</div>
-      <h1 id="headline">Loading…</h1>
-      <p class="note">Signal in the noise: survivor stories, tools, and daily strength.</p>
-      <p>
-        <a class="btn" href="#latest">Watch latest</a>
-        <a class="btn ghost" href="#join">Join</a>
-      </p>
-      <p class="note">Contact: <a id="mailLink" href="#">email</a></p>
+      <div class="pill">Rise from madness</div>
+      <h1>Not broken. Rewritten.</h1>
+      <p class="note">This hub auto-pulls the **most-watched** and **rising** videos on YouTube in your topics. TikTok embeds can be fed from a simple list—no code, no rebuilds.</p>
+      <p class="small">Contact: <a href="mailto:pleadingsanity1@gmail.com">pleadingsanity1@gmail.com</a></p>
     </div>
     <div class="card">
       <iframe class="embed" title="Featured"
-        src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+        src="https://www.youtube-nocookie.com/embed/kXYiU_JCYtU"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-      <p class="note">Swap the video ID any time; no other files needed.</p>
+      <p class="note">Swap the ID any time — no rebuild needed elsewhere.</p>
     </div>
   </section>
 
-  <div class="ticker"><span id="quoteTicker"></span></div>
-
-  <section class="grid">
-    <div class="card">
-      <h2>Sanity Hub Feed</h2>
-      <div class="grid" id="feed"></div>
-      <p class="note">This starter shows 6 cards. We can wire YouTube/TikTok later with one small change.</p>
-    </div>
-    <aside class="card" id="join">
-      <h2>Join the Movement</h2>
-      <form class="input" onsubmit="event.preventDefault();document.getElementById('msg').textContent='You’re on the list. Stay close.';this.reset();">
-        <input type="email" placeholder="you@email.com" required />
-        <button class="btn" type="submit">Join</button>
-      </form>
-      <p id="msg" class="note"></p>
-    </aside>
+  <section class="section card" id="yt">
+    <h2>YouTube — Live Feed</h2>
+    <p class="note">Auto updates from YouTube (trending + topics). Scroll to load more.</p>
+    <div id="yt-feed" class="feed"></div>
+    <div id="yt-loader" class="loader">Loading…</div>
   </section>
 
-  <section class="card" id="latest" style="margin-top:14px">
-    <h2>Latest Drop</h2>
-    <iframe class="embed" title="Inspiration"
-      src="https://www.youtube.com/embed/2JmzyHqv9Eo"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <section class="section card" id="tiktok">
+    <h2>TikTok — Curated Stream</h2>
+    <p class="note">TikTok doesn’t offer a stable “trending” API. This section reads from a tiny JSON list so you can add/change links without touching code.</p>
+    <div id="tt-feed" class="feed"></div>
   </section>
 
-  <footer class="footer">© <span id="y"></span> <span id="brandSmall"></span></footer>
+  <section class="section card" id="join">
+    <h2>Join the Movement</h2>
+    <form name="join" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="grid" style="grid-template-columns:1fr auto">
+      <input type="hidden" name="form-name" value="join"><p style="display:none"><label>Don’t fill this out: <input name="bot-field"></label></p>
+      <input type="email" name="email" placeholder="you@email.com" required style="background:#0e0e14;border:1px solid var(--ring);color:var(--fg);border-radius:10px;padding:10px">
+      <button class="btn" type="submit">I’m In</button>
+    </form>
+    <p class="small">You’ll get drops, quotes, and sanity tools. No spam.</p>
+  </section>
+
+  <footer class="footer">© <span id="y"></span> Pleading Sanity • Leicester, UK</footer>
 </div>
+
+<!-- ====== CONFIG YOU CAN EDIT WITHOUT CODE KNOWLEDGE ====== -->
+<script id="ps-config" type="application/json">
+{
+  "topics": ["mental health", "resilience", "healing", "mindset", "motivation"],
+  "region": "GB",
+  "pageSize": 12,
+  "tiktok": [
+    "https://www.tiktok.com/@jayshenks/video/7354312345678901234",
+    "https://www.tiktok.com/@mindsetdaily/video/7312345678901234567"
+  ]
+}
+</script>
 
 <script>
 (function(){
-  // --- derive brand + email from domain ---
-  const host = (location.hostname || 'pleadingsanity.co.uk').replace(/^www\./,'');
-  const brand = host.split('.')[0].split(/[-_]/).map(w=>w? w[0].toUpperCase()+w.slice(1):'').join(' ') || 'Pleading Sanity';
-  const email = 'support@' + host;
-  const shopUrl = 'https://' + host + '/shop';
+  // Basic branding and year
+  document.getElementById('y').textContent=new Date().getFullYear();
 
-  document.title = brand + ' — Sanity Hub';
-  document.getElementById('brand').textContent = brand;
-  document.getElementById('brandSmall').textContent = brand;
-  document.getElementById('headline').textContent = brand + ' — Not broken. Rewritten.';
-  const ml = document.getElementById('mailLink'); ml.href = 'mailto:'+email; ml.textContent = email;
-  document.getElementById('shopLink').href = shopUrl;
-  document.getElementById('y').textContent = new Date().getFullYear();
+  const cfg = JSON.parse(document.getElementById('ps-config').textContent||'{}');
+  const region = cfg.region || 'GB';
+  const topics = cfg.topics || ['mental health'];
+  const pageSize = cfg.pageSize || 12;
 
-  // --- tiny quote ticker, no libs ---
-  const quotes = [
-    "The pain didn’t kill me — it made me art.",
-    "Madness is just misunderstood genius.",
-    "You weren’t too much — they were too little.",
-    "Healing isn’t soft. It’s war.",
-    "Not broken. Rewritten."
-  ];
-  const qEl = document.getElementById('quoteTicker');
-  let qi=0, idx=0, typing;
-  function type(){ if(idx<quotes[qi].length){ qEl.textContent += quotes[qi][idx++]; typing=setTimeout(type,60);}
-    else setTimeout(del,1400); }
-  function del(){ if(qEl.textContent.length){ qEl.textContent=qEl.textContent.slice(0,-1); setTimeout(del,24);}
-    else { idx=0; qi=(qi+1)%quotes.length; setTimeout(type,300);} }
-  type();
+  // ---- YouTube feed via Netlify Function ----
+  const ytFeed = document.getElementById('yt-feed');
+  const ytLoader = document.getElementById('yt-loader');
+  let nextPageToken = ''; let loading = false; let exhausted = false;
 
-  // --- simple feed (cards pull images by topic, no API) ---
-  const pics = [
-    "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=75",
-    "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1200&q=75",
-    "https://images.unsplash.com/photo-1547038577-da80b6fd63fa?w=1200&q=75",
-    "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=75",
-    "https://images.unsplash.com/photo-1495562569060-2eec283d3391?w=1200&q=75",
-    "https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?w=1200&q=75"
-  ];
-  const titles = ["Still Standing","Breathe","Crying Brain","Quiet Power","Warrior Code","Soft Reboot"];
-  const feed = document.getElementById('feed');
-  pics.forEach((src,i)=>{
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <img loading="lazy" alt="${titles[i]}" style="width:100%;border-radius:10px" src="${src}">
-      <div class="note" style="margin-top:8px">${titles[i]}</div>`;
-    feed.appendChild(card);
+  async function loadYouTube(first=false){
+    if (loading || exhausted) return; loading = true;
+    ytLoader.textContent = 'Loading…';
+    try {
+      const url = new URL('/.netlify/functions/fetch-videos', location.origin);
+      url.searchParams.set('region', region);
+      url.searchParams.set('topics', topics.join(','));
+      url.searchParams.set('pageSize', pageSize);
+      if (nextPageToken) url.searchParams.set('pageToken', nextPageToken);
+      const res = await fetch(url.toString());
+      if (!res.ok) throw new Error('YouTube fetch failed');
+      const data = await res.json();
+      (data.items||[]).forEach(v => {
+        const card = document.createElement('div'); card.className='card';
+        const iframe = document.createElement('iframe');
+        iframe.className='embed';
+        iframe.title = v.title || 'Video';
+        iframe.src = 'https://www.youtube-nocookie.com/embed/'+encodeURIComponent(v.id);
+        iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.referrerPolicy='strict-origin-when-cross-origin'; iframe.allowFullscreen=true;
+        card.appendChild(iframe);
+        const meta = document.createElement('div'); meta.className='small';
+        meta.textContent = v.title || '';
+        card.appendChild(meta);
+        ytFeed.appendChild(card);
+      });
+      nextPageToken = data.nextPageToken || '';
+      if (!data.items || data.items.length === 0 || !nextPageToken) {
+        exhausted = true; ytLoader.textContent = 'Up to date.';
+      } else {
+        ytLoader.textContent = 'Scroll for more…';
+      }
+    } catch (e){
+      console.warn(e);
+      ytLoader.textContent = 'Live feed unavailable. Showing fallback.';
+      // Simple fallback (static picks)
+      if (!ytFeed.hasChildNodes()){
+        ['kXYiU_JCYtU','3YxaaGgTQYM','ktvTqknDobU'].forEach(id=>{
+          const card=document.createElement('div'); card.className='card';
+          const iframe=document.createElement('iframe'); iframe.className='embed'; iframe.allowFullscreen=true;
+          iframe.src='https://www.youtube-nocookie.com/embed/'+id;
+          iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+          iframe.referrerPolicy='strict-origin-when-cross-origin';
+          card.appendChild(iframe); ytFeed.appendChild(card);
+        });
+      }
+      exhausted = true;
+    } finally {
+      loading = false;
+    }
+  }
+  loadYouTube(true);
+
+  // Infinite scroll for YouTube
+  const io = 'IntersectionObserver' in window;
+  if (io){
+    const sentinel = document.createElement('div'); sentinel.style.height='1px';
+    ytLoader.after(sentinel);
+    const obs = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{ if (e.isIntersecting) loadYouTube(); });
+    },{root:null,rootMargin:'1200px 0px 0px 0px',threshold:0});
+    obs.observe(sentinel);
+  }
+
+  // ---- TikTok list render (curated URLs) ----
+  const ttFeed = document.getElementById('tt-feed');
+  (cfg.tiktok||[]).forEach(url=>{
+    const card = document.createElement('div'); card.className='card';
+    // TikTok oEmbed
+    const block = document.createElement('blockquote');
+    block.className='tiktok-embed'; block.setAttribute('cite', url);
+    block.setAttribute('data-video-id','');
+    block.innerHTML = `<a href="${url}">TikTok</a>`;
+    card.appendChild(block);
+    ttFeed.appendChild(card);
   });
+  if ((cfg.tiktok||[]).length){
+    const s=document.createElement('script');
+    s.src='https://www.tiktok.com/embed.js'; s.async=true; document.body.appendChild(s);
+  }
 })();
 </script>
 </body>
