@@ -1,92 +1,147 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Pleading Sanity: Rise From Madness. A mental health movement disguised as streetwear. Find truth, strength, and community.">
-  <meta property="og:title" content="Pleading Sanity | Rise From Madness">
-  <meta property="og:description" content="Join the revolution. From pain to power. Shop apparel, explore survivor stories, and connect with a global tribe.">
-  <meta property="og:image" content="/assets/og-image.webp"> <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="/assets/favicon.ico"> <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="/style.css">
-  <title>Pleading Sanity | Rise From Madness</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Loading…</title>
+<meta name="description" content="A movement to turn pain into power — Sanity Hub, stories, and tools." />
+<meta name="theme-color" content="#0b0b0d" />
+<style>
+:root{--bg:#0b0b0d;--fg:#e9e9f2;--muted:#a7a7bb;--card:#141421;--ring:#222238;--brand:#7cf2d8}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,Segoe UI,Inter,Roboto,Arial,sans-serif}
+a{color:var(--brand);text-decoration:none}
+.wrap{max-width:1100px;margin:0 auto;padding:20px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--ring);position:sticky;top:0;background:rgba(11,11,13,.6);backdrop-filter:blur(8px)}
+.brand{font-weight:800;font-size:1.1rem}
+.nav a{margin-left:14px}
+.hero{display:grid;gap:18px;grid-template-columns:1.2fr .8fr;align-items:center;padding:20px 0}
+.card{background:var(--card);border:1px solid var(--ring);border-radius:14px;padding:16px}
+.btn{display:inline-block;background:var(--brand);color:#0b0b0d;font-weight:700;border-radius:10px;padding:10px 14px}
+.btn.ghost{background:transparent;border:1px solid var(--ring);color:var(--fg)}
+.note{color:var(--muted);font-size:.95rem}
+.grid{display:grid;gap:14px}
+@media (max-width:900px){.hero{grid-template-columns:1fr}}
+.embed{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;background:#000}
+.footer{margin-top:24px;padding:20px 0;border-top:1px solid var(--ring);color:var(--muted);text-align:center}
+.input{display:flex;gap:8px;flex-wrap:wrap}
+.input input{flex:1;min-width:220px;background:#0e0e14;border:1px solid var(--ring);color:var(--fg);border-radius:10px;padding:10px}
+.ticker{overflow:hidden;white-space:nowrap;border-block:1px solid var(--ring);background:#0e0e18;margin:16px 0}
+#quoteTicker{display:inline-block;padding:10px 0;border-right:2px solid rgba(255,255,255,.7);min-height:22px}
+.pill{border:1px solid var(--ring);border-radius:999px;padding:6px 10px;color:var(--muted);font-size:.85rem}
+</style>
 </head>
 <body>
-  <section class="intro" id="intro">
-    <div class="space-background"></div> <div class="intro-content">
-      <h1 class="rise-text">RISE FROM MADNESS</h1>
-      <p class="intro-tagline">This is the ignition point of your spiritual OS.</p>
+<div class="wrap">
+  <header>
+    <div class="brand" id="brand">Loading…</div>
+    <nav class="nav">
+      <a href="#hub">Hub</a>
+      <a href="#join">Join</a>
+      <a id="shopLink" href="#" rel="nofollow">Shop</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="hub">
+    <div class="card">
+      <div class="pill" id="tagline">Rise from madness</div>
+      <h1 id="headline">Loading…</h1>
+      <p class="note">Signal in the noise: survivor stories, tools, and daily strength.</p>
+      <p>
+        <a class="btn" href="#latest">Watch latest</a>
+        <a class="btn ghost" href="#join">Join</a>
+      </p>
+      <p class="note">Contact: <a id="mailLink" href="#">email</a></p>
+    </div>
+    <div class="card">
+      <iframe class="embed" title="Featured"
+        src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <p class="note">Swap the video ID any time; no other files needed.</p>
     </div>
   </section>
 
-  <nav class="navbar" id="mainNavbar">
-    <div class="nav-brand">PLEADING SANITY</div>
-    <div class="nav-links">
-      <a href="#intro">Home</a>
-      <a href="#featured-product">Shop</a>
-      <a href="#join-movement">Join</a>
-      <a href="#sanity-hub">Sanity Hub</a>
-      <a href="#games-zone">Games</a>
-    </div>
-    <div class="quote-ticker-container">
-      <div class="quote-ticker" id="quoteTicker"></div>
-    </div>
-  </nav>
+  <div class="ticker"><span id="quoteTicker"></span></div>
 
-  <section class="featured-product-section" id="featured-product">
-    <div class="product-display">
-      <img src="/assets/crying-brain-hoodie.webp" alt="Crying Brain Hoodie" class="product-image">
-      <div class="product-details">
-        <h2 class="product-name">The Crying Brain Hoodie</h2>
-        <p class="product-tagline">“The pain didn’t kill me — it made me art. This hoodie carries the tears of those still standing.”</p>
-        <button class="cta-button pulse-effect">Shop The Drop</button>
-      </div>
+  <section class="grid">
+    <div class="card">
+      <h2>Sanity Hub Feed</h2>
+      <div class="grid" id="feed"></div>
+      <p class="note">This starter shows 6 cards. We can wire YouTube/TikTok later with one small change.</p>
     </div>
-  </section>
-
-  <section class="join-movement-section" id="join-movement">
-    <div class="join-content">
-      <h2>Join The Movement</h2>
-      <p>Sign up, get 10% off your first order, and wear your survival out loud. Become part of the tribe.</p>
-      <form class="signup-form">
-        <input type="email" placeholder="Enter your email" required>
-        <button type="submit" class="cta-button">Fuel The Revolution</button>
+    <aside class="card" id="join">
+      <h2>Join the Movement</h2>
+      <form class="input" onsubmit="event.preventDefault();document.getElementById('msg').textContent='You’re on the list. Stay close.';this.reset();">
+        <input type="email" placeholder="you@email.com" required />
+        <button class="btn" type="submit">Join</button>
       </form>
-    </div>
+      <p id="msg" class="note"></p>
+    </aside>
   </section>
 
-  <section class="sanity-hub-preview-section" id="sanity-hub">
-    <h2>Sanity Hub: Live Pulse</h2>
-    <div class="scroll-feed-placeholder">
-      <div class="feed-item-placeholder">
-        <h3>Loading wisdom...</h3>
-        <p>Your journey through raw truth and resilience.</p>
-        <img src="/assets/feed-placeholder-vid.webp" alt="Video Placeholder" class="feed-placeholder-img">
-      </div>
-      <div class="feed-item-placeholder">
-        <h3>Survivor's Echo</h3>
-        <p>"I turned my breakdown into a blueprint."</p>
-        <img src="/assets/feed-placeholder-quote.webp" alt="Quote Placeholder" class="feed-placeholder-img">
-      </div>
-    </div>
-    <a href="#" class="cta-button view-all-feed">Explore Full Sanity Hub</a>
+  <section class="card" id="latest" style="margin-top:14px">
+    <h2>Latest Drop</h2>
+    <iframe class="embed" title="Inspiration"
+      src="https://www.youtube.com/embed/2JmzyHqv9Eo"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   </section>
 
-  <footer class="footer">
-    <div class="footer-content">
-      <div class="footer-logo-watermark">PLEADING SANITY</div>
-      <p>"Rise From Madness. Built for Survivors."</p>
-      <div class="social-links">
-        <a href="https://www.tiktok.com/@mentally.inshane" target="_blank" rel="noopener noreferrer">TikTok</a>
-        <a href="https://www.instagram.com/mentally.inshane" target="_blank" rel="noopener noreferrer">Instagram</a>
-        </div>
-      <p class="copyright">&copy; 2025 Pleading Sanity. All Rights Reserved.</p>
-    </div>
-  </footer>
+  <footer class="footer">© <span id="y"></span> <span id="brandSmall"></span></footer>
+</div>
 
-  <script src="/script.js"></script>
+<script>
+(function(){
+  // --- derive brand + email from domain ---
+  const host = (location.hostname || 'pleadingsanity.co.uk').replace(/^www\./,'');
+  const brand = host.split('.')[0].split(/[-_]/).map(w=>w? w[0].toUpperCase()+w.slice(1):'').join(' ') || 'Pleading Sanity';
+  const email = 'support@' + host;
+  const shopUrl = 'https://' + host + '/shop';
+
+  document.title = brand + ' — Sanity Hub';
+  document.getElementById('brand').textContent = brand;
+  document.getElementById('brandSmall').textContent = brand;
+  document.getElementById('headline').textContent = brand + ' — Not broken. Rewritten.';
+  const ml = document.getElementById('mailLink'); ml.href = 'mailto:'+email; ml.textContent = email;
+  document.getElementById('shopLink').href = shopUrl;
+  document.getElementById('y').textContent = new Date().getFullYear();
+
+  // --- tiny quote ticker, no libs ---
+  const quotes = [
+    "The pain didn’t kill me — it made me art.",
+    "Madness is just misunderstood genius.",
+    "You weren’t too much — they were too little.",
+    "Healing isn’t soft. It’s war.",
+    "Not broken. Rewritten."
+  ];
+  const qEl = document.getElementById('quoteTicker');
+  let qi=0, idx=0, typing;
+  function type(){ if(idx<quotes[qi].length){ qEl.textContent += quotes[qi][idx++]; typing=setTimeout(type,60);}
+    else setTimeout(del,1400); }
+  function del(){ if(qEl.textContent.length){ qEl.textContent=qEl.textContent.slice(0,-1); setTimeout(del,24);}
+    else { idx=0; qi=(qi+1)%quotes.length; setTimeout(type,300);} }
+  type();
+
+  // --- simple feed (cards pull images by topic, no API) ---
+  const pics = [
+    "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=75",
+    "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1200&q=75",
+    "https://images.unsplash.com/photo-1547038577-da80b6fd63fa?w=1200&q=75",
+    "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=75",
+    "https://images.unsplash.com/photo-1495562569060-2eec283d3391?w=1200&q=75",
+    "https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?w=1200&q=75"
+  ];
+  const titles = ["Still Standing","Breathe","Crying Brain","Quiet Power","Warrior Code","Soft Reboot"];
+  const feed = document.getElementById('feed');
+  pics.forEach((src,i)=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <img loading="lazy" alt="${titles[i]}" style="width:100%;border-radius:10px" src="${src}">
+      <div class="note" style="margin-top:8px">${titles[i]}</div>`;
+    feed.appendChild(card);
+  });
+})();
+</script>
 </body>
 </html>
