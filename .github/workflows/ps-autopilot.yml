@@ -36,12 +36,6 @@ jobs:
         shell: bash
         run: |
           set -e
-          [ -f _redirects ] || echo "/*    /index.html   200" > _redirects
-          if [ ! -f netlify.toml ]; then
-            cat > netlify.toml <<'TOML'
-[build]
-  publish = "."
-  command = ""
           [ -f _redirects ] || echo "/* /index.html   200" > _redirects
           if [ ! -f netlify.toml ]; then
             cat > netlify.toml <<'TOML'
