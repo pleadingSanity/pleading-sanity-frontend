@@ -42,18 +42,37 @@ jobs:
 [build]
   publish = "."
   command = ""
-[[redirects]]
-  from = "/h"
-  to = "/sanityhub.html"
-  status = 301
-[[redirects]]
-  from = "/m"
-  to = "/movement.html"
-  status = 301
-[[redirects]]
-  from = "/"
-  to = "/index.html"
-  status = 200
+      - name: Ensure site skeleton
+        run: |
+          set -e
+          [ -f _redirects ] || echo "/* /index.html   200" > _redirects
+          if [ ! -f netlify.toml ]; then
+            cat > netlify.toml <<'TOML'
+          [build]
+            publish = "."
+            command = ""
+
+          [[redirects]]
+            from = "/h"
+            to = "/sanityhub.html"
+            status = 301
+
+          [[redirects]]
+            from = "/m"
+            to = "/movement.html"
+            status = 301
+          
+          [[redirects]]
+            from = "/"
+            to = "/index.html"
+            status = 200
+
+          TOML
+          
+          if [ ! -f style.css ]; then
+            cat > style.css <<'CSS'
+          :root{...}
+          CSS
   
 TOML
           fi
