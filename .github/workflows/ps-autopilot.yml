@@ -43,9 +43,18 @@ jobs:
   publish = "."
   command = ""
 [[redirects]]
-  from = "/*"
+  from = "/h"
+  to = "/sanityhub.html"
+  status = 301
+[[redirects]]
+  from = "/m"
+  to = "/movement.html"
+  status = 301
+[[redirects]]
+  from = "/"
   to = "/index.html"
   status = 200
+  
 TOML
           fi
           if [ ! -f style.css ]; then
