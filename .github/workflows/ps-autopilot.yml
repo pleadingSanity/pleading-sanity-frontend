@@ -63,9 +63,9 @@ jobs:
           if [ ! -f style.css ]; then
             cat > style.css <<'CSS'
           :root{...}
+        
           CSS
-          
-:root{--bg:#0b0b12;--fg:#e8e8f2;--muted:#a8a8c0;--brand:#7aa8ff;--line:#1e1e30}
+          :root{--bg:#0b0b12;--fg:#e8e8f2;--muted:#a8a8c0;--brand:#7aa8ff;--line:#1e1e30}
 *{box-sizing:border-box}html,body{margin:0;background:#0b0b12;color:var(--fg);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
 .header{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);background:rgba(11,11,18,.8);backdrop-filter:saturate(140%) blur(8px)}
 .brand{font-weight:800}.nav a{margin-left:12px;text-decoration:none;color:var(--fg)}
