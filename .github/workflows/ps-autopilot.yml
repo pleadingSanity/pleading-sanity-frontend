@@ -66,15 +66,7 @@ jobs:
 
           # Create the style.css file
           if [ ! -f style.css ]; then
-            cat > style.css <<'CSS'
-:root{
-  --bg:#0b0b0d;
-  --fg:#e9e9f2;
-  --muted:#a7a7bb;
-  --brand:#7aa8ff;
-  --ring:#222238;
-  --card:#141421;
-}
+            cat > style.css <<'CSS'  --bg:#0b0b0d; --fg:#e9e9f2; --muted:#a7a7bb;  --brand:#7aa8ff; --ring:#222238; --card:#141421;}
 * {box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,Inter,Roboto,Arial,sans-serif}
 a{color:var(--brand);text-decoration:none}
@@ -99,11 +91,9 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;pa
 hr{border:none;border-top:1px solid var(--ring);margin:18px 0}
 .loader{opacity:.7;text-align:center;padding:16px}
 CSS
-          fi
-
           # Create the index.html file
           if [ ! -f index.html ]; then
-            cat > index.html <<'HTML'
+            cat > index.html <<'HTML'css
 <!doctype html>
 <html lang="en">
 <head>
