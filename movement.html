@@ -372,4 +372,162 @@
     loadFeed();
   </script>
 </body>
+  <script>
+  // --- Small a11y helper (safe to keep even if already added elsewhere)
+  (function(){
+    if (document.getElementById('sr-only-style')) return;
+    const s = document.createElement('style');
+    s.id = 'sr-only-style';
+    s.textContent = '.sr-only{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}';
+    document.head.appendChild(s);
+  })();
+
+  // --- Helpers --------------------------------------------------------------
+
+  // Extract TT numeric id from common URL formats like .../video/1234567890123456789
+  function extractTikTokId(u){
+    const m = String(u).match(/video\/(\d{8,20})/);
+    return m ? m[1] : '';
+  }
+
+  // Build a card that opens a YouTube search (no API key required)
+  function makeYouTubeCard(keyword){
+    const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(keyword)}`;
+    const div = document.createElement('article');
+    div.className = 'card';
+    div.innerHTML = `
+      <div class="chip" aria-hidden="true">YouTube Search</div>
+      <h3 style="margin:.3rem 0 .6rem">${keyword}</h3>
+      <p class="muted">Curated search for this topic. New content appears automatically.</p>
+      <div style="display:flex;justify-content:flex-end;margin-top:10px">
+        <a class="btn btn--brand" href="${url}" target="_blank" rel="noopener">Open Results</a>
+      </div>`;
+    return div;
+  }
+
+  // Build a TikTok embed card (uses TikTok’s lightweight embed)
+  function makeTikTokCard(url){
+    const id = extractTikTokId(url);
+    const outer = document.createElement('article');
+    outer.className = 'card';
+    outer.innerHTML = `
+      <div class="chip" aria-hidden="true">Featured TikTok</div>
+      <div style="margin-top:.6rem">
+        ${id
+          ? `<iframe class="embed" title="TikTok" src="https://www.tiktok.com/embed/v2/${id}"
+              allow="encrypted-media; autoplay; clipboard-write; fullscreen"
+              referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>`
+          : `<p class="muted">Invalid TikTok URL: <code>${String(url).replace(/</g,'&lt;')}</code></p>`}
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:10px">
+        <a class="btn" href="${url}" target="_blank" rel="noopener">Open on TikTok</a>
+      </div>`;
+    return outer;
+  }
+
+  // Small heading between groups
+  function makeCategoryHeader(name){
+    const h = document.createElement('h3');
+    h.textContent = name;
+    h.style.margin = '10px 0 6px';
+    return h;
+  }
+
+  // --- Feed loader (reads /content_feed.json with categories) ---------------
+
+  async function loadFeed(){
+    const grid = document.getElementById('drops-grid');
+    if (!grid) return;
+
+    // leave skeletons in place until we know we have content
+    let cleared = false;
+    const clearSkeletons = () => {
+      if (cleared) return;
+      grid.innerHTML = '';
+      cleared = true;
+    };
+
+    try{
+      // cache-bust each minute so updates show after deploy
+      const res = await fetch('/content_feed.json?t=' + Math.floor(Date.now()/60000), { cache: 'no-store' });
+      if(!res.ok) throw new Error('Feed missing');
+      const feed = await res.json();
+
+      const sectionsRendered = [];
+
+      // 1) TikToks (optional)
+      if (feed.tiktok && Array.isArray(feed.tiktok.urls) && feed.tiktok.urls.length){
+        clearSkeletons();
+        grid.appendChild(makeCategoryHeader('Featured TikToks'));
+        for (const u of feed.tiktok.urls.slice(0, 4)){
+          if (u) grid.appendChild(makeTikTokCard(u));
+        }
+        sectionsRendered.push('tiktok');
+      }
+
+      // 2) YouTube categories
+      const y = feed.youtube || {};
+      const maxPer = Number(y.maxPerSource || 8);
+      const cats = Array.isArray(y.categories) ? y.categories : [];
+
+      for (const cat of cats){
+        const items = [];
+
+        const kws = Array.isArray(cat.keywords) ? cat.keywords.slice(0, maxPer) : [];
+        for (const kw of kws){ items.push(makeYouTubeCard(kw)); }
+
+        // If you add channel IDs later (e.g., "UC_x5X..."), they render as channel buttons
+        const chs = Array.isArray(cat.channels) ? cat.channels.slice(0, maxPer) : [];
+        for (const id of chs){
+          const card = document.createElement('article');
+          card.className = 'card';
+          card.innerHTML = `
+            <div class="chip">YouTube Channel</div>
+            <h3 style="margin:.3rem 0 .6rem">${id}</h3>
+            <p class="muted">Open this channel on YouTube.</p>
+            <div style="display:flex;justify-content:flex-end;margin-top:10px">
+              <a class="btn btn--brand" href="https://www.youtube.com/channel/${id}" target="_blank" rel="noopener">Open Channel</a>
+            </div>`;
+          items.push(card);
+        }
+
+        if (items.length){
+          clearSkeletons();
+          grid.appendChild(makeCategoryHeader(cat.name || 'Category'));
+          for (const el of items) grid.appendChild(el);
+          sectionsRendered.push(cat.name || 'category');
+        }
+      }
+
+      // 3) If nothing rendered, show guidance
+      if (!sectionsRendered.length){
+        clearSkeletons();
+        const empty = document.createElement('article');
+        empty.className = 'card';
+        empty.innerHTML = `<h3>Feed not configured</h3>
+          <p class="muted">Add categories, keywords, or TikTok URLs to <code>content_feed.json</code>, then redeploy.</p>
+          <pre style="white-space:pre-wrap;background:#0003;padding:.8rem;border-radius:10px;border:1px solid #ffffff1a"><code>{
+  "youtube": {
+    "maxPerSource": 8,
+    "categories": [
+      { "name":"Mindset & Motivation", "keywords":["mental health motivation"], "channels":[] }
+    ]
+  },
+  "tiktok": { "urls": [] }
+}</code></pre>`;
+        grid.appendChild(empty);
+      }
+    }catch(e){
+      // Keep skeletons visible, then show an error card
+      const err = document.createElement('article');
+      err.className = 'card';
+      err.innerHTML = `<h3>Feed not available</h3>
+        <p class="muted">Couldn’t load <code>content_feed.json</code>. Ensure it’s valid JSON (no comments) at the repo root, then redeploy.</p>`;
+      grid.appendChild(err);
+    }
+  }
+
+  // Kick it off
+  loadFeed();
+  </script>
 </html>
