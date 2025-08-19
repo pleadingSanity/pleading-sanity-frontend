@@ -6,44 +6,95 @@
   <title>Pleading Sanity — Sanity Hub</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;padding:16px}
-    .card{background:#131322;border:1px solid #1e1e30;border-radius:12px;overflow:hidden}
-    .card img{width:100%;height:auto;display:block}
-    .card .p{padding:10px 12px;color:#e8e8f2}
-    .muted{color:#a8a8c0;font-size:12px}
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      margin: 0;
+      font-family: system-ui, sans-serif;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      background: var(--card);
+      border-bottom: 1px solid var(--ring);
+    }
+    .brand { font-weight: 700; }
+    .nav a {
+      color: var(--fg);
+      text-decoration: none;
+      margin-left: 12px;
+    }
+    /* Feed container */
+    #feed {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px;
+      max-width: 720px;
+      margin: auto;
+    }
+    .post {
+      background: var(--card);
+      border: 1px solid var(--ring);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    .post iframe,
+    .post img {
+      width: 100%;
+      display: block;
+    }
+    .post .p {
+      padding: 12px;
+    }
+    .title { font-weight: 600; margin-bottom: 6px; }
+    .muted { color: var(--muted); font-size: 0.85rem; }
   </style>
 </head>
 <body>
-  <header class="header">
+  <header>
     <div class="brand">🧠 Pleading Sanity</div>
-    <nav class="nav-links"><a href="/">Home</a></nav>
+    <nav class="nav"><a href="/">Home</a><a href="/movement.html">Movement</a></nav>
   </header>
 
-  <main class="grid" id="grid"></main>
+  <main id="feed"></main>
 
   <script>
-    async function load(){
-      try{
+    async function loadFeed(){
+      try {
         const res = await fetch('content.json', {cache:'no-store'});
         const data = await res.json();
-        const el = document.getElementById('grid');
-        (data.items || []).forEach(it=>{
-          const card = document.createElement('article');
-          card.className='card';
-          if(it.thumb){
-            const img = document.createElement('img');
-            img.src = it.thumb; img.alt = it.title || '';
-            card.appendChild(img);
+        const el = document.getElementById('feed');
+        el.innerHTML = '';
+
+        (data.items || []).forEach(it => {
+          const post = document.createElement('article');
+          post.className = 'post';
+
+          if(it.embed){
+            post.innerHTML = it.embed; // YouTube/TikTok iframe
+          } else if(it.thumb){
+            post.innerHTML = `<img src="${it.thumb}" alt="${it.title||''}"/>`;
           }
-          const p = document.createElement('div'); p.className='p';
-          p.innerHTML = `<div>${it.title||''}</div>
-                         <div class="muted"><a href="${it.url}" target="_blank" rel="noopener">Open</a></div>`;
-          card.appendChild(p);
-          el.appendChild(card);
+
+          const meta = document.createElement('div');
+          meta.className = 'p';
+          meta.innerHTML = `
+            <div class="title">${it.title||''}</div>
+            <div class="muted"><a href="${it.url}" target="_blank" rel="noopener">Open</a></div>
+          `;
+          post.appendChild(meta);
+
+          el.appendChild(post);
         });
-      }catch(e){ console.error(e); }
+      } catch(err) {
+        console.error('Feed error', err);
+      }
     }
-    load();
+    loadFeed();
   </script>
 </body>
 </html>
