@@ -1,30 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Page Not Found — Pleading Sanity</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>404 — Page Not Found | Pleading Sanity</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="favicon.ico" />
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: black;
-      color: white;
-      text-align: center;
-      padding: 50px 20px;
+    :root{
+      --bg:#05060a; --panel:#0b0e14; --ink:#e9eefc; --muted:#bcd0ffcc;
+      --brand:#7cf2d8; --accent:#a78bfa; --ring:0 0 0 .15rem #7cf2d855;
+      --shadow:0 .6rem 2rem #0008;
+      --grad: radial-gradient(900px 520px at 120% -10%, #a78bfa22, transparent 60%),
+              radial-gradient(700px 480px at -20% 10%, #7cf2d815, transparent 60%);
     }
-    h1 { font-size: 2rem; }
-    a {
-      color: #00f;
-      text-decoration: underline;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font:16px/1.6 system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial,sans-serif;
+      color:var(--ink); background:var(--bg) fixed; background-image:var(--grad);
+      display:grid; place-items:center; padding:24px;
     }
+    .card{
+      width:min(880px,100%); background:linear-gradient(180deg,#0b0e14cc,#0a0d13f0);
+      border:1px solid #ffffff16; border-radius:18px; padding:28px; box-shadow:var(--shadow);
+    }
+    h1{
+      margin:.2rem 0 .2rem; font-size: clamp(2.2rem, 4.5vw, 3.4rem); line-height:1.05;
+      text-shadow:0 8px 24px #000c;
+    }
+    .eyebrow{color:var(--muted); text-transform:uppercase; letter-spacing:.16em; font-size:.82rem}
+    p.lead{color:var(--muted); margin:.4rem 0 1rem}
+    .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .btn{
+      display:inline-flex; align-items:center; gap:.5rem; padding:.8rem 1rem; border-radius:12px;
+      background:#121728; border:1px solid #ffffff22; color:var(--ink); text-decoration:none;
+      transition:transform .15s ease, filter .15s ease; box-shadow:var(--shadow)
+    }
+    .btn:hover{transform:translateY(-1px); filter:brightness(1.05)}
+    .btn--brand{background:linear-gradient(135deg,#30e9c7,#7cf2d8); color:#061015; border:none}
+    .grid{display:grid; gap:12px; margin-top:16px}
+    @media (min-width:760px){ .grid{grid-template-columns:1fr 1fr} }
+    .panel{background:#0e1424;border:1px solid #ffffff14;border-radius:12px;padding:14px}
+    .panel h3{margin:.1rem 0 .35rem}
+    .links{display:grid; gap:8px}
+    .links a{color:var(--ink); text-decoration:none; padding:.55rem .7rem; border-radius:10px;
+      background:#0f1629; border:1px solid #ffffff14}
+    .links a:hover{border-color:#ffffff2a}
+    .search{display:flex; gap:8px; margin-top:8px}
+    input[type="search"]{
+      flex:1; padding:.85rem 1rem; border-radius:10px; background:#0c1120;
+      border:1px solid #ffffff22; color:var(--ink); outline:none
+    }
+    input[type="search"]:focus{box-shadow:var(--ring); border-color:#7cf2d866}
+    .muted{color:var(--muted)}
+    .timer{font-variant-numeric: tabular-nums}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>Uh oh!</h1>
-    <p>The path isn’t clear. The page you’re looking for was not found.</p>
-    <p><a href="/">Go back to the homepage</a></p>
-  </div>
+  <main class="card" role="main" aria-labelledby="t">
+    <div class="eyebrow">404 • Not Found</div>
+    <h1 id="t">The path isn't clear.</h1>
+    <p class="lead">
+      The page you’re looking for doesn’t exist (or has moved). You’ll be
+      redirected to the homepage in <span class="timer" id="count">8</span>s.
+    </p>
+
+    <div class="actions">
+      <a class="btn btn--brand" href="/">Go Home</a>
+      <a class="btn" href="/movement.html">The Movement</a>
+      <a class="btn" href="/sanityhub.html">Sanity Hub</a>
+      <a class="btn" href="/shop.html">Latest Drops</a>
+      <a class="btn" href="/about.html">About</a>
+    </div>
+
+    <div class="grid">
+      <section class="panel" aria-labelledby="quick">
+        <h3 id="quick">Quick search</h3>
+        <form class="search" role="search" aria-label="Site search" action="https://www.google.com/search" method="get">
+          <!-- Google site search (keeps it static-site friendly) -->
+          <input type="hidden" name="as_sitesearch" value="pleadingsanity.co.uk">
+          <input type="search" name="q" placeholder="Search Pleading Sanity…" autofocus />
+          <button class="btn" type="submit" aria-label="Search">Search</button>
+        </form>
+        <p class="muted" style="margin-top:8px">Tip: try “survivor stories”, “discipline”, or “mental health tools”.</p>
+      </section>
+
+      <section class="panel" aria-labelledby="dest">
+        <h3 id="dest">Popular destinations</h3>
+        <nav class="links" aria-label="Popular pages">
+          <a href="/">Home</a>
+          <a href="/movement.html">Manifesto & Join</a>
+          <a href="/sanityhub.html">Tools & Resources</a>
+          <a href="/index.html#stories">Survivor Stories</a>
+          <a href="/index.html#contact">Contact the Co-op</a>
+        </nav>
+        <p class="muted" style="margin-top:8px">
+          If you think this is a broken link, <a class="muted" href="mailto:pleadingsanitydev@gmail.com">email the team</a>.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    // Simple auto-redirect countdown
+    let n = 8, el = document.getElementById('count');
+    const tick = () => {
+      n--; if (el) el.textContent = n;
+      if (n <= 0) location.href = '/';
+      else setTimeout(tick, 1000);
+    };
+    setTimeout(tick, 1000);
+  </script>
 </body>
 </html>
