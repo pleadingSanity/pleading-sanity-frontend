@@ -11,9 +11,7 @@
           "entrepreneur mental toughness",
           "youth motivation UK"
         ],
-        "channels": [
-          /* Add specific channel IDs for this category here */
-        ]
+        "channels": []
       },
       {
         "name": "Healing & Resilience",
@@ -50,8 +48,6 @@
     ]
   },
   "tiktok": {
-    "urls": [
-      /* Paste public TikTok post URLs here to feature specific clips */
-    ]
+    "urls": []
   }
 }
