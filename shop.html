@@ -1,1 +1,155 @@
-<!-- Hoodie, Tracksuit cards with Buy links -->
+<!-- Hoodie, Tracksuit cards with Buy links --><!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Pleading Sanity — Shop</title>
+
+  <!-- (optional) your global styles -->
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root{
+      --bg:#0a0a14; --fg:#f3f3ff; --muted:#a8a8c0;
+      --card:#17172a; --line:#2b2b44; --brand:#4e72ff; --brand-2:#7cf2d8;
+    }
+    body{margin:0;font-family:system-ui,Segoe UI,Inter,Arial,sans-serif;background:var(--bg);color:var(--fg)}
+    header{padding:16px; background:#131322; display:flex; gap:16px; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10}
+    header .brand{font-weight:800}
+    header nav a{color:#fff; text-decoration:none; margin-left:14px}
+    main{padding:20px}
+    .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px}
+    .card{background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden; display:flex; flex-direction:column}
+    .imgwrap{aspect-ratio:4/3; background:#0c0c18; display:grid; place-items:center}
+    .imgwrap img{width:100%; height:100%; object-fit:cover}
+    .pad{padding:12px 14px}
+    .title{font-weight:800; font-size:18px; margin:6px 0 2px}
+    .desc{color:var(--muted); font-size:14px; margin:6px 0 10px}
+    .row{display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap}
+    .price{font-weight:800}
+    .badge{background:#ffffff1a; border:1px solid #ffffff22; color:#cfe; font-size:12px; padding:4px 8px; border-radius:999px}
+    .select{appearance:none; background:#0f0f1d; border:1px solid #2b2b44; color:var(--fg); padding:8px 10px; border-radius:8px}
+    .btn{display:inline-block; text-align:center; padding:10px 14px; border-radius:10px; background:linear-gradient(135deg,var(--brand),var(--brand-2)); color:#0b0b0d; font-weight:900; text-decoration:none; margin-top:10px}
+    .btn[aria-disabled="true"]{opacity:.5; pointer-events:none}
+    .empty,.error{max-width:720px; margin:40px auto; text-align:center; color:var(--muted)}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">🧠 Pleading Sanity</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="shop.html" aria-current="page">Shop</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1 style="margin:0 0 8px">Shop</h1>
+    <p style="margin:0 0 16px; color:var(--muted)">Wear your survival. Every drop funds tools that pull people out of the dark.</p>
+
+    <section class="grid" id="products"></section>
+
+    <div class="empty" id="empty" hidden>No products yet. Add items to <code>products.json</code> and redeploy.</div>
+    <div class="error" id="error" hidden>Couldn’t load <code>products.json</code>. Make sure the file exists at the repo root.</div>
+  </main>
+
+  <script>
+    const money = (n, c = 'GBP') =>
+      new Intl.NumberFormat('en-GB', { style: 'currency', currency: c, maximumFractionDigits: 2 }).format(n);
+
+    function productCard(p){
+      const el = document.createElement('article');
+      el.className = 'card';
+
+      // Image
+      const imgwrap = document.createElement('div');
+      imgwrap.className = 'imgwrap';
+      const img = document.createElement('img');
+      img.loading = 'lazy';
+      img.alt = p.title || '';
+      img.src = p.image || 'logo.png';
+      imgwrap.appendChild(img);
+      el.appendChild(imgwrap);
+
+      const pad = document.createElement('div');
+      pad.className = 'pad';
+
+      // Top row: badge + price
+      const top = document.createElement('div');
+      top.className = 'row';
+      if (p.badge) {
+        const b = document.createElement('span');
+        b.className = 'badge';
+        b.textContent = p.badge;
+        top.appendChild(b);
+      }
+      const pr = document.createElement('div');
+      pr.className = 'price';
+      pr.textContent = money(p.price, p.currency || 'GBP');
+      top.appendChild(pr);
+      pad.appendChild(top);
+
+      // Title + description
+      const title = document.createElement('div');
+      title.className = 'title';
+      title.textContent = p.title || '';
+      pad.appendChild(title);
+
+      if (p.description){
+        const d = document.createElement('div');
+        d.className = 'desc';
+        d.textContent = p.description;
+        pad.appendChild(d);
+      }
+
+      // Sizes (optional)
+      if (Array.isArray(p.sizes) && p.sizes.length){
+        const sel = document.createElement('select');
+        sel.className = 'select';
+        sel.setAttribute('aria-label', 'Choose size');
+        sel.innerHTML = `<option value="" disabled selected>Select size</option>` +
+          p.sizes.map(s => `<option value="${s}">${s}</option>`).join('');
+        pad.appendChild(sel);
+      }
+
+      // Buy button
+      const btn = document.createElement('a');
+      btn.className = 'btn';
+      btn.href = p.url || '#';
+      btn.target = '_blank';
+      btn.rel = 'noopener';
+      btn.textContent = p.inStock === false ? 'Sold Out' : 'Buy Now';
+      if (p.inStock === false || !p.url) btn.setAttribute('aria-disabled','true');
+
+      pad.appendChild(btn);
+      el.appendChild(pad);
+      return el;
+    }
+
+    async function loadProducts(){
+      const grid = document.getElementById('products');
+      const empty = document.getElementById('empty');
+      const error = document.getElementById('error');
+
+      try{
+        const res = await fetch('products.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('Missing products.json');
+        const data = await res.json();
+        const items = Array.isArray(data.items) ? data.items : [];
+
+        if (!items.length){
+          empty.hidden = false;
+          return;
+        }
+
+        items.forEach(p => grid.appendChild(productCard(p)));
+      }catch(e){
+        error.hidden = false;
+        console.error(e);
+      }
+    }
+
+    loadProducts();
+  </script>
+</body>
+</html>
