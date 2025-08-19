@@ -1,1 +1,102 @@
-Placeholder content for kids.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pleading Sanity — Kids Games</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    :root{--bg:#0d0d0f;--card:#151527;--ink:#f4f6ff;--muted:#b9c0ff;--brand:#7cf2d8}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+    header{padding:22px;text-align:center;background:#101020;border-bottom:1px solid #232346}
+    h1{margin:0;font-size:2rem}
+    .sub{color:var(--muted);margin-top:6px}
+    .wrap{max-width:1100px;margin:0 auto;padding:18px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+    .card{background:var(--card);border:1px solid #232346;border-radius:14px;padding:14px;box-shadow:0 .5rem 1.2rem #0006;transition:transform .15s ease}
+    .card:hover{transform:translateY(-4px)}
+    .tag{display:inline-block;padding:.25rem .6rem;border-radius:999px;background:#1e1e36;border:1px solid #2c2c4e;color:var(--muted);font-size:.78rem}
+    h3{margin:.6rem 0 .2rem;color:#7dd3fc}
+    p{margin:.3rem 0;color:#cfd6ff}
+    .btn{display:inline-block;margin-top:10px;padding:10px 14px;border-radius:10px;background:var(--brand);color:#001; font-weight:700;text-decoration:none}
+    .note{margin:18px 0 4px;color:var(--muted);font-size:.9rem}
+    footer{padding:24px 0 40px;text-align:center;color:#9fb0ff}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🧒 Keep Kids Sane — Play & Learn</h1>
+    <div class="sub">Safe, positive games that build focus, calm, and creativity</div>
+  </header>
+
+  <main class="wrap">
+    <div class="grid">
+
+      <article class="card">
+        <span class="tag">Calm • Breathing</span>
+        <h3>Box Breathing (Kids)</h3>
+        <p>Follow a gentle animation to breathe in, hold, out. Great for settling nerves.</p>
+        <a class="btn" href="https://xhalr.com/" target="_blank" rel="noopener">Start</a>
+      </article>
+
+      <article class="card">
+        <span class="tag">Memory</span>
+        <h3>Animal Memory Match</h3>
+        <p>Flip the cards and find the pairs. Improves short-term memory and attention.</p>
+        <a class="btn" href="https://www.memozor.com/memory-games/for-kids/online" target="_blank" rel="noopener">Play</a>
+      </article>
+
+      <article class="card">
+        <span class="tag">Creativity • Drawing</span>
+        <h3>Quick, Draw! (Kids mode)</h3>
+        <p>Draw the prompt before the timer ends while the AI guesses. Silly and fun.</p>
+        <a class="btn" href="https://quickdraw.withgoogle.com/" target="_blank" rel="noopener">Play</a>
+      </article>
+
+      <article class="card">
+        <span class="tag">Logic • Puzzles</span>
+        <h3>Kids Sudoku (Easy)</h3>
+        <p>Friendly 4×4 and 6×6 boards to learn logic without frustration.</p>
+        <a class="btn" href="https://sudoku.com/kids/" target="_blank" rel="noopener">Play</a>
+      </article>
+
+      <article class="card">
+        <span class="tag">Words</span>
+        <h3>Spellie (Child-friendly Wordle)</h3>
+        <p>Daily word puzzles with three difficulty levels for kids.</p>
+        <a class="btn" href="https://www.spelliegame.com/" target="_blank" rel="noopener">Play</a>
+      </article>
+
+      <article class="card">
+        <span class="tag">Focus • Reflex</span>
+        <h3>Tetra Blocks (Gentle Tetris)</h3>
+        <p>Simple block-stacking that trains focus and planning. No sign-ups.</p>
+        <a class="btn" href="https://www.crazygames.com/game/tetra-blocks" target="_blank" rel="noopener">Play</a>
+      </article>
+
+      <article class="card">
+        <span class="tag">Mindfulness • Color</span>
+        <h3>Coloring Book Online</h3>
+        <p>Relaxing digital coloring pages—animals, nature, and more.</p>
+        <a class="btn" href="https://www.thecolor.com/" target="_blank" rel="noopener">Color</a>
+      </article>
+
+      <article class="card">
+        <span class="tag">Music • Rhythm</span>
+        <h3>Chrome Music Lab</h3>
+        <p>Play with rhythm, melody, and sound in bite-size experiments.</p>
+        <a class="btn" href="https://musiclab.chromeexperiments.com/" target="_blank" rel="noopener">Explore</a>
+      </article>
+
+    </div>
+
+    <p class="note">Tip for parents/teachers: pair play time with a 2-minute breathing break for a calm reset.</p>
+  </main>
+
+  <footer>
+    © <span id="y"></span> Pleading Sanity • <a href="index.html" style="color:#7dd3fc">Home</a>
+  </footer>
+
+  <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+</body>
+</html>Placeholder content for kids.html
