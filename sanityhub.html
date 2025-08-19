@@ -4,96 +4,225 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Pleading Sanity — Sanity Hub</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon.ico">
   <style>
-    body {
-      background: var(--bg);
-      color: var(--fg);
-      margin: 0;
-      font-family: system-ui, sans-serif;
+    /* Uses your global tokens if present */
+    :root{
+      --bg: #0a0b12; --fg:#e9eefc; --muted:#bcd0ffcc; --card:#12162b; --ring:#1a2140; --brand:#6ea8ff;
     }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 20px;
-      background: var(--card);
-      border-bottom: 1px solid var(--ring);
-    }
-    .brand { font-weight: 700; }
-    .nav a {
-      color: var(--fg);
-      text-decoration: none;
-      margin-left: 12px;
-    }
-    /* Feed container */
-    #feed {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      padding: 20px;
-      max-width: 720px;
-      margin: auto;
-    }
-    .post {
-      background: var(--card);
-      border: 1px solid var(--ring);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    }
-    .post iframe,
-    .post img {
-      width: 100%;
-      display: block;
-    }
-    .post .p {
-      padding: 12px;
-    }
-    .title { font-weight: 600; margin-bottom: 6px; }
-    .muted { color: var(--muted); font-size: 0.85rem; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,Segoe UI,Roboto,Inter,Arial,sans-serif}
+
+    /* Header */
+    header{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:14px 16px;
+      background:#0a0b12cc;border-bottom:1px solid #ffffff14;backdrop-filter:saturate(1.1) blur(10px)}
+    .brand{font-weight:700;display:flex;gap:10px;align-items:center}
+    .brand img{width:22px;height:22px;border-radius:6px}
+    .nav a{color:var(--fg);text-decoration:none;margin-left:10px;padding:6px 10px;border-radius:8px}
+    .nav a:hover{background:#171a2c}
+
+    /* Feed */
+    main{max-width:820px;margin:0 auto;padding:18px}
+    #feed{display:grid;grid-template-columns:1fr;gap:16px}
+    .post{background:var(--card);border:1px solid var(--ring);border-radius:14px;overflow:hidden;box-shadow:0 6px 22px #0006}
+    .media{position:relative;background:#000}
+    .media>iframe,.media>img{display:block;width:100%;height:clamp(220px,56vw,420px);border:0}
+    .badge{position:absolute;left:10px;top:10px;padding:.28rem .5rem;border-radius:999px;background:#ffffff1a;border:1px solid #ffffff30;color:var(--muted);font-size:.78rem}
+    .p{padding:12px 14px}
+    .title{font-weight:700;margin:0 0 4px}
+    .muted{color:var(--muted);font-size:.9rem}
+    .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .btn{display:inline-flex;align-items:center;gap:.45rem;padding:.5rem .7rem;border-radius:10px;background:#111735;border:1px solid #ffffff22;color:#e9eefc;text-decoration:none}
+    .btn:hover{filter:brightness(1.06)}
+
+    /* Skeletons */
+    .skeleton{border-radius:14px;overflow:hidden;border:1px solid var(--ring);background:linear-gradient(90deg,#11142a 25%,#171c39 37%,#11142a 63%);background-size:400% 100%;
+      animation:shimmer 1.2s infinite}
+    .sk-media{height:clamp(220px,56vw,420px)}
+    .sk-meta{height:72px}
+    @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+
+    /* Empty state */
+    .empty{padding:22px;border:1px dashed #ffffff2a;border-radius:12px;text-align:center;color:var(--muted)}
+
+    /* Accessibility + reduced motion */
+    :focus-visible{outline:2px solid var(--brand);outline-offset:3px}
+    @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition:none!important}}
   </style>
 </head>
 <body>
   <header>
-    <div class="brand">🧠 Pleading Sanity</div>
-    <nav class="nav"><a href="/">Home</a><a href="/movement.html">Movement</a></nav>
+    <div class="brand"><img src="brain-logo.png" alt=""><span>🧠 Pleading Sanity</span></div>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="movement.html">Movement</a>
+    </nav>
   </header>
 
-  <main id="feed"></main>
+  <main>
+    <div id="feed" aria-live="polite" aria-busy="true">
+      <!-- skeletons while loading -->
+      <div class="skeleton sk-media"></div>
+      <div class="skeleton sk-meta"></div>
+      <div class="skeleton sk-media"></div>
+      <div class="skeleton sk-meta"></div>
+    </div>
+  </main>
 
   <script>
+    // ---------- utilities ----------
+    const FEED = document.getElementById('feed');
+
+    // Extract YouTube ID from URL/ID
+    const ytId = s => {
+      if(!s) return "";
+      const m = String(s).match(/(?:v=|youtu\.be\/|embed\/)([A-Za-z0-9_-]{6,})/);
+      return m ? m[1] : (/^[A-Za-z0-9_-]{6,}$/.test(s) ? s : "");
+    };
+    // Extract TikTok numeric ID
+    const ttId = s => {
+      const m = String(s).match(/video\/(\d{8,})/);
+      return m ? m[1] : "";
+    };
+
+    // IntersectionObserver: lazy-load & stop playback
+    const io = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        const iframe = e.target.querySelector('iframe[data-src]');
+        if(!iframe) return;
+        if(e.isIntersecting && e.intersectionRatio > 0.4){
+          if(!iframe.src) iframe.src = iframe.dataset.src;
+        }else{
+          if(iframe.src) iframe.src = ""; // stop playback + save data
+        }
+      });
+    }, {threshold:[0,.4,1]});
+
+    // Build a post card
+    function makeCard({type,title,url,caption,embedSrc}){
+      const art = document.createElement('article');
+      art.className = 'post';
+
+      const media = document.createElement('div');
+      media.className = 'media';
+      media.innerHTML = `<span class="badge">${type}</span>
+        <iframe title="${title||type}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                referrerpolicy="strict-origin-when-cross-origin" loading="lazy" data-src="${embedSrc}"></iframe>`;
+      art.appendChild(media);
+
+      const meta = document.createElement('div'); meta.className='p';
+      meta.innerHTML = `
+        <div class="row">
+          <div>
+            <div class="title">${title||''}</div>
+            <div class="muted">${caption||''}</div>
+          </div>
+          <a class="btn" href="${url}" target="_blank" rel="noopener">Open</a>
+        </div>`;
+      art.appendChild(meta);
+
+      // observe for lazy loading
+      io.observe(art);
+      return art;
+    }
+
+    // ---------- data loaders ----------
+    async function readJSON(path){
+      const res = await fetch(path, {cache:'no-store'});
+      if(!res.ok) throw new Error('no json');
+      return res.json();
+    }
+    async function readLines(path){
+      try{
+        const res = await fetch(path, {cache:'no-store'});
+        if(!res.ok) return [];
+        return (await res.text()).split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+      }catch{return []}
+    }
+
     async function loadFeed(){
-      try {
-        const res = await fetch('content.json', {cache:'no-store'});
-        const data = await res.json();
-        const el = document.getElementById('feed');
-        el.innerHTML = '';
-
-        (data.items || []).forEach(it => {
-          const post = document.createElement('article');
-          post.className = 'post';
-
-          if(it.embed){
-            post.innerHTML = it.embed; // YouTube/TikTok iframe
-          } else if(it.thumb){
-            post.innerHTML = `<img src="${it.thumb}" alt="${it.title||''}"/>`;
+      try{
+        // 1) Preferred: content.json (your existing format)
+        const data = await readJSON('content.json'); // { items: [{title, url, embed?, thumb?}]}
+        const items = (data.items||[]).map(it=>{
+          // Decide embedSrc (supports both YouTube + TikTok)
+          let embedSrc = "";
+          if(it.embed){ // you already provided raw <iframe> HTML in older files; support data.embed URL too
+            // If "embed" contains a whole iframe string, use it verbatim
+            if(/<iframe/i.test(it.embed)) return {raw:true, html:it.embed};
+            embedSrc = it.embed;
+          }else if(/tiktok\.com/i.test(it.url)){
+            const id = ttId(it.url);
+            embedSrc = `https://www.tiktok.com/embed/v2/${id}`;
+          }else{
+            const id = ytId(it.url);
+            embedSrc = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1`;
           }
-
-          const meta = document.createElement('div');
-          meta.className = 'p';
-          meta.innerHTML = `
-            <div class="title">${it.title||''}</div>
-            <div class="muted"><a href="${it.url}" target="_blank" rel="noopener">Open</a></div>
-          `;
-          post.appendChild(meta);
-
-          el.appendChild(post);
+          return {type: /tiktok/i.test(embedSrc) ? 'TikTok':'YouTube', title: it.title, url: it.url, caption: it.caption||'', embedSrc};
         });
-      } catch(err) {
-        console.error('Feed error', err);
+
+        FEED.innerHTML = '';
+        if(items.length === 0){
+          FEED.innerHTML = emptyHTML();
+        }else{
+          for(const it of items){
+            if(it.raw){ // legacy: raw iframe
+              const card = document.createElement('article'); card.className='post';
+              const media = document.createElement('div'); media.className='media';
+              media.innerHTML = it.html;
+              card.appendChild(media);
+              const meta = document.createElement('div'); meta.className='p';
+              meta.innerHTML = `<div class="title">${it.title||''}</div><div class="muted"><a href="${it.url}" target="_blank" rel="noopener">Open</a></div>`;
+              card.appendChild(meta);
+              FEED.appendChild(card);
+            }else{
+              FEED.appendChild(makeCard(it));
+            }
+          }
+        }
+      }catch(_e){
+        // 2) Fallback: youtube_videos.txt (one URL or ID per line)
+        const lines = await readLines('youtube_videos.txt');
+        FEED.innerHTML = '';
+        if(lines.length === 0){
+          FEED.innerHTML = emptyHTML(true);
+          return;
+        }
+        lines.forEach(v=>{
+          const id = ytId(v);
+          if(!id) return;
+          const url = `https://youtu.be/${id}`;
+          const embedSrc = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1`;
+          FEED.appendChild(makeCard({type:'YouTube', title:'', url, caption:'', embedSrc}));
+        });
+      } finally {
+        FEED.setAttribute('aria-busy','false');
       }
     }
+
+    function emptyHTML(showExamples){
+      return `
+        <div class="empty">
+          <h3>No content yet</h3>
+          <p>Add items to <code>content.json</code> (preferred) or lines to <code>youtube_videos.txt</code>, then redeploy.</p>
+          ${showExamples?`
+          <pre style="text-align:left;overflow:auto;background:#0b0f23;padding:12px;border-radius:10px;border:1px solid #ffffff18">
+https://www.youtube.com/watch?v=dQw4w9WgXcQ
+https://youtu.be/5qap5aO4i9A
+          </pre>`:''}
+          <p class="muted">content.json minimal example:</p>
+          <pre style="text-align:left;overflow:auto;background:#0b0f23;padding:12px;border-radius:10px;border:1px solid #ffffff18">
+{
+  "items": [
+    { "title": "Still here — survivor talk", "url": "https://youtu.be/5qap5aO4i9A" },
+    { "title": "Hope clip", "url": "https://www.tiktok.com/@user/video/7123456789012345678" }
+  ]
+}
+          </pre>
+        </div>`;
+    }
+
     loadFeed();
   </script>
 </body>
