@@ -1,1 +1,127 @@
-Placeholder content for games.html
+Placeholder content for games.html<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pleading Sanity Games</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0d0d0d;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      padding: 20px;
+      background: #111;
+      border-bottom: 2px solid #444;
+    }
+    h1 {
+      margin: 0;
+      font-size: 2.2rem;
+    }
+    .subheading {
+      font-size: 1.1rem;
+      color: #ccc;
+    }
+    .games-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .game-card {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.6);
+      transition: transform 0.2s ease;
+    }
+    .game-card:hover {
+      transform: translateY(-5px);
+    }
+    .game-card h3 {
+      margin-top: 0;
+      font-size: 1.3rem;
+      color: #00d4ff;
+    }
+    .game-card p {
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+    .play-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 15px;
+      background: #00d4ff;
+      color: #000;
+      font-weight: bold;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+    .play-btn:hover {
+      background: #00aacc;
+    }
+    footer {
+      margin-top: 30px;
+      padding: 15px;
+      background: #111;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🧠 PLEADING SANITY GAMES</h1>
+    <p class="subheading">Keep Your Mind Sharp • Have Fun • Stay Positive</p>
+  </header>
+
+  <section class="games-container">
+
+    <div class="game-card">
+      <h3>Sudoku</h3>
+      <p>Challenge your logic and focus with this classic brain training puzzle.</p>
+      <a class="play-btn" href="https://sudoku.com" target="_blank">Play Now</a>
+    </div>
+
+    <div class="game-card">
+      <h3>Memory Card Flip</h3>
+      <p>Boost memory and concentration in this simple but addictive card-matching game.</p>
+      <a class="play-btn" href="https://www.memozor.com/memory-games/for-adults/online-free" target="_blank">Play Now</a>
+    </div>
+
+    <div class="game-card">
+      <h3>Quick Draw</h3>
+      <p>Test your creativity! Draw what the AI asks before the timer runs out.</p>
+      <a class="play-btn" href="https://quickdraw.withgoogle.com/" target="_blank">Play Now</a>
+    </div>
+
+    <div class="game-card">
+      <h3>Tetris Online</h3>
+      <p>Improve focus and reaction time with the legendary block-stacking game.</p>
+      <a class="play-btn" href="https://tetris.com/play-tetris" target="_blank">Play Now</a>
+    </div>
+
+    <div class="game-card">
+      <h3>Breathing Relax Game</h3>
+      <p>Sync your breathing with calming animations to lower stress and anxiety.</p>
+      <a class="play-btn" href="https://xhalr.com/" target="_blank">Start</a>
+    </div>
+
+    <div class="game-card">
+      <h3>Wordle</h3>
+      <p>Guess the hidden word in 6 tries. Sharpen your brain while having fun.</p>
+      <a class="play-btn" href="https://www.nytimes.com/games/wordle/" target="_blank">Play Now</a>
+    </div>
+
+  </section>
+
+  <footer>
+    <p>© 2025 Pleading Sanity • <a href="index.html" style="color:#00d4ff;">Return Home</a></p>
+  </footer>
+</body>
+</html>
