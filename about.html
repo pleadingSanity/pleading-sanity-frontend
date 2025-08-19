@@ -1,10 +1,80 @@
-Placeholder content for about.html<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>About Pleading Sanity</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: black url("assets/stars-bg.jpg") center/cover no-repeat fixed;
+      color: #f5f5f5;
+      text-align: center;
+      line-height: 1.6;
+    }
+    header {
+      padding: 2rem 1rem;
+      background: rgba(0, 0, 0, 0.7);
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin: 0;
+      color: #00c3ff;
+    }
+    .subheading {
+      font-size: 1.1rem;
+      color: #bbb;
+      letter-spacing: 2px;
+    }
+    .about-section {
+      max-width: 800px;
+      margin: 3rem auto;
+      padding: 1rem;
+      background: rgba(20, 20, 20, 0.8);
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 195, 255, 0.4);
+    }
+    .about-section h2 {
+      color: #00c3ff;
+      margin-bottom: 1rem;
+    }
+    blockquote {
+      font-size: 1.3rem;
+      margin: 2rem 0;
+      padding: 1rem;
+      background: rgba(255,255,255,0.05);
+      border-left: 4px solid #00c3ff;
+    }
+    footer {
+      margin-top: 3rem;
+      padding: 1rem;
+      background: rgba(0,0,0,0.6);
+      font-size: 0.9rem;
+    }
+    a {
+      color: #00c3ff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .btn {
+      display: inline-block;
+      margin: 1rem;
+      padding: 0.8rem 1.5rem;
+      background: #00c3ff;
+      color: black;
+      border-radius: 6px;
+      text-transform: uppercase;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background: #008bbd;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -19,9 +89,16 @@ Placeholder content for about.html<!DOCTYPE html>
       It’s for the ones called “mad” who turned their pain into art. We stand for mental strength, street wisdom, and unapologetic hope.
     </p>
     <p>
-      Founded by Shane Cooper (@mentally.inshane), this project started as a whisper in a padded room — and turned into a battle cry for the world.
+      Founded by Shane Cooper (<a href="https://instagram.com/mentally.inshane" target="_blank">@mentally.inshane</a>), this project started as a whisper in a padded room — and turned into a battle cry for the world.
       The clothing, the platform, the stories — all exist for one reason: to prove that madness is not a weakness. It’s a code. And we’re decoding it together.
     </p>
+
+    <blockquote>
+      “Madness is just misunderstood genius — and we wear it as armor.”  
+    </blockquote>
+
+    <a href="shop.html" class="btn">Shop the Movement</a>
+    <a href="index.html" class="btn">Return Home</a>
   </section>
 
   <footer>
