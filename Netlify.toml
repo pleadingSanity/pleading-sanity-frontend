@@ -31,33 +31,56 @@
 # Image optim happens via Netlify CDN; extra plugins not required.
 
 # ---------- Routing ----------
-# We are NOT adding a SPA catch-all redirect so your multi-page site works:
-#   /movement.html, /shop.html, /kids.html, /404.html load directly.
-# If you later switch to a single-page app router, add:
-# [[redirects]]
-#   from = "/*"
-#   to = "/index.html"
-#   status = 200
-
-# Nice-to-have: redirect old /index to root (just in case)
+# No SPA catch-all so multi-page routes work (movement/shop/kids/404)
+# Add SPA rule later only if you move to a front-end router.
 [[redirects]]
   from = "/index"
   to = "/"
   status = 301
+  force  = true
+
+# Convenience pretty routes (optional)
+[[redirects]]
+  from = "/sanityhub"
+  to   = "/sanityhub.html"
+  status = 301
   force = true
 
 # ---------- Caching ----------
-# Long cache for static assets (images, icons, media)
+# Long cache for static assets (images, icons, media) — 1 year
 [[headers]]
   for = "/assets/*"
   [headers.values]
-    Cache-Control = "public, max-age=604800, immutable"  # 7 days, fingerprint-friendly
+    Cache-Control = "public, max-age=31536000, immutable"
+    Vary = "Accept-Encoding"
+
+# Long cache for compiled CSS/JS — 1 year (safe for static file names)
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Vary = "Accept-Encoding"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Vary = "Accept-Encoding"
+
+# Fonts (if you add any under /assets/fonts)
+[[headers]]
+  for = "/assets/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Access-Control-Allow-Origin = "*"
+    Vary = "Accept-Encoding"
 
 # Short cache for HTML so updates go live fast
 [[headers]]
   for = "/*.html"
   [headers.values]
-    Cache-Control = "public, max-age=60"                  # 1 minute
+    Cache-Control = "public, max-age=60"
+    Vary = "Accept-Encoding"
 
 # ---------- Security Headers ----------
 [[headers]]
@@ -68,8 +91,8 @@
     X-Content-Type-Options    = "nosniff"
     Referrer-Policy           = "strict-origin-when-cross-origin"
     Permissions-Policy        = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
-    # CSP: generous enough for YouTube-nocookie + TikTok embeds, mailto links
-    # If you later add analytics (e.g., Plausible), whitelist its domain here.
+    # CSP: generous enough for YouTube-nocookie + TikTok embeds, mailto links.
+    # If you add analytics (e.g., Plausible), whitelist its domain under script-src & connect-src.
     Content-Security-Policy   = """
       default-src 'self';
       script-src 'self' https://www.tiktok.com https://*.tiktokcdn.com 'unsafe-inline';
@@ -84,7 +107,7 @@
       form-action 'self' https://api.netlify.com;
     """
 
-# ---------- MIME fixes (just in case for icons/webmanifest) ----------
+# ---------- MIME fixes (manifest/icons) ----------
 [[headers]]
   for = "/site.webmanifest"
   [headers.values]
