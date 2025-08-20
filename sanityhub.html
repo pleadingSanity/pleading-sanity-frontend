@@ -1,229 +1,419 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <!-- Basics -->
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Pleading Sanity — Sanity Hub</title>
-  <link rel="icon" href="favicon.ico">
+  <meta name="description" content="Live mix of survivor clips, mindset tools, and calm breaks. Built by the Pleading Sanity movement — Rise From Madness."/>
+  <link rel="canonical" href="https://www.pleadingsanity.co.uk/sanityhub.html"/>
+  <meta name="theme-color" content="#0a0b12"/>
+
+  <!-- Social cards -->
+  <meta property="og:title" content="Pleading Sanity — Sanity Hub">
+  <meta property="og:description" content="Live, healing signal: survivor stories, calm breaks, and tools — updated continuously.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.pleadingsanity.co.uk/sanityhub.html">
+  <meta property="og:image" content="/assets/og/og-ps.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Icons / perf -->
+  <link rel="icon" href="/assets/favicon.ico">
+  <link rel="preconnect" href="https://www.youtube-nocookie.com" crossorigin>
+  <link rel="preconnect" href="https://i.ytimg.com" crossorigin>
+  <link rel="dns-prefetch" href="//www.tiktok.com">
+
   <style>
-    /* Uses your global tokens if present */
+    /* Design tokens (works with your global system) */
     :root{
-      --bg: #0a0b12; --fg:#e9eefc; --muted:#bcd0ffcc; --card:#12162b; --ring:#1a2140; --brand:#6ea8ff;
+      --bg:#0a0b12; --fg:#e9eefc; --muted:#bcd0ffcc;
+      --card:#12162b; --ring:#1a2140; --brand:#6ea8ff;
+      --radius:14px;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,Segoe UI,Roboto,Inter,Arial,sans-serif}
+    body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,Segoe UI,Roboto,Inter,Arial,sans-serif}
 
     /* Header */
     header{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:14px 16px;
       background:#0a0b12cc;border-bottom:1px solid #ffffff14;backdrop-filter:saturate(1.1) blur(10px)}
-    .brand{font-weight:700;display:flex;gap:10px;align-items:center}
+    .brand{font-weight:800;display:flex;gap:10px;align-items:center;letter-spacing:.2px}
     .brand img{width:22px;height:22px;border-radius:6px}
     .nav a{color:var(--fg);text-decoration:none;margin-left:10px;padding:6px 10px;border-radius:8px}
     .nav a:hover{background:#171a2c}
 
-    /* Feed */
-    main{max-width:820px;margin:0 auto;padding:18px}
+    /* Layout */
+    main{max-width:880px;margin:0 auto;padding:18px}
+    .intro{margin:10px 0 14px;color:var(--muted)}
+
+    /* Feed / cards */
     #feed{display:grid;grid-template-columns:1fr;gap:16px}
-    .post{background:var(--card);border:1px solid var(--ring);border-radius:14px;overflow:hidden;box-shadow:0 6px 22px #0006}
+    .post{background:var(--card);border:1px solid var(--ring);border-radius:var(--radius);overflow:hidden;box-shadow:0 6px 22px #0006}
     .media{position:relative;background:#000}
     .media>iframe,.media>img{display:block;width:100%;height:clamp(220px,56vw,420px);border:0}
-    .badge{position:absolute;left:10px;top:10px;padding:.28rem .5rem;border-radius:999px;background:#ffffff1a;border:1px solid #ffffff30;color:var(--muted);font-size:.78rem}
+    .badge{position:absolute;left:10px;top:10px;padding:.28rem .5rem;border-radius:999px;background:#ffffff1a;
+      border:1px solid #ffffff30;color:var(--muted);font-size:.78rem;backdrop-filter:blur(4px)}
     .p{padding:12px 14px}
-    .title{font-weight:700;margin:0 0 4px}
-    .muted{color:var(--muted);font-size:.9rem}
+    .title{font-weight:800;margin:0 0 4px}
+    .muted{color:var(--muted);font-size:.92rem}
     .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
     .btn{display:inline-flex;align-items:center;gap:.45rem;padding:.5rem .7rem;border-radius:10px;background:#111735;border:1px solid #ffffff22;color:#e9eefc;text-decoration:none}
     .btn:hover{filter:brightness(1.06)}
+    .sentinel{height:1px}
 
     /* Skeletons */
-    .skeleton{border-radius:14px;overflow:hidden;border:1px solid var(--ring);background:linear-gradient(90deg,#11142a 25%,#171c39 37%,#11142a 63%);background-size:400% 100%;
-      animation:shimmer 1.2s infinite}
+    .skeleton{border-radius:var(--radius);overflow:hidden;border:1px solid var(--ring);
+      background:linear-gradient(90deg,#11142a 25%,#171c39 37%,#11142a 63%);background-size:400% 100%;animation:shimmer 1.2s infinite}
     .sk-media{height:clamp(220px,56vw,420px)}
-    .sk-meta{height:72px}
+    .sk-meta{height:76px}
     @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
     /* Empty state */
     .empty{padding:22px;border:1px dashed #ffffff2a;border-radius:12px;text-align:center;color:var(--muted)}
 
-    /* Accessibility + reduced motion */
+    /* A11y */
     :focus-visible{outline:2px solid var(--brand);outline-offset:3px}
     @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition:none!important}}
   </style>
 </head>
 <body>
   <header>
-    <div class="brand"><img src="brain-logo.png" alt=""><span>🧠 Pleading Sanity</span></div>
-    <nav class="nav">
-      <a href="index.html">Home</a>
-      <a href="movement.html">Movement</a>
+    <div class="brand"><img src="/assets/brain-logo.png" alt=""><span>🧠 Pleading Sanity</span></div>
+    <nav class="nav" aria-label="Primary">
+      <a href="/index.html">Home</a>
+      <a href="/movement.html">Movement</a>
+      <a href="/shop.html">Shop</a>
     </nav>
   </header>
 
   <main>
+    <h1 style="margin:12px 0 0">Sanity Hub</h1>
+    <p class="intro">A living feed for the movement — survivor clips, mindset tools, calm breaks. Built to reduce drag and increase hope.</p>
+
     <div id="feed" aria-live="polite" aria-busy="true">
-      <!-- skeletons while loading -->
+      <!-- initial skeletons -->
       <div class="skeleton sk-media"></div>
       <div class="skeleton sk-meta"></div>
       <div class="skeleton sk-media"></div>
       <div class="skeleton sk-meta"></div>
     </div>
+    <div id="loader" class="muted" style="text-align:center;padding:12px">Loading…</div>
+    <div id="sentinel" class="sentinel" aria-hidden="true"></div>
   </main>
 
-  <script>
-    // ---------- utilities ----------
-    const FEED = document.getElementById('feed');
+  <!-- Optional external config (if present) -->
+  <script src="/content.feed.js" defer></script>
 
-    // Extract YouTube ID from URL/ID
-    const ytId = s => {
-      if(!s) return "";
-      const m = String(s).match(/(?:v=|youtu\.be\/|embed\/)([A-Za-z0-9_-]{6,})/);
-      return m ? m[1] : (/^[A-Za-z0-9_-]{6,}$/.test(s) ? s : "");
+  <script>
+  (function(){
+    /* ========= Utilities ========= */
+    const $ = (s, r=document) => r.querySelector(s);
+    const FEED = $('#feed'), LOADER = $('#loader'), SENTINEL = $('#sentinel');
+
+    const once = (fn => { let done=false; return (...a)=>{ if(done) return; done=true; fn(...a);} }) // helper
+    const loadTikTokScriptOnce = once(() => {
+      const s = document.createElement('script');
+      s.src = 'https://www.tiktok.com/embed.js'; s.async = true; document.body.appendChild(s);
+    });
+
+    // Safer YouTube 11-char ID extraction
+    const ytId = (s) => {
+      if (!s) return "";
+      const str = String(s).trim();
+      const m = str.match(/[?&]v=([A-Za-z0-9_-]{11})/) ||
+                str.match(/youtu\.be\/([A-Za-z0-9_-]{11})/) ||
+                str.match(/embed\/([A-Za-z0-9_-]{11})/);
+      if (m) return m[1];
+      return /^[A-Za-z0-9_-]{11}$/.test(str) ? str : "";
     };
-    // Extract TikTok numeric ID
-    const ttId = s => {
-      const m = String(s).match(/video\/(\d{8,})/);
+    // TikTok numeric id
+    const ttId = (s) => {
+      const m = String(s||"").match(/video\/(\d{8,})/);
       return m ? m[1] : "";
     };
 
-    // IntersectionObserver: lazy-load & stop playback
-    const io = new IntersectionObserver(entries=>{
+    // HTML helpers
+    const esc = (t='') => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+    const h = (html) => { const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content.firstElementChild; };
+
+    // Observer to lazy-start & hard-stop iframes to save data
+    const playObserver = new IntersectionObserver(entries=>{
       entries.forEach(e=>{
         const iframe = e.target.querySelector('iframe[data-src]');
-        if(!iframe) return;
-        if(e.isIntersecting && e.intersectionRatio > 0.4){
-          if(!iframe.src) iframe.src = iframe.dataset.src;
-        }else{
-          if(iframe.src) iframe.src = ""; // stop playback + save data
+        if (!iframe) return;
+        if (e.isIntersecting && e.intersectionRatio > 0.35) {
+          if (!iframe.src) iframe.src = iframe.dataset.src;
+        } else {
+          if (iframe.src) iframe.src = ""; // stop playback + free memory
         }
       });
-    }, {threshold:[0,.4,1]});
+    }, {threshold:[0, .35, 1]});
 
-    // Build a post card
-    function makeCard({type,title,url,caption,embedSrc}){
-      const art = document.createElement('article');
-      art.className = 'post';
+    /* ========= Data Sources =========
+       Priority:
+       1) content.json { items:[{title,url,caption?,embed?}] }
+       2) youtube_videos.txt (one YT URL/ID per line)
+       3) window.PS_FEED (YouTube search cards + TikTok)
+    ==================================*/
 
-      const media = document.createElement('div');
-      media.className = 'media';
-      media.innerHTML = `<span class="badge">${type}</span>
-        <iframe title="${title||type}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-                referrerpolicy="strict-origin-when-cross-origin" loading="lazy" data-src="${embedSrc}"></iframe>`;
-      art.appendChild(media);
-
-      const meta = document.createElement('div'); meta.className='p';
-      meta.innerHTML = `
-        <div class="row">
-          <div>
-            <div class="title">${title||''}</div>
-            <div class="muted">${caption||''}</div>
-          </div>
-          <a class="btn" href="${url}" target="_blank" rel="noopener">Open</a>
-        </div>`;
-      art.appendChild(meta);
-
-      // observe for lazy loading
-      io.observe(art);
-      return art;
-    }
-
-    // ---------- data loaders ----------
     async function readJSON(path){
       const res = await fetch(path, {cache:'no-store'});
-      if(!res.ok) throw new Error('no json');
+      if(!res.ok) throw new Error('json missing');
       return res.json();
     }
     async function readLines(path){
-      try{
-        const res = await fetch(path, {cache:'no-store'});
-        if(!res.ok) return [];
-        return (await res.text()).split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
-      }catch{return []}
+      const res = await fetch(path, {cache:'no-store'});
+      if(!res.ok) return [];
+      return (await res.text()).split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
     }
 
-    async function loadFeed(){
-      try{
-        // 1) Preferred: content.json (your existing format)
-        const data = await readJSON('content.json'); // { items: [{title, url, embed?, thumb?}]}
-        const items = (data.items||[]).map(it=>{
-          // Decide embedSrc (supports both YouTube + TikTok)
-          let embedSrc = "";
-          if(it.embed){ // you already provided raw <iframe> HTML in older files; support data.embed URL too
-            // If "embed" contains a whole iframe string, use it verbatim
-            if(/<iframe/i.test(it.embed)) return {raw:true, html:it.embed};
-            embedSrc = it.embed;
-          }else if(/tiktok\.com/i.test(it.url)){
-            const id = ttId(it.url);
-            embedSrc = `https://www.tiktok.com/embed/v2/${id}`;
-          }else{
-            const id = ytId(it.url);
-            embedSrc = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1`;
-          }
-          return {type: /tiktok/i.test(embedSrc) ? 'TikTok':'YouTube', title: it.title, url: it.url, caption: it.caption||'', embedSrc};
-        });
+    /* ========= Card Builders ========= */
+    function cardEmbed({type, title, url, caption, embedSrc}){
+      const art = h(`
+        <article class="post">
+          <div class="media">
+            <span class="badge">${esc(type)}</span>
+            <iframe title="${esc(title||type)}"
+              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+              referrerpolicy="strict-origin-when-cross-origin" loading="lazy"
+              data-src="${esc(embedSrc)}"></iframe>
+          </div>
+          <div class="p">
+            <div class="row">
+              <div>
+                <div class="title">${esc(title||'')}</div>
+                <div class="muted">${esc(caption||'')}</div>
+              </div>
+              <a class="btn" href="${esc(url)}" target="_blank" rel="noopener">Open</a>
+            </div>
+          </div>
+        </article>
+      `);
+      playObserver.observe(art);
+      return art;
+    }
 
-        FEED.innerHTML = '';
-        if(items.length === 0){
-          FEED.innerHTML = emptyHTML();
-        }else{
-          for(const it of items){
-            if(it.raw){ // legacy: raw iframe
-              const card = document.createElement('article'); card.className='post';
-              const media = document.createElement('div'); media.className='media';
-              media.innerHTML = it.html;
-              card.appendChild(media);
-              const meta = document.createElement('div'); meta.className='p';
-              meta.innerHTML = `<div class="title">${it.title||''}</div><div class="muted"><a href="${it.url}" target="_blank" rel="noopener">Open</a></div>`;
-              card.appendChild(meta);
-              FEED.appendChild(card);
-            }else{
-              FEED.appendChild(makeCard(it));
-            }
-          }
+    function cardSearch({title, url, caption}){
+      // Search card (PS_FEED mode) — open results in new tab
+      return h(`
+        <article class="post">
+          <div class="media">
+            <span class="badge">YouTube</span>
+            <a href="${esc(url)}" target="_blank" rel="noopener" title="Open YouTube results for ${esc(title)}">
+              <img alt="${esc(title)}" src="https://dummyimage.com/1280x720/12162b/6ea8ff&text=${encodeURIComponent(title)}"
+                   style="width:100%;height:clamp(220px,56vw,420px);object-fit:cover;border:0"/>
+            </a>
+          </div>
+          <div class="p">
+            <div class="title">${esc(title)}</div>
+            <div class="muted">${esc(caption || 'Fresh results for this query.')}</div>
+          </div>
+        </article>
+      `);
+    }
+
+    /* ========= Pagination over items[] ========= */
+    let items = [];           // normalized objects
+    let cursor = 0;
+    const BATCH = 8;
+    const seen = new Set();   // de-dup by id/url/title
+    let loading = false, end = false;
+
+    function showSkeleton(n=4){
+      for(let i=0;i<n;i++){
+        FEED.appendChild(h(`<div class="skeleton sk-media"></div>`));
+        FEED.appendChild(h(`<div class="skeleton sk-meta"></div>`));
+      }
+    }
+    function clearSkeleton(){
+      FEED.querySelectorAll('.skeleton').forEach(n=>n.remove());
+    }
+    function appendBatch(){
+      const slice = items.slice(cursor, cursor + BATCH);
+      cursor += slice.length;
+      const frag = document.createDocumentFragment();
+      slice.forEach(it => {
+        const key = it.key || it.url || it.id || it.title;
+        if (key && seen.has(key)) return;
+        if (key) seen.add(key);
+
+        if (it.kind === 'search') {
+          frag.appendChild(cardSearch({title:it.title, url:it.url, caption:it.caption}));
+        } else {
+          frag.appendChild(cardEmbed({type:it.type, title:it.title, url:it.url, caption:it.caption, embedSrc:it.embedSrc}));
+          if (it.type === 'TikTok') loadTikTokScriptOnce();
         }
-      }catch(_e){
-        // 2) Fallback: youtube_videos.txt (one URL or ID per line)
-        const lines = await readLines('youtube_videos.txt');
-        FEED.innerHTML = '';
-        if(lines.length === 0){
-          FEED.innerHTML = emptyHTML(true);
-          return;
-        }
-        lines.forEach(v=>{
-          const id = ytId(v);
-          if(!id) return;
-          const url = `https://youtu.be/${id}`;
-          const embedSrc = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1`;
-          FEED.appendChild(makeCard({type:'YouTube', title:'', url, caption:'', embedSrc}));
-        });
-      } finally {
-        FEED.setAttribute('aria-busy','false');
+      });
+      FEED.appendChild(frag);
+      if (cursor >= items.length) {
+        end = true;
+        LOADER.textContent = 'You’re all caught up ✨';
       }
     }
 
-    function emptyHTML(showExamples){
-      return `
-        <div class="empty">
-          <h3>No content yet</h3>
-          <p>Add items to <code>content.json</code> (preferred) or lines to <code>youtube_videos.txt</code>, then redeploy.</p>
-          ${showExamples?`
-          <pre style="text-align:left;overflow:auto;background:#0b0f23;padding:12px;border-radius:10px;border:1px solid #ffffff18">
-https://www.youtube.com/watch?v=dQw4w9WgXcQ
-https://youtu.be/5qap5aO4i9A
-          </pre>`:''}
-          <p class="muted">content.json minimal example:</p>
-          <pre style="text-align:left;overflow:auto;background:#0b0f23;padding:12px;border-radius:10px;border:1px solid #ffffff18">
+    const io = new IntersectionObserver(async entries=>{
+      if (loading || end) return;
+      if (!entries.some(e=>e.isIntersecting)) return;
+      loading = true; LOADER.textContent = 'Loading…'; showSkeleton(2);
+      await new Promise(r=>setTimeout(r, 100)); // tiny delay for smoothness
+      try { appendBatch(); } finally { clearSkeleton(); loading = false; if (!end) LOADER.textContent = 'Scroll for more…'; }
+    }, { rootMargin: '600px 0px' });
+
+    /* ========= Loaders (priority order) ========= */
+    async function loadFromContentJSON(){
+      const data = await readJSON('content.json'); // { items: [{title,url,caption?,embed?}] }
+      const out = [];
+
+      (data.items || []).forEach(it=>{
+        // legacy raw-iframe support
+        if (it.embed && /<iframe/i.test(it.embed)) {
+          out.push({
+            key: 'raw_'+(it.title||it.url||Math.random()),
+            type: /tiktok/i.test(it.embed)?'TikTok':'YouTube',
+            title: it.title || '',
+            url: it.url || '#',
+            caption: it.caption || '',
+            embedSrc: '', // will be in raw HTML, but we keep structure consistent
+            raw: it.embed
+          });
+          return;
+        }
+
+        // build embedSrc from url or embed field
+        let embedSrc = '';
+        let type = 'YouTube';
+        if (it.embed) {
+          embedSrc = it.embed;
+          type = /tiktok/i.test(embedSrc) ? 'TikTok' : 'YouTube';
+        } else if (/tiktok\.com/i.test(it.url||'')) {
+          const id = ttId(it.url);
+          embedSrc = `https://www.tiktok.com/embed/v2/${id}`;
+          type = 'TikTok';
+        } else {
+          const id = ytId(it.url||'');
+          if (id) {
+            embedSrc = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1`;
+            type = 'YouTube';
+          }
+        }
+
+        if (it.embed && /<iframe/i.test(it.embed)) {
+          // already handled raw above
+        } else if (embedSrc) {
+          out.push({
+            key: (it.url||it.title||embedSrc),
+            type, title: it.title||'', url: it.url||'#', caption: it.caption||'',
+            embedSrc
+          });
+        }
+      });
+
+      // convert raw-iframe entries into actual cards (preserve original iframe)
+      const rawOnes = out.filter(o=>o.raw);
+      if (rawOnes.length){
+        // inject raw iframe in card shells
+        rawOnes.forEach(o=>{
+          const card = document.createElement('article'); card.className='post';
+          const media = document.createElement('div'); media.className='media';
+          media.innerHTML = o.raw;
+          const meta = document.createElement('div'); meta.className='p';
+          meta.innerHTML = `<div class="title">${esc(o.title)}</div><div class="muted"><a href="${esc(o.url)}" target="_blank" rel="noopener">Open</a></div>`;
+          // queued into initial DOM after first batch
+          items.unshift({kind:'_rawnode', node: (()=>{ const wrap=document.createDocumentFragment(); wrap.appendChild(card); card.appendChild(media); card.appendChild(meta); return card; })()});
+        });
+      }
+
+      return out;
+    }
+
+    async function loadFromTxt(){
+      const lines = await readLines('youtube_videos.txt'); // each line a YT URL/ID
+      return lines.map(v=>{
+        const id = ytId(v);
+        if (!id) return null;
+        return {
+          key: id, type:'YouTube', title:'', url:`https://youtu.be/${id}`, caption:'',
+          embedSrc:`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1`
+        };
+      }).filter(Boolean);
+    }
+
+    function loadFromPSFeed(){
+      const PS = window.PS_FEED || {};
+      const out = [];
+      // YouTube keyword search -> search cards
+      (PS.youtube?.categories || []).forEach(cat=>{
+        (cat.keywords || []).forEach(q=>{
+          out.push({
+            key:'search_'+q, kind:'search',
+            title:q, url:`https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`,
+            caption: cat.name ? `Category: ${cat.name}` : 'Open live results'
+          });
+        });
+      });
+      // TikTok embeds
+      (PS.tiktok?.urls || []).forEach(u=>{
+        const id = ttId(u);
+        out.push({
+          key:'tt_'+id, type:'TikTok', title:'TikTok', url:u, caption:'',
+          embedSrc:`https://www.tiktok.com/embed/v2/${id}`
+        });
+      });
+      return out;
+    }
+
+    /* ========= Boot ========= */
+    (async function init(){
+      try {
+        // Try content.json
+        items = await loadFromContentJSON();
+        if (!items.length) throw new Error('no items in content.json');
+      } catch {
+        // Fallback to youtube_videos.txt
+        items = await loadFromTxt();
+        if (!items.length) {
+          // Last fallback: PS_FEED if present
+          try {
+            items = loadFromPSFeed();
+          } catch {
+            items = [];
+          }
+        }
+      }
+
+      FEED.innerHTML = '';
+      if (!items.length){
+        FEED.innerHTML = `
+          <div class="empty">
+            <h3>No content yet</h3>
+            <p>Add items to <code>content.json</code> (preferred) or lines to <code>youtube_videos.txt</code>. You can also supply <code>content.feed.js</code> (window.PS_FEED) to generate YouTube search cards + TikToks.</p>
+            <pre style="text-align:left;overflow:auto;background:#0b0f23;padding:12px;border-radius:10px;border:1px solid #ffffff18">
 {
   "items": [
     { "title": "Still here — survivor talk", "url": "https://youtu.be/5qap5aO4i9A" },
     { "title": "Hope clip", "url": "https://www.tiktok.com/@user/video/7123456789012345678" }
   ]
 }
-          </pre>
-        </div>`;
-    }
+            </pre>
+          </div>`;
+        LOADER.textContent = '—';
+        FEED.setAttribute('aria-busy','false');
+        return;
+      }
 
-    loadFeed();
+      // If we queued any raw iframes, render them first
+      const raw = items.filter(i => i.kind==='_rawnode');
+      if (raw.length){
+        raw.forEach(r => FEED.appendChild(r.node));
+        items = items.filter(i => i.kind!=='_rawnode');
+      }
+
+      // First batch + observe infinite scroll
+      appendBatch();
+      io.observe(SENTINEL);
+      FEED.setAttribute('aria-busy','false');
+    })();
+  })();
   </script>
 </body>
 </html>
