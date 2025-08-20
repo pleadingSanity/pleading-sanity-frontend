@@ -1,70 +1,109 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <!-- Verification -->
   <meta name="google-site-verification" content="iExaECSUCWqOPsfVE8C1YAmIU7RSCRVu83HXhHk-dq8">
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+
+  <!-- Core -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Pleading Sanity — Rise From Madness</title>
-  <meta name="description" content="A mental-health movement turned streetwear. Survivor stories, Sanity Hub, and merch that means something."/>
-  <link rel="canonical" href="https://www.pleadingsanity.co.uk/"/>
-  <meta name="theme-color" content="#0b0b0d">
+  <meta name="description" content="Pleading Sanity: a mental-health movement turned streetwear. Survivor stories, Sanity Hub, and merch that means something. Rise From Madness." />
+  <meta name="theme-color" content="#0b0b0d" />
+  <link rel="canonical" href="https://www.pleadingsanity.co.uk/" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
 
   <!-- Social cards -->
-  <meta property="og:title" content="Pleading Sanity — Rise From Madness">
-  <meta property="og:description" content="Survivor stories, Sanity Hub, and merch that means something.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.pleadingsanity.co.uk/">
-  <meta property="og:image" content="/assets/og/og-ps.jpg">
-  <meta name="twitter:card" content="summary_large_image">
-</head>
-  <link rel="icon" href="/assets/favicon.ico">
+  <meta property="og:title" content="Pleading Sanity — Rise From Madness" />
+  <meta property="og:description" content="Survivor stories, Sanity Hub, and merch that means something. Join the movement: Rise From Madness." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.pleadingsanity.co.uk/" />
+  <meta property="og:image" content="/assets/og/og-ps.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Pleading Sanity — Rise From Madness" />
+  <meta name="twitter:description" content="Turn pain into power. Sanity Hub + survivor stories + streetwear with meaning." />
+  <meta name="twitter:image" content="/assets/og/og-ps.jpg" />
 
+  <!-- Icons / PWA basics -->
+  <link rel="icon" href="/assets/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+
+  <!-- Performance hints -->
+  <link rel="preconnect" href="https://www.youtube-nocookie.com" crossorigin>
+  <link rel="preconnect" href="https://i.ytimg.com" crossorigin>
+  <link rel="dns-prefetch" href="//www.tiktok.com">
+
+  <!-- Styles (your global system) -->
+  <link rel="stylesheet" href="/style.css" />
+
+  <!-- Page add-ons (kept tiny; most styles live in style.css) -->
   <style>
-    :root{
-      --bg:#0b0b0d; --fg:#e9e9f2; --muted:#a7a7bb;
-      --card:#141421; --ring:#23233a; --brand:#7cf2d8;
-      --brand-2:#9fd2ff; --danger:#ff6b6b;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,Inter,Roboto,Arial,sans-serif}
-    a{color:var(--brand);text-decoration:none}
-    img{max-width:100%;display:block}
     .wrap{max-width:1150px;margin:0 auto;padding:18px}
-    .pill{display:inline-block;border:1px solid var(--ring);border-radius:999px;padding:6px 10px;color:var(--muted);font-size:.85rem}
-    .btn{display:inline-block;background:var(--brand);color:#061214;font-weight:700;border-radius:10px;padding:10px 14px}
-    .btn.ghost{background:transparent;border:1px solid var(--ring);color:var(--fg)}
-    .card{background:var(--card);border:1px solid var(--ring);border-radius:14px;padding:16px}
-    .note{color:var(--muted);font-size:.95rem}
-    .small{font-size:.88rem;color:var(--muted)}
-    .grid{display:grid;gap:14px}
     header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--ring);position:sticky;top:0;background:rgba(11,11,13,.6);backdrop-filter:blur(8px);z-index:5}
     .brand{font-weight:800;letter-spacing:.02em}
-    nav a{margin-left:10px;padding:6px 10px;border-radius:8px}
-    nav a:hover{background:#1a1a27}
+    .nav a{margin-left:10px;padding:6px 10px;border-radius:8px}
+    .nav a:hover{background:#1a1a27}
     .hero{display:grid;gap:18px;grid-template-columns:1.2fr .8fr;align-items:center;padding:20px 0}
     .hero h1{font-size:clamp(28px,6vw,60px);margin:10px 0}
     .hero .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
     .embed{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;background:#000}
     .section{margin-top:18px}
     .section h2{margin:0 0 6px;font-size:1.3rem}
-    .filters{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
-    .chip{background:#0e0e16;border:1px solid var(--ring);border-radius:999px;padding:6px 10px;color:var(--muted);font-size:.85rem;cursor:pointer}
-    .chip.active{border-color:var(--brand);color:var(--fg)}
-    .feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-    .feed .card iframe,.feed .card img{width:100%;border-radius:10px}
-    .feed .meta{margin-top:8px}
     .quote-ticker{overflow:hidden;white-space:nowrap;border:1px solid var(--ring);border-radius:12px;padding:8px 10px;margin:14px 0;color:var(--muted)}
-    .footer{margin-top:26px;padding:20px 0;border-top:1px solid var(--ring);color:var(--muted);text-align:center}
     .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
     @media (max-width:900px){ .hero{grid-template-columns:1fr} .cols{grid-template-columns:1fr} }
+    /* Feed layout (cards, skeletons, end note) already provided in style.css */
   </style>
+
+  <!-- JSON-LD: Organization + WebSite + Product (Hoodie) -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"Pleading Sanity",
+    "url":"https://www.pleadingsanity.co.uk/",
+    "logo":"https://www.pleadingsanity.co.uk/assets/icons/apple-touch-icon.png",
+    "sameAs":[
+      "https://x.com/mentally_inshane",
+      "https://www.instagram.com/mentally.inshane",
+      "https://www.tiktok.com/@mentally.inshane"
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"Pleading Sanity",
+    "url":"https://www.pleadingsanity.co.uk/",
+    "potentialAction":{
+      "@type":"SearchAction",
+      "target":"https://www.pleadingsanity.co.uk/?q={search_term_string}",
+      "query-input":"required name=search_term_string"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Product",
+    "name":"Crying Brain Hoodie",
+    "image":["https://www.pleadingsanity.co.uk/assets/hoodie.jpg"],
+    "description":"Streetwear with meaning. Glowing Crying Brain back graphic, 'PLEADING SANITY' chest + inside hood seam.",
+    "brand":{"@type":"Brand","name":"Pleading Sanity"},
+    "offers":{"@type":"Offer","priceCurrency":"GBP","price":"55.00","availability":"https://schema.org/InStock","url":"https://www.pleadingsanity.co.uk/shop.html#hoodie"}
+  }
+  </script>
 </head>
 <body>
+  <a href="#main" class="sr-only" style="position:absolute;left:-999px;top:auto;width:1px;height:1px;overflow:hidden;">Skip to content</a>
+
   <div class="wrap">
     <!-- Header -->
-    <header>
-      <div class="brand">Pleading Sanity</div>
-      <nav class="nav">
+    <header role="banner">
+      <div class="brand">🧠 Pleading Sanity</div>
+      <nav class="nav" aria-label="Primary">
         <a href="#hub">Sanity Hub</a>
         <a href="/movement.html">Movement</a>
         <a href="/shop.html">Shop</a>
@@ -74,20 +113,20 @@
     </header>
 
     <!-- Hero -->
-    <section class="hero" id="hub">
+    <section class="hero" id="hub" aria-labelledby="hero-title">
       <div class="card">
         <div class="pill">RISE FROM MADNESS</div>
-        <h1>RISE FROM MADNESS</h1>
-        <p class="note">A mental-health movement turned streetwear. Built by survivors. Powered by truth.</p>
+        <h1 id="hero-title">Rise From Madness.</h1>
+        <p class="note">A mental-health movement turned streetwear. Built by survivors. Powered by truth. Real tools, real stories, real drip.</p>
         <div class="cta">
-          <a class="btn" href="/shop.html#hoodie">Get the Crying Brain Hoodie</a>
+          <a class="btn" href="/shop.html#hoodie">Crying Brain Hoodie</a>
           <a class="btn ghost" href="/movement.html">Join the Movement</a>
         </div>
-        <div class="quote-ticker" id="ticker">The pain didn’t kill me — it made me art.</div>
+        <div class="quote-ticker" id="ticker" aria-live="polite">The pain didn’t kill me — it made me art.</div>
         <p class="small">Contact: <a href="mailto:admin@pleadingsanity.co.uk">admin@pleadingsanity.co.uk</a></p>
       </div>
       <div class="card">
-        <iframe class="embed" id="featureVideo" title="Featured"
+        <iframe class="embed" id="featureVideo" title="Featured video"
           src="https://www.youtube-nocookie.com/embed/kXYiU_JCYtU"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -96,11 +135,12 @@
     </section>
 
     <!-- Sanity Hub -->
-    <section class="section card" id="hub-latest">
-      <h2>Sanity Hub — Latest</h2>
-      <p class="note">Your daily mix of survivor clips, calm breaks, and truth bombs. Short, real, and healing.</p>
+    <main id="main" class="section card" aria-labelledby="hub-heading">
+      <h2 id="hub-heading">Sanity Hub — Live Mix</h2>
+      <p class="note">Survivor clips, calm breaks, mindset tools, and truth bombs. Infinite scroll. Always fresh.</p>
 
-      <div class="filters" id="filters">
+      <!-- Filters (optional; tag semantics handled in script if you use inline config videos) -->
+      <div class="filters" id="filters" hidden>
         <button class="chip active" data-tag="all">All</button>
         <button class="chip" data-tag="inspiring">Inspiring</button>
         <button class="chip" data-tag="survivor">Survivor</button>
@@ -108,25 +148,27 @@
         <button class="chip" data-tag="merch">Merch</button>
       </div>
 
-      <div class="feed" id="yt-feed"></div>
-    </section>
+      <!-- Infinite feed -->
+      <div class="feed" id="yt-feed" aria-live="polite"></div>
+      <div id="yt-loader" class="loader small" style="text-align:center; padding:12px">Loading…</div>
+    </main>
 
     <!-- TikTok curated -->
-    <section class="section card" id="tiktok">
-      <h2>TikTok — Curated Stream</h2>
-      <p class="note">TikTok embeds from a tiny list you control. Paste new links in the config — no rebuild.</p>
+    <section class="section card" id="tiktok" aria-labelledby="tt-heading">
+      <h2 id="tt-heading">TikTok — Curated Stream</h2>
+      <p class="note">Paste public links into the config — they render here without code changes.</p>
       <div class="feed" id="tt-feed"></div>
     </section>
 
-    <!-- Movement tease + product tease -->
-    <section class="section cols">
-      <div class="card">
+    <!-- Movement & Product -->
+    <section class="section cols" aria-label="Movement and Merch">
+      <article class="card">
         <h3>Why Pleading Sanity exists</h3>
         <p>I was labeled, sectioned, and written off. I didn’t fold — I forged a mission. Pleading Sanity is clothing as a shield, stories as medicine, and a platform where survivors go from silent to seen.</p>
         <p><strong>Rise From Madness</strong> isn’t a slogan. It’s a discipline. We show up when the mind storms — especially then.</p>
         <p><a class="btn ghost" href="/movement.html">Read the Movement</a></p>
-      </div>
-      <div class="card">
+      </article>
+      <article class="card">
         <h3>Crying Brain Hoodie</h3>
         <p class="note">“The pain didn’t kill me — it made me art.”</p>
         <ul class="small">
@@ -137,40 +179,42 @@
         <p><a class="btn" href="/shop.html#hoodie">Shop the Hoodie — £55</a></p>
         <hr>
         <h3>Limited Tracksuit</h3>
-        <p class="note">“Only for those who still show up.” Unlock it with your belief.</p>
+        <p class="note">“Only for those who still show up.”</p>
         <ul class="small">
           <li>Hoodie + Joggers set</li>
           <li>Subtle branding: hood seam & thigh</li>
           <li>Launch-edition fit and finish</li>
         </ul>
         <p><a class="btn" href="/shop.html#tracksuit">Unlock the Set — £55</a></p>
-      </div>
+      </article>
     </section>
 
-    <!-- Join -->
-    <section class="section card" id="join">
-      <h2>Join the Movement</h2>
+    <!-- Join (Netlify form, no backend needed) -->
+    <section class="section card" id="join" aria-labelledby="join-heading">
+      <h2 id="join-heading">Join the Movement</h2>
       <form name="join" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="grid" style="grid-template-columns:1fr auto">
-        <input type="hidden" name="form-name" value="join">
-        <p style="display:none"><label>Don’t fill this out: <input name="bot-field"></label></p>
+        <input type="hidden" name="form-name" value="join" />
+        <p style="display:none"><label>Don’t fill this out: <input name="bot-field" /></label></p>
         <input type="email" name="email" placeholder="you@email.com" required
-               style="background:#0e0e14;border:1px solid var(--ring);color:var(--fg);border-radius:10px;padding:10px">
+               style="background:#0e0e14;border:1px solid var(--ring);color:var(--fg);border-radius:10px;padding:10px" />
         <button class="btn" type="submit">I’m In</button>
       </form>
-      <p class="small">Get drops, survivor spotlights, and tools that help when it’s heavy. By joining, you agree to the mission: turn pain into power, truth into action.</p>
+      <p class="small">Drops, survivor spotlights, and tools that help when it’s heavy. No spam. Unsubscribe anytime.</p>
     </section>
 
     <!-- Footer -->
     <footer class="footer">© <span id="y"></span> Pleading Sanity • Leicester, UK</footer>
   </div>
 
-  <!-- ========= CONFIG — EDIT ONLY THIS JSON ========= -->
+  <!-- ========= CONFIGS ========= -->
+
+  <!-- Prefer external config (auto-used if present) -->
+  <script src="/content.feed.js" defer></script>
+
+  <!-- Inline fallback config (used only if window.PS_FEED is missing) -->
   <script id="ps-config" type="application/json">
   {
-    "feature": {
-      "youtubeId": "kXYiU_JCYtU",
-      "caption": "Featured: swap the video ID anytime."
-    },
+    "feature": { "youtubeId": "kXYiU_JCYtU", "caption": "Featured: swap the video ID anytime." },
     "quotes": [
       "The pain didn’t kill me — it made me art.",
       "We rise from madness or drown in it — choose.",
@@ -184,34 +228,10 @@
       "Your scars are honest — let them breathe."
     ],
     "videos": [
-      {
-        "id": "yt-rfm-01",
-        "type": "youtube",
-        "title": "Rise From Madness — our why (short)",
-        "youtubeId": "3YxaaGgTQYM",
-        "tags": ["inspiring","survivor"]
-      },
-      {
-        "id": "yt-hoodie",
-        "type": "youtube",
-        "title": "Crying Brain Hoodie — made from pain",
-        "youtubeId": "ktvTqknDobU",
-        "tags": ["merch","inspiring"]
-      },
-      {
-        "id": "yt-reality",
-        "type": "youtube",
-        "title": "Reality Stream — truth over noise",
-        "youtubeId": "2vjPBrBU-TM",
-        "tags": ["inspiring"]
-      },
-      {
-        "id": "yt-uk-01",
-        "type": "youtube",
-        "title": "UK survivor voice — still rising",
-        "youtubeId": "Gd9OhYroLN0",
-        "tags": ["survivor","inspiring"]
-      }
+      { "id":"yt-rfm-01","type":"youtube","title":"Rise From Madness — our why (short)","youtubeId":"3YxaaGgTQYM","tags":["inspiring","survivor"] },
+      { "id":"yt-hoodie","type":"youtube","title":"Crying Brain Hoodie — made from pain","youtubeId":"ktvTqknDobU","tags":["merch","inspiring"] },
+      { "id":"yt-reality","type":"youtube","title":"Reality Stream — truth over noise","youtubeId":"2vjPBrBU-TM","tags":["inspiring"] },
+      { "id":"yt-uk-01","type":"youtube","title":"UK survivor voice — still rising","youtubeId":"Gd9OhYroLN0","tags":["survivor","inspiring"] }
     ],
     "tiktok": [
       "https://www.tiktok.com/@jayshenks/video/7354312345678901234",
@@ -220,88 +240,199 @@
   }
   </script>
 
-  <!-- ========= RUNTIME (no backend needed) ========= -->
+  <!-- ========= RUNTIME ========= -->
+
+  <!-- Unified Hub (auto: PS_FEED → search cards + TikTok; fallback → inline + real embeds) -->
   <script>
   (function(){
-    // Year
-    document.getElementById('y').textContent = new Date().getFullYear();
+    const $ = (s, r=document)=>r.querySelector(s);
+    const esc = (s='')=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+    const y = $('#y'); if (y) y.textContent = new Date().getFullYear();
 
-    // Config
-    const cfgEl = document.getElementById('ps-config');
+    // Feature + quotes from inline config (safe even if PS_FEED exists)
     let cfg = {};
-    try { cfg = JSON.parse(cfgEl.textContent); } catch(e){ cfg = {}; }
+    try { cfg = JSON.parse($('#ps-config')?.textContent || '{}'); } catch {}
+    if (cfg.feature?.youtubeId) $('#featureVideo').src = 'https://www.youtube-nocookie.com/embed/'+encodeURIComponent(cfg.feature.youtubeId);
+    if (cfg.feature?.caption) $('#featureCaption').textContent = cfg.feature.caption;
 
-    // Feature video
-    if (cfg.feature && cfg.feature.youtubeId) {
-      document.getElementById('featureVideo').src =
-        'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(cfg.feature.youtubeId);
+    const ticker = $('#ticker');
+    const quotes = (cfg.quotes && cfg.quotes.length) ? cfg.quotes : [ticker?.textContent || ''];
+    if (ticker && quotes.length > 0){
+      let i=0; setInterval(()=>{ i=(i+1)%quotes.length; ticker.textContent = quotes[i]; }, 3500);
     }
-    if (cfg.feature && cfg.feature.caption) {
-      document.getElementById('featureCaption').textContent = cfg.feature.caption;
-    }
 
-    // Quote ticker (simple loop)
-    const ticker = document.getElementById('ticker');
-    const quotes = Array.isArray(cfg.quotes) && cfg.quotes.length ? cfg.quotes : [ticker.textContent];
-    let qi = 0;
-    setInterval(()=>{
-      qi = (qi+1) % quotes.length;
-      ticker.textContent = quotes[qi];
-    }, 3500);
+    // FEED ENGINE
+    const ytFeed   = $('#yt-feed');
+    const ytLoader = $('#yt-loader');
 
-    // Feed render
-    const list = document.getElementById('yt-feed');
-    const chips = Array.from(document.querySelectorAll('.chip'));
-    function renderFeed(tag='all'){
-      list.innerHTML = '';
-      const items = (cfg.videos || []).filter(v => tag==='all' ? true : (v.tags||[]).includes(tag));
-      if (!items.length){
-        const empty = document.createElement('div');
-        empty.className = 'small';
-        empty.textContent = 'No videos yet.';
-        list.appendChild(empty);
-        return;
-      }
-      items.forEach(v=>{
-        const card = document.createElement('article');
-        card.className = 'card';
-        let inner = '';
-        if (v.type === 'youtube' && v.youtubeId){
-          inner += '<iframe class="embed" src="https://www.youtube-nocookie.com/embed/' +
-                   encodeURIComponent(v.youtubeId) + '" title="' + (v.title || 'Video') +
-                   '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" ' +
-                   'referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
-        } else if (v.thumb) {
-          inner += '<img src="' + v.thumb + '" alt="">';
+    // Decide data source
+    const PS = window.PS_FEED || null; // from content.feed.js if present
+
+    // MODE A: PS_FEED → build search cards + TikTok
+    if (PS && Array.isArray(PS.youtube?.categories)){
+      const items = [];
+
+      // Featured (optional)
+      (PS.featured || []).forEach(f => items.push({
+        id: f.id || f.url || f.title, kind: f.type || 'image', title: f.title || '',
+        url: f.url || '', thumb: f.thumb || '', tags: f.tags || []
+      }));
+
+      // YouTube search cards from keywords
+      (PS.youtube.categories||[]).forEach(cat=>{
+        (cat.keywords||[]).forEach(q=>{
+          items.push({
+            id:'ytsearch_'+q, kind:'youtube-search', title:q,
+            url:`https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`,
+            thumb:`https://dummyimage.com/1280x720/141421/7cf2d8&text=${encodeURIComponent(q)}`,
+            tags:[cat.name,'YouTube']
+          });
+        });
+      });
+
+      // TikTok
+      (PS.tiktok?.urls||[]).forEach(u=>items.push({id:'tt_'+u,kind:'tiktok',title:'TikTok',url:u}));
+
+      // Paginator
+      const pageSize = PS.meta?.pageSize || 12;
+      let cursor = 0, loading=false, done=false;
+      const seen = new Set();
+
+      const h = html => { const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content.firstElementChild; };
+      const cardSearch = it => h(`
+        <article class="card">
+          <div class="card__media">
+            <a href="${esc(it.url)}" target="_blank" rel="noopener" aria-label="Open YouTube results for ${esc(it.title)}">
+              <img loading="lazy" src="${esc(it.thumb)}" alt="${esc(it.title)}" />
+            </a>
+          </div>
+          <div class="card__body">
+            <h3 class="card__title">${esc(it.title)}</h3>
+            <div class="card__meta">${(it.tags||[]).map(t=>`<span>#${esc(t)}</span>`).join(' ')}</div>
+            <div class="muted"><a href="${esc(it.url)}" target="_blank" rel="noopener">Open results</a></div>
+          </div>
+        </article>
+      `);
+      const cardTikTok = it => h(`
+        <article class="card">
+          <div class="card__media">
+            <blockquote class="tiktok-embed" cite="${esc(it.url)}" data-video-id="">
+              <a href="${esc(it.url)}" target="_blank" rel="noopener">Open TikTok</a>
+            </blockquote>
+          </div>
+          <div class="card__body"><h3 class="card__title">${esc(it.title)}</h3><div class="card__meta"><span>#TikTok</span></div></div>
+        </article>
+      `);
+
+      function showSkeleton(n=6){
+        const frag=document.createDocumentFragment();
+        for(let i=0;i<n;i++){
+          const s=h(`<article class="card skel"><div class="card__media skeleton"></div><div class="card__body">
+            <div class="skeleton" style="height:18px;width:70%;border-radius:6px;margin:10px 0"></div>
+            <div class="skeleton" style="height:12px;width:45%;border-radius:6px"></div>
+          </div></article>`);
+          frag.appendChild(s);
         }
-        inner += '<div class="meta"><div class="small">' + (v.title || '') + '</div>' +
-                 '<div class="small">' + ((v.tags||[]).map(t=> '#'+t).join(' ')) + '</div></div>';
-        card.innerHTML = inner;
-        list.appendChild(card);
-      });
-    }
-    chips.forEach(ch=>{
-      ch.addEventListener('click', ()=>{
-        chips.forEach(c=>c.classList.remove('active'));
-        ch.classList.add('active');
-        renderFeed(ch.dataset.tag);
-      });
-    });
-    renderFeed('all');
+        ytFeed.appendChild(frag);
+      }
+      function clearSkeleton(){ ytFeed.querySelectorAll('.skel').forEach(n=>n.remove()); }
 
-    // TikTok simple embeds (curated list)
-    const ttFeed = document.getElementById('tt-feed');
-    (cfg.tiktok || []).forEach(url=>{
-      const card = document.createElement('div'); card.className = 'card';
-      const block = document.createElement('blockquote');
-      block.className='tiktok-embed'; block.setAttribute('cite', url); block.setAttribute('data-video-id','');
-      block.innerHTML = '<a href="'+url+'" target="_blank" rel="noopener">TikTok</a>';
-      card.appendChild(block); ttFeed.appendChild(card);
-    });
-    if ((cfg.tiktok || []).length){
-      const s=document.createElement('script'); s.src='https://www.tiktok.com/embed.js'; s.async=true; document.body.appendChild(s);
+      function loadBatch(){
+        const slice = items.slice(cursor, cursor+pageSize);
+        cursor += slice.length;
+        const frag=document.createDocumentFragment();
+        slice.forEach(it=>{
+          const key = it.id || it.url || it.title;
+          if (seen.has(key)) return; seen.add(key);
+          frag.appendChild(it.kind==='tiktok' ? cardTikTok(it) : cardSearch(it));
+        });
+        ytFeed.appendChild(frag);
+        // TikTok embed script (once)
+        if (slice.some(i=>i.kind==='tiktok') && !document.querySelector('script[src*="tiktok.com/embed.js"]')){
+          const s=document.createElement('script'); s.src='https://www.tiktok.com/embed.js'; s.async=true; document.body.appendChild(s);
+        }
+        if (cursor>=items.length){ ytLoader.textContent='You’re all caught up ✨'; done=true; }
+      }
+
+      const io = new IntersectionObserver(async entries=>{
+        if (loading || done) return;
+        if (!entries.some(e=>e.isIntersecting)) return;
+        loading=true; ytLoader.textContent='Loading…'; showSkeleton();
+        await new Promise(r=>setTimeout(r,120)); loadBatch();
+        clearSkeleton(); loading=false; if(!done) ytLoader.textContent='Scroll for more…';
+      }, { rootMargin: '600px 0px' });
+
+      // First draw + observe
+      loadBatch(); io.observe(ytLoader);
+    }
+
+    // MODE B: Inline fallback → real embeds from inline "videos"
+    else {
+      const cfgVideos = Array.isArray(cfg.videos) ? cfg.videos : [];
+      const mapped = cfgVideos.map(v=>({id:v.youtubeId, title:v.title||'', kind:'youtube'}));
+      const pageSize = 12; let cursor=0, loading=false, done=false;
+
+      const h = html => { const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content.firstElementChild; };
+      function cardEmbed(v){
+        return h(`<article class="card">
+          <div class="card__media">
+            <iframe class="embed" title="${esc(v.title||'Video')}"
+              src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.id)}"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+          <div class="card__body"><h3 class="card__title">${esc(v.title||'')}</h3></div>
+        </article>`);
+      }
+      function showSkeleton(n=6){
+        const frag=document.createDocumentFragment();
+        for(let i=0;i<n;i++){
+          frag.appendChild(h(`<article class="card skel"><div class="card__media skeleton"></div>
+            <div class="card__body"><div class="skeleton" style="height:18px;width:70%;border-radius:6px;margin:10px 0"></div>
+            <div class="skeleton" style="height:12px;width:45%;border-radius:6px"></div></div></article>`));
+        }
+        ytFeed.appendChild(frag);
+      }
+      function clearSkeleton(){ ytFeed.querySelectorAll('.skel').forEach(n=>n.remove()); }
+      function loadBatch(){
+        const slice = mapped.slice(cursor, cursor+pageSize);
+        cursor += slice.length;
+        const frag=document.createDocumentFragment();
+        slice.forEach(v=>frag.appendChild(cardEmbed(v)));
+        ytFeed.appendChild(frag);
+        if (cursor>=mapped.length){ ytLoader.textContent='You’re all caught up ✨'; done=true; }
+      }
+      const io = new IntersectionObserver(async entries=>{
+        if (loading || done) return;
+        if (!entries.some(e=>e.isIntersecting)) return;
+        loading=true; ytLoader.textContent='Loading…'; showSkeleton();
+        await new Promise(r=>setTimeout(r,120)); loadBatch();
+        clearSkeleton(); loading=false; if(!done) ytLoader.textContent='Scroll for more…';
+      }, { rootMargin: '600px 0px' });
+
+      loadBatch(); io.observe(ytLoader);
+
+      // TikTok (from inline)
+      const ttFeed = document.getElementById('tt-feed');
+      (cfg.tiktok || []).forEach(url=>{
+        const card = document.createElement('div'); card.className='card';
+        const block = document.createElement('blockquote');
+        block.className='tiktok-embed'; block.setAttribute('cite', url); block.setAttribute('data-video-id','');
+        block.innerHTML = '<a href="'+url+'" target="_blank" rel="noopener">TikTok</a>';
+        card.appendChild(block); ttFeed.appendChild(card);
+      });
+      if ((cfg.tiktok||[]).length){
+        const s=document.createElement('script'); s.src='https://www.tiktok.com/embed.js'; s.async=true; document.body.appendChild(s);
+      }
     }
   })();
   </script>
+
+  <!-- No-JS message (for completeness) -->
+  <noscript>
+    <div style="max-width:700px;margin:20px auto;padding:12px;border:1px solid #333;border-radius:10px;background:#111;color:#ddd;">
+      JavaScript is required to load the Sanity Hub feed. You can still <a href="/movement.html">read the Movement</a> and <a href="/shop.html">shop</a>.
+    </div>
+  </noscript>
 </body>
 </html>
