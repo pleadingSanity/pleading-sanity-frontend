@@ -1,0 +1,255 @@
+name: Pleading Sanity - Autopilot (Fetch + Build + Deploy)
+
+on:
+  schedule:
+    - cron: '*/30 * * * *' # every 30 minutes
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  id-token: write
+
+env:
+  # Load your curated YouTube feeds (channel or playlist RSS). Edit anytime.
+  PS_FEEDS: >-
+    https://www.youtube.com/feeds/videos.xml?channel_id=UC_zEw8B9gZ_c9qPZ0F9SYT
+    https://www.youtube.com/feeds/videos.xml?search_query=bipolar%20survivor%20story
+  # Set a limit on the number of new items to keep on the hub
+  PS_LIMIT: "15"
+
+jobs:
+  ps-autopilot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Snapshot Backup
+        run: |
+          TS=$(date -u +%Y%m%d_%H%M%S)
+          zip -qr "arron-backups/backup-$TS.zip" . -x ".git/*" ".arron-backups/*" || true
+
+      - name: Ensure basic site skeleton exists (keeps your custom files if present)
+        shell: bash
+        run: |
+          set -e
+          [ -f _redirects ] || echo "/* /index.html 200" > _redirects
+          if [ ! -f netlify.toml ]; then
+            cat > netlify.toml <<'TOML'
+          [build]
+            publish = "."
+            command = ""
+
+          [[redirects]]
+            from = "/h"
+            to = "/sanityhub.html"
+            status = 301
+
+          [[redirects]]
+            from = "/m"
+            to = "/movement.html"
+            status = 301
+
+          [[redirects]]
+            from = "/"
+            to = "/index.html"
+            status = 200
+          TOML
+          fi
+
+          if [ ! -f style.css ]; then
+            cat > style.css <<'CSS'
+          :root{--bg:#0b0b0d;--fg:#e9e9f2;--muted:#a7a7bb;--card:#141421;--ring:#222238;--brand:#7cf2d8}
+          *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,Inter,Roboto,Arial,sans-serif}
+          a{color:var(--brand);text-decoration:none}
+          .wrap{max-width:1150px;margin:0 auto;padding:20px}
+          header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--ring);position:sticky;top:0;background:rgba(11,11,13,.6);backdrop-filter:blur(8px);z-index:5}
+          .brand{font-weight:800;font-size:1.1rem}
+          .nav a{margin-left:10px;padding:6px 10px;border-radius:8px}
+          .nav a:hover{background:#1a1a27}
+          .pill{border:1px solid var(--ring);border-radius:999px;padding:6px 10px;color:var(--muted);font-size:.85rem}
+          .hero{display:grid;gap:18px;grid-template-columns:1.2fr .8fr;align-items:center;padding:20px 0}
+          .card{background:var(--card);border:1px solid var(--ring);border-radius:14px;padding:16px}
+          .note{color:var(--muted);font-size:.95rem}
+          .btn{display:inline-block;background:var(--brand);color:#0b0b0d;font-weight:700;border-radius:10px;padding:10px 14px}
+          .grid{display:grid;gap:14px}
+          .embed{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;background:#000}
+          .section{margin-top:16px}
+          .feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+          .feed .card iframe,.feed .card img{width:100%;display:block;border-radius:10px}
+          .tag{display:inline-block;background:#0e0e16;border:1px solid var(--ring);border-radius:999px;padding:4px 8px;color:var(--muted);font-size:.78rem;margin-top:8px}
+          .small{font-size:.88rem;color:var(--muted)}
+          .footer{margin-top:24px;padding:20px 0;border-top:1px solid var(--ring);color:var(--muted);text-align:center}
+          hr{border:none;border-top:1px solid var(--ring);margin:18px 0}
+          .loader{opacity:.7;text-align:center;padding:16px}
+          CSS
+          fi
+
+          if [ ! -f index.html ]; then
+            cat > index.html <<'HTML'
+          <!doctype html>
+          <html lang="en">
+          <head>
+          <meta charset="utf-8"/>
+          <meta name="viewport" content="width=device-width,initial-scale=1"/>
+          <title>Pleading Sanity — Sanity Hub</title>
+          <meta name="description" content="Turning pain into power. A living feed of the best videos across the net."/>
+          <link rel="canonical" href="https://www.pleadingsanity.co.uk/"/>
+          <meta name="theme-color" content="#0b0b0d">
+          <meta property="og:title" content="Pleading Sanity — Sanity Hub">
+          <meta property="og:description" content="Signal in the noise. Daily strength, stories, and tools.">
+          <meta property="og:type" content="website">
+          <meta property="og:url" content="https://www.pleadingsanity.co.uk/">
+          <meta property="og:image" content="https://images.unsplash.com/photo-1547038577-da80b6fd63fa?w=1200&q=75">
+          <meta name="twitter:card" content="summary_large_image">
+          <link rel="icon" href="data:,">
+          <link rel="stylesheet" href="style.css">
+          </head>
+          <body>
+          <div class="wrap">
+            <header>
+              <div class="brand" id="brand">Pleading Sanity</div>
+              <nav class="nav">
+                <a href="#hub">Hub</a>
+                <a href="#yt">YouTube</a>
+                <a href="#tiktok">TikTok</a>
+                <a href="#join">Join</a>
+              </nav>
+            </header>
+            <section class="hero" id="hub">
+              <div class="card">
+                <div class="pill">Rise from madness</div>
+                <h1>Not broken. Rewritten.</h1>
+                <p class="note">This hub auto-pulls the **most-watched** and **rising** videos on YouTube in your topics. TikTok embeds can be fed from a simple list—no code, no rebuilds.</p>
+                <p class="small">Contact: <a href="mailto:pleadingsanity1@gmail.com">pleadingsanity1@gmail.com</a></p>
+              </div>
+              <div class="card">
+                <iframe class="embed" title="Featured" src="https://www.youtube-nocookie.com/embed/kXYiU_JCYtU" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <p class="note">Swap the ID any time — no rebuild needed elsewhere.</p>
+              </div>
+            </section>
+            <section class="section card" id="yt">
+              <h2>YouTube — Live Feed</h2>
+              <p class="note">Auto updates from YouTube (trending + topics). Scroll to load more.</p>
+              <div id="yt-feed" class="feed"></div>
+              <div id="yt-loader" class="loader">Loading…</div>
+            </section>
+            <section class="section card" id="tiktok">
+              <h2>TikTok — Curated Stream</h2>
+              <p class="note">TikTok doesn’t offer a stable “trending” API. This section reads from a tiny JSON list so you can add/change links without touching code.</p>
+              <div id="tt-feed" class="feed"></div>
+            </section>
+            <section class="section card" id="join">
+              <h2>Join the Movement</h2>
+              <form name="join" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="grid" style="grid-template-columns:1fr auto">
+                <input type="hidden" name="form-name" value="join"><p style="display:none"><label>Don’t fill this out: <input name="bot-field"></label></p>
+                <input type="email" name="email" placeholder="you@email.com" required style="background:#0e0e14;border:1px solid var(--ring);color:var(--fg);border-radius:10px;padding:10px">
+                <button class="btn" type="submit">I’m In</button>
+              </form>
+              <p class="small">You’ll get drops, quotes, and sanity tools. No spam.</p>
+            </section>
+            <footer class="footer">© <span id="y"></span> Pleading Sanity • Leicester, UK</footer>
+          </div>
+          <script id="ps-config" type="application/json">
+          {
+            "topics": ["mental health", "resilience", "healing", "mindset", "motivation"],
+            "region": "GB",
+            "pageSize": 12,
+            "tiktok": [
+              "https://www.tiktok.com/@jayshenks/video/7354312345678901234",
+              "https://www.tiktok.com/@mindsetdaily/video/7312345678901234567"
+            ]
+          }
+          </script>
+          <script>
+          (function(){
+            document.getElementById('y').textContent=new Date().getFullYear();
+            const cfg = JSON.parse(document.getElementById('ps-config').textContent||'{}');
+            const region = cfg.region || 'GB';
+            const topics = cfg.topics || ['mental health'];
+            const pageSize = cfg.pageSize || 12;
+            const ytFeed = document.getElementById('yt-feed');
+            const ytLoader = document.getElementById('yt-loader');
+            let nextPageToken = ''; let loading = false; let exhausted = false;
+            async function loadYouTube(first=false){
+              if (loading || exhausted) return; loading = true;
+              ytLoader.textContent = 'Loading…';
+              try {
+                const url = new URL('/.netlify/functions/fetch-videos', location.origin);
+                url.searchParams.set('region', region);
+                url.searchParams.set('topics', topics.join(','));
+                url.searchParams.set('pageSize', pageSize);
+                if (nextPageToken) url.searchParams.set('pageToken', nextPageToken);
+                const res = await fetch(url.toString());
+                if (!res.ok) throw new Error('YouTube fetch failed');
+                const data = await res.json();
+                (data.items||[]).forEach(v => {
+                  const card = document.createElement('div'); card.className='card';
+                  const iframe = document.createElement('iframe');
+                  iframe.className='embed';
+                  iframe.title = v.title || 'Video';
+                  iframe.src = 'https://www.youtube-nocookie.com/embed/'+encodeURIComponent(v.id);
+                  iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                  iframe.referrerPolicy='strict-origin-when-cross-origin'; iframe.allowFullscreen=true;
+                  card.appendChild(iframe);
+                  const meta = document.createElement('div'); meta.className='small';
+                  meta.textContent = v.title || '';
+                  card.appendChild(meta);
+                  ytFeed.appendChild(card);
+                });
+                nextPageToken = data.nextPageToken || '';
+                if (!data.items || data.items.length === 0 || !nextPageToken) {
+                  exhausted = true; ytLoader.textContent = 'Up to date.';
+                } else {
+                  ytLoader.textContent = 'Scroll for more…';
+                }
+              } catch (e){
+                console.warn(e);
+                ytLoader.textContent = 'Live feed unavailable. Showing fallback.';
+                if (!ytFeed.hasChildNodes()){
+                  ['kXYiU_JCYtU','3YxaaGgTQYM','ktvTqknDobU'].forEach(id=>{
+                    const card=document.createElement('div'); card.className='card';
+                    const iframe=document.createElement('iframe'); iframe.className='embed'; iframe.allowFullscreen=true;
+                    iframe.src='https://www.youtube-nocookie.com/embed/'+id;
+                    iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                    iframe.referrerPolicy='strict-origin-when-cross-origin';
+                    card.appendChild(iframe); ytFeed.appendChild(card);
+                  });
+                }
+                exhausted = true;
+              } finally {
+                loading = false;
+              }
+            }
+            loadYouTube(true);
+            const io = 'IntersectionObserver' in window;
+            if (io){
+              const sentinel = document.createElement('div'); sentinel.style.height='1px';
+              ytLoader.after(sentinel);
+              const obs = new IntersectionObserver(entries=>{
+                entries.forEach(e=>{ if (e.isIntersecting) loadYouTube(); });
+              },{root:null,rootMargin:'1200px 0px 0px 0px',threshold:0});
+              obs.observe(sentinel);
+            }
+            const ttFeed = document.getElementById('tt-feed');
+            (cfg.tiktok||[]).forEach(url=>{
+              const card = document.createElement('div'); card.className='card';
+              const block = document.createElement('blockquote');
+              block.className='tiktok-embed'; block.setAttribute('cite', url);
+              block.setAttribute('data-video-id','');
+              block.innerHTML = `<a href="${url}">TikTok</a>`;
+              card.appendChild(block);
+              ttFeed.appendChild(card);
+            });
+            if ((cfg.tiktok||[]).length){
+              const s=document.createElement('script');
+              s.src='https://www.tiktok.com/embed.js'; s.async=true; document.body.appendChild(s);
+            }
+          })();
+          </script>
+          </body>
+          </html>
+          HTML
+          fi
