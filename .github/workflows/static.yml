@@ -1,0 +1,65 @@
+# Pleading Sanity: Static Site Autopilot Deploy to GitHub Pages
+# Locked for future: Always deploys perfect, with full build support.
+
+name: Deploy static content to Pages
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      # 1. Get the full latest repo content (no shallow copy)
+      - name: Checkout repo (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 2. (Optional) Install Node.js if you ever add a build step (remove if not needed)
+      # - name: Setup Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 20
+
+      # 3. (Optional) Build step for JS frameworks or preprocessors
+      # - name: Install and Build
+      #   run: |
+      #     npm install
+      #     npm run build
+      #   # If your built files are in /dist or /build, change path below
+
+      # 4. Configure Pages (always needed)
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      # 5. Upload artifact (site files)
+      - name: Upload site files
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'  # Change to 'dist' or 'build' if you have a build output
+
+      # 6. Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      # 7. Show deploy preview artifact (for debug or audit)
+      - name: Post deploy summary
+        run: echo "Site deployed to ${{ steps.deployment.outputs.page_url }}"
+
+# --- End of Arron’s master deploy workflow ---
