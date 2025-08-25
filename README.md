@@ -1,4 +1,4 @@
-# 🧠 Pleading Sanity – Rise From Madness
+o# 🧠 Pleading Sanity – Rise From Madness
 
 Welcome to the Pleading Sanity frontend codebase! This is the official static site for the mental health movement, survivor stories, and exclusive merch. Whether you’re a developer, contributor, or just exploring, this repo is your starting point.
 
