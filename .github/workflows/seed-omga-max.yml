@@ -1,0 +1,403 @@
+name: Seed OMEGA MAX (clean repo + add full Pleading Sanity site)
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/seed-omega-max.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Clean repo (keep workflows)
+        run: |
+          shopt -s dotglob
+          for p in * .*; do
+            [ "$p" = "." ] || [ "$p" = ".." ] && continue
+            [ "$p" = ".git" ] && continue
+            [ "$p" = ".github" ] && continue
+            rm -rf "$p"
+          done
+
+      - name: Write OMEGA MAX files
+        run: |
+          mkdir -p assets/brand data netlify/functions
+
+          ############## ASSETS ##############
+          cat > assets/brand/crying-brain.svg <<'SVG'
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><defs><radialGradient id="g" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#7dd3fc"/><stop offset="60%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#1e3a8a"/></radialGradient></defs><rect width="120" height="120" fill="#0b1020"/><g transform="translate(10,10)"><ellipse cx="50" cy="40" rx="45" ry="30" fill="url(#g)" stroke="#9ec7ff" stroke-width="2"/><path d="M20 40 Q35 20 50 40 T80 40" fill="none" stroke="#c7e2ff" stroke-width="2" opacity="0.6"/><path d="M48 50 q2 6 -3 12 q6 -2 10 0 q-4 -6 -3 -12 z" fill="#22d3ee" opacity="0.9"/><circle cx="40" cy="38" r="3" fill="#0f172a"/><circle cx="60" cy="38" r="3" fill="#0f172a"/></g><text x="60" y="110" text-anchor="middle" fill="#93c5fd" font-family="system-ui,-apple-system,Segoe UI,Roboto" font-size="8">Pleading Sanity</text></svg>
+          SVG
+          cp assets/brand/crying-brain.svg assets/brand/favicon.svg
+
+          ############## CONFIG/DATA ##############
+          cat > content.config.json <<'JSON'
+          {"brand":{"name":"Pleading Sanity","logo":"/assets/brand/crying-brain.svg","favicon":"/assets/brand/favicon.svg","tagline":"Rise from madness"},"sources":{"youtube_channels":["UCJ5v_MCY6GNUBTO8-D3XoAg"],"youtube_playlist":"","podcasts":["https://feeds.megaphone.fm/stuffyoushouldknow"]},"merch":{"payhip_store_url":"https://payhip.com/Pleadingsanity"}}
+          JSON
+
+          cat > data/tiktok.json <<'JSON'
+          {"items":[{"title":"Motivation Clip 1","url":"https://www.tiktok.com/@scout2015/video/6718335390845095173","image":""}]}
+          JSON
+
+          cat > data/tiktok_shop.json <<'JSON'
+          {"shop_embed_url":"https://vt.tiktok.com/ZNd4wRFfn/?page=TikTokShop",
+           "products":[
+             {"title":"PS Tracksuit — Midnight Blue","price":"£79","image":"/assets/brand/crying-brain.svg","url":"https://vt.tiktok.com/ZNd4wRFfn/?page=TikTokShop"},
+             {"title":"Crying Brain Hoodie — Black","price":"£49","image":"/assets/brand/crying-brain.svg","url":"https://vt.tiktok.com/ZNd4wRFfn/?page=TikTokShop"}]}
+          JSON
+
+          ############## ROOT FILES ##############
+          cat > index.html <<'HTML'
+          <!doctype html><html lang="en"><head>
+          <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+          <meta name="theme-color" content="#00040f"/>
+          <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml"/>
+          <link rel="manifest" href="/manifest.webmanifest"/>
+          <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+          <title>Pleading Sanity — OMEGA</title>
+          <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob: https:; media-src 'self' https: blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self' https:; frame-src https://www.youtube.com https://www.tiktok.com https://*.tiktok.com https://vt.tiktok.com https://*.vt.tiktok.com https://payhip.com;">
+          <link rel="stylesheet" href="/app.css"/></head>
+          <body class="cosmic">
+            <canvas id="stars"></canvas>
+            <div class="site-banner"><p><strong>Starter:</strong> TikTok Shop embed + product cards. Real silhouettes next. </p></div>
+            <header class="ps-header">
+              <div class="logo"><img src="/assets/brand/crying-brain.svg" alt="PS"/>
+                <div class="wordmark"><h1>Pleading <span>Sanity</span></h1><p class="tag">Rise from madness</p></div>
+              </div>
+              <nav>
+                <a href="#feed">Feed</a><a href="#podcasts">Soundbites</a><a href="#merch">Merch</a>
+                <a href="/arron.html">Arron</a><a href="/journal.html">Journal</a>
+                <a href="/rap.html">Rap</a><a href="/fitness.html">Fitness</a><a href="/creators.html">Creators</a>
+                <a href="/business-plan.html">Plan</a>
+              </nav>
+            </header>
+            <main>
+              <section class="hero"><div class="hero-inner">
+                <h2>Sanity Hub</h2>
+                <div class="controls">
+                  <label><input type="checkbox" id="onlyPositive"> Only Positive</label>
+                  <label>Source
+                    <select id="sourceFilter"><option value="all">All</option><option value="trending">Top YouTube</option><option value="channels">Channels</option><option value="podcast">Podcasts</option><option value="tiktok">TikTok</option></select>
+                  </label>
+                  <button id="refresh" class="btn">Refresh</button>
+                </div>
+              </div></section>
+              <section id="feed" class="feed"><h3>Sanity Feed</h3><div id="feed-grid" class="grid"></div></section>
+              <section id="podcasts" class="podcasts"><h3>Sanity Soundbites</h3><div id="playlist-wrap"></div><div id="podcast-list" class="podcast-grid"></div></section>
+              <section id="merch" class="merch"><h3>Merch</h3><div id="shop-embed" class="merch-embed"></div><div id="shop-grid" class="grid merch-grid"></div><p class="muted center">This is our beachhead. Premium designs + collabs incoming.</p></section>
+              <section id="journal" class="journal"><h3>Journaling Vault</h3>
+                <form id="journal-form">
+                  <textarea id="entry" placeholder="Unload your mind..." required></textarea>
+                  <div class="row">
+                    <select id="mood"><option value="neutral">Neutral</option><option value="low">Low</option><option value="high">High</option></select>
+                    <label class="toggle"><input type="checkbox" id="isPublic"> Public</label>
+                    <button class="btn" type="submit">Save</button>
+                  </div>
+                  <p id="journal-status" class="muted"></p>
+                </form>
+              </section>
+            </main>
+            <footer class="ps-footer"><p>&copy; <span id="y"></span> Pleading Sanity</p></footer>
+            <script src="/app.js" defer></script><script src="/stars.js" defer></script>
+            <script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))}</script>
+          </body></html>
+          HTML
+
+          cat > app.css <<'CSS'
+          :root{--bg:#00040f;--bg2:#0b1020;--card:#121a34;--ink:#e5edff;--muted:#9bb3ff;--brand:#7dd3fc;--accent:#c084fc;--ring:#3b82f6}
+          *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto}
+          h1,h2,h3{font-family:Orbitron,sans-serif} a{color:var(--brand)}
+          #stars{position:fixed;inset:0;z-index:-1}
+          .ps-header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid #1c2548;background:linear-gradient(180deg,rgba(18,26,52,.8),rgba(18,26,52,.4));backdrop-filter:blur(6px)}
+          .ps-header img{width:42px;height:42px;border-radius:8px}
+          .ps-header nav{display:flex;gap:12px;flex-wrap:wrap}
+          .site-banner{background:#0e1630;border-bottom:1px solid #203163;padding:8px 16px;text-align:center;color:#cfe0ff}
+          .hero{padding:30px 16px}.hero-inner{max-width:1100px;margin:0 auto}
+          .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+          .card{background:var(--card);border:1px solid #1f2a4f;border-radius:16px}
+          .btn{background:linear-gradient(90deg,var(--ring),var(--accent));color:#fff;border:none;border-radius:12px;padding:8px 12px;font-weight:700}
+          .merch-embed iframe{width:100%;min-height:560px;border:1px solid #1f2a4f;border-radius:16px;background:#fff}
+          .journal textarea{width:100%;min-height:120px;background:#0e1630;border:1px solid #1f2a4f;border-radius:12px;color:var(--ink);padding:10px;margin-bottom:8px}
+          .ps-footer{padding:20px;text-align:center;color:#9bb3ff}
+          CSS
+
+          cat > stars.js <<'JS'
+          (function(){const c=document.getElementById("stars");if(!c)return;const d=Math.max(1,Math.min(2,devicePixelRatio||1));const x=c.getContext("2d");let w=0,h=0;const s=[];function R(){w=c.width=innerWidth*d;h=c.height=innerHeight*d;c.style.width=innerWidth+"px";c.style.height=innerHeight+"px"}function I(){s.length=0;const n=Math.min(300,Math.floor((w*h)/15000));for(let i=0;i<n;i++)s.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.5+0.5,v:Math.random()*0.6+0.1})}function T(){x.clearRect(0,0,w,h);x.fillStyle="#a5b4fc";for(const a of s){a.y+=a.v;if(a.y>h)a.y=0;x.globalAlpha=0.2+(a.v*0.8);x.beginPath();x.arc(a.x,a.y,a.r,0,Math.PI*2);x.fill()}requestAnimationFrame(T)}addEventListener("resize",()=>{R();I()});R();I();T()})();
+          JS
+
+          cat > app.js <<'JS'
+          const FEED=document.getElementById('feed-grid'), POD=document.getElementById('podcast-list'), PL=document.getElementById('playlist-wrap');
+          const POS=document.getElementById('onlyPositive'), SRC=document.getElementById('sourceFilter'), REF=document.getElementById('refresh');
+          const SHOP=document.getElementById('shop-embed'), SHOPGRID=document.getElementById('shop-grid'); const JFORM=document.getElementById('journal-form'), JSTAT=document.getElementById('journal-status');
+          const Y=document.getElementById('y'); if(Y) Y.textContent=new Date().getFullYear();
+          let items=[],page=0; const SIZE=12;
+          const get=async(u)=>{const r=await fetch(u,{headers:{Accept:'application/json'}});return r.json()};
+          const pos=(a)=> POS?.checked ? a.filter(i=>!/(hate|kill|worst|fail|drama|beef)/i.test(i.title||'')) : a;
+          const bysrc=(a)=>{const t=SRC?.value||'all';return t==='all'?a:a.filter(i=>(i.feed||i.provider)===t||i.provider===t)};
+          async function loadFeed(){const d=await get('/.netlify/functions/aggregate');items=bysrc(pos(d.items||[]));page=0;FEED.innerHTML='';renderPage()}
+          function renderPage(){const s=page*SIZE,e=s+SIZE;(items.slice(s,e)).forEach(it=>{const c=document.createElement('article');c.className='card';const th=document.createElement('div');th.className='thumb';
+          if(it.provider==='youtube'||it.feed==='trending'){const f=document.createElement('iframe');const id=it.id||(it.url?.split('v=')[1]?.substring(0,11));f.src='https://www.youtube.com/embed/'+id+'?rel=0&modestbranding=1';f.loading='lazy';f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';th.appendChild(f)}
+          c.appendChild(th);const b=document.createElement('div');b.className='body';const h=document.createElement('h4');h.textContent=it.title||'Untitled';b.appendChild(h);c.appendChild(b);FEED.appendChild(c)});page++}
+          async function loadPod(){const d=await get('/.netlify/functions/podcast');if(POD) POD.innerHTML='';(d.items||[]).slice(0,9).forEach(p=>{const a=document.createElement('article');a.className='podcast';const b=document.createElement('div');b.className='body';const h=document.createElement('h4');h.textContent=p.title||'Podcast';b.appendChild(h);a.appendChild(b);if(p.audio){const au=document.createElement('audio');au.controls=true;au.preload='none';au.src=p.audio;a.appendChild(au)}POD&&POD.appendChild(a)});try{const cfg=await (await fetch('/content.config.json')).json();const pl=cfg.sources?.youtube_playlist||'';if(pl&&PL){const f=document.createElement('iframe');f.src='https://www.youtube.com/embed/videoseries?list='+encodeURIComponent(pl);f.loading='lazy';f.style.width='100%';f.style.minHeight='360px';PL.appendChild(f)}}catch{}}
+          async function shop(){try{const j=await get('/.netlify/functions/tiktok-shop');if(j.embed){const f=document.createElement('iframe');f.src=j.embed;f.loading='lazy';SHOP&&SHOP.appendChild(f)}else if(j.payhip){const f=document.createElement('iframe');f.src=j.payhip;f.loading='lazy';SHOP&&SHOP.appendChild(f)}
+          if(SHOP&&SHOP.firstChild&&SHOP.firstChild.tagName==='IFRAME'){let ok=false;SHOP.firstChild.addEventListener('load',()=>ok=true);setTimeout(()=>{if(!ok){SHOP.innerHTML='';const a=document.createElement('a');a.href=j.embed||j.payhip||'https://payhip.com/Pleadingsanity';a.target='_blank';a.className='btn';a.textContent='Open TikTok Shop';SHOP.appendChild(a)}},2000)}
+          if(SHOPGRID){SHOPGRID.innerHTML='';(j.products||[]).forEach(p=>{const card=document.createElement('div');card.className='product';const img=document.createElement('img');img.src=p.image||'/assets/brand/crying-brain.svg';const body=document.createElement('div');body.className='body';const h=document.createElement('h4');h.textContent=p.title;const link=document.createElement('a');link.href=p.url;link.target='_blank';link.className='btn';link.textContent='Buy';body.appendChild(h);body.appendChild(link);card.appendChild(img);card.appendChild(body);SHOPGRID.appendChild(card)})}}catch{}}
+          JFORM?.addEventListener('submit',async e=>{e.preventDefault();const text=document.getElementById('entry').value.trim(),mood=document.getElementById('mood').value,isPublic=document.getElementById('isPublic').checked;JSTAT.textContent='Saving...';
+          try{const r=await fetch('/.netlify/functions/journal-submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,mood,is_public:isPublic})});const j=await r.json();JSTAT.textContent=j.ok?'Saved.':(j.message||'Saved locally.');if(!j.ok){const arr=JSON.parse(localStorage.getItem('ps_journal')||'[]');arr.push({text,mood,is_public:isPublic,ts:Date.now()});localStorage.setItem('ps_journal',JSON.stringify(arr))}JFORM.reset()}catch{JSTAT.textContent='Offline: saved locally.'}});
+          SRC?.addEventListener('change',()=>{loadFeed()});POS?.addEventListener('change',()=>{loadFeed()});REF?.addEventListener('click',()=>{loadFeed();loadPod();shop()});
+          loadFeed();loadPod();shop();
+          JS
+
+          cat > manifest.webmanifest <<'JSON'
+          {"name":"Pleading Sanity — OMEGA","short_name":"Sanity","start_url":"/","display":"standalone","background_color":"#00040f","theme_color":"#00040f","icons":[{"src":"/assets/brand/favicon.svg","sizes":"512x512","type":"image/svg+xml"}]}
+          JSON
+
+          cat > sw.js <<'JS'
+          const CORE=["/","/index.html","/app.css","/app.js","/stars.js","/assets/brand/crying-brain.svg","/assets/brand/favicon.svg"];const PRE="ps-precache";
+          self.addEventListener("install",e=>{e.waitUntil(caches.open(PRE).then(c=>c.addAll(CORE)))});
+          self.addEventListener("fetch",e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)))});
+          JS
+
+          cat > _redirects <<'TXT'
+          /api/*  /.netlify/functions/:splat  200!
+          /* /index.html 200
+          TXT
+
+          cat > _headers <<'TXT'
+          /*
+            Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+          /.netlify/functions/*
+            Access-Control-Allow-Origin: *
+          TXT
+
+          ############## EXTRA PAGES ##############
+          cat > arron.html <<'H'
+          <!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Arron</title><link rel="stylesheet" href="/app.css"/></head><body class="cosmic"><header class="ps-header"><div class="logo"><img src="/assets/brand/crying-brain.svg"/><div class="wordmark"><h1>Arron — <span>Sanity Architect</span></h1></div></div><nav><a href="/">Home</a></nav></header><main class="chat-main"><div id="chat" class="chat"></div><form id="f" class="chat-form"><input id="m" placeholder="Speak your truth..."/><button class="btn">Send</button></form></main><script>const c=document.getElementById("chat"),f=document.getElementById("f"),m=document.getElementById("m");const add=(r,t)=>{const b=document.createElement("div");b.className="bubble "+r;b.textContent=t;c.appendChild(b);c.scrollTop=c.scrollHeight};f.addEventListener("submit",async e=>{e.preventDefault();const t=m.value.trim();if(!t)return;add("user",t);m.value="";try{const r=await fetch("/.netlify/functions/arron",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"user",content:t}]})});const j=await r.json();add("ai",j.reply||"Arron is offline. Add OPENAI_API_KEY.")}catch{add("ai","Arron is offline. Add OPENAI_API_KEY.")}});</script></body></html>
+          H
+
+          cat > business-plan.html <<'H'
+          <!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Business Plan — God Mode</title><link rel="stylesheet" href="/app.css"/></head><body class="cosmic"><header class="ps-header"><div class="logo"><img src="/assets/brand/crying-brain.svg"/><div class="wordmark"><h1>Business Plan — <span>God Mode</span></h1></div></div><nav><a href="/">Home</a><a href="/arron.html">Arron</a></nav></header><main class="doc"><h2>Why we exist</h2><p>Pleading Sanity is a new-gen social hub: sanity-first feed, merch with meaning, journals, AI companion.</p><h2>Core</h2><ul><li>Sanity Hub</li><li>AI Journaling</li><li>Podcasts</li><li>Games & Kids</li><li>Positive Points</li><li>Fitness</li><li>Rap Battles</li></ul><h2>Monetization</h2><p>TikTok Shop + Payhip, premium drops, partnerships.</p></main></body></html>
+          H
+
+          cat > journal.html <<'H'
+          <!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Journaling Wall</title><link rel="stylesheet" href="/app.css"/></head><body class="cosmic"><header class="ps-header"><div class="logo"><img src="/assets/brand/crying-brain.svg"/><div class="wordmark"><h1>Journaling Wall</h1></div></div><nav><a href="/">Home</a></nav></header><main class="doc"><p class="muted">Public entries you’ve saved (local demo). Connect Supabase to sync.</p><div id="wall" class="grid"></div></main><script>function load(){const w=document.getElementById("wall");w.innerHTML="";(JSON.parse(localStorage.getItem("ps_journal")||"[]").filter(x=>x.is_public).reverse().slice(0,50)).forEach(e=>{const card=document.createElement("article");card.className="card";const b=document.createElement("div");b.className="body";const t=document.createElement("h4");t.textContent=(e.mood||"neutral").toUpperCase();const p=document.createElement("p");p.textContent=e.text;const m=document.createElement("p");m.className="muted";m.textContent=new Date(e.ts||Date.now()).toLocaleString();b.appendChild(t);b.appendChild(p);b.appendChild(m);card.appendChild(b);w.appendChild(card)})}load()</script></body></html>
+          H
+
+          cat > rap.html <<'H'
+          <!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Rap Battles</title><link rel="stylesheet" href="/app.css"/></head><body class="cosmic"><header class="ps-header"><div class="logo"><img src="/assets/brand/crying-brain.svg"/><div class="wordmark"><h1>Rap Battles</h1></div></div><nav><a href="/">Home</a></nav></header><main class="doc"><article class="card"><div class="body"><h4>Submit verse</h4><textarea id="lyrics" style="width:100%;min-height:120px" placeholder="Paste your 1-minute verse..."></textarea><div class="center" style="margin:8px 0"><button class="btn" id="scoreBtn">Score Verse</button></div><p id="scoreOut" class="muted"></p></div></article></main><script>document.getElementById("scoreBtn").addEventListener("click",()=>{const t=(document.getElementById("lyrics").value||"").toLowerCase();const pos=["heal","rise","breathe","love","hope","grow","sanity","light","strong","peace"],neg=["hate","kill","worthless","die","anger","fail","drama","beef"];let s=50,p=0,n=0;pos.forEach(w=>t.includes(w)&&p++);neg.forEach(w=>t.includes(w)&&n++);s+=p*5-n*7;s=Math.max(0,Math.min(100,s));document.getElementById("scoreOut").textContent=`Prototype Score: ${s}/100 (pos +${p*5}, neg -${n*7})`});</script></body></html>
+          H
+
+          cat > fitness.html <<'H'
+          <!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Fitness & Mind</title><link rel="stylesheet" href="/app.css"/></head><body class="cosmic"><header class="ps-header"><div class="logo"><img src="/assets/brand/crying-brain.svg"/><div class="wordmark"><h1>Fitness & Mind</h1></div></div><nav><a href="/">Home</a></nav></header><main class="doc"><div class="grid"><article class="card"><div class="body"><h4>Log</h4><label>Steps <input id="steps" type="number" min="0"></label><label>Breath (min) <input id="breathe" type="number" min="0"></label><label>Workout? <input id="workout" type="checkbox"></label><div class="center" style="margin:8px 0"><button class="btn" id="save">Save</button></div><p id="status" class="muted"></p></div></article><article class="card"><div class="body"><h4>History</h4><div id="hist"></div></div></article></div></main><script>const K="ps_fitness";const L=()=>JSON.parse(localStorage.getItem(K)||"[]");const S=d=>localStorage.setItem(K,JSON.stringify(d));const R=()=>{const h=document.getElementById("hist");h.innerHTML="";L().slice(-14).reverse().forEach(r=>{const p=document.createElement("p");p.className="muted";p.textContent=`${new Date(r.ts).toLocaleString()} — steps ${r.steps}, breath ${r.breathe}m, workout ${r.workout?"yes":"no"}`;h.appendChild(p)})};document.getElementById("save").addEventListener("click",()=>{const steps=+document.getElementById("steps").value||0,breathe=+document.getElementById("breathe").value||0,workout=document.getElementById("workout").checked;const d=L();d.push({steps,breathe,workout,ts:Date.now()});S(d);document.getElementById("status").textContent="Saved.";R()});R()</script></body></html>
+          H
+
+          cat > creators.html <<'H'
+          <!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Verified Creators</title><link rel="stylesheet" href="/app.css"/></head><body class="cosmic"><header class="ps-header"><div class="logo"><img src="/assets/brand/crying-brain.svg"/><div class="wordmark"><h1>Verified Creators</h1></div></div><nav><a href="/">Home</a></nav></header><main class="doc"><div id="grid" class="grid"></div></main><script>const data=[{name:"Survivor Poet",handle:"@poet",avatar:"/assets/brand/crying-brain.svg",link:"https://tiktok.com",tag:"poetry"},{name:"Coach Flow",handle:"@flow",avatar:"/assets/brand/crying-brain.svg",link:"https://youtube.com",tag:"fitness"}];const grid=document.getElementById("grid");data.forEach(p=>{const card=document.createElement("article");card.className="card";const b=document.createElement("div");b.className="body";const h=document.createElement("h4");h.textContent=p.name+" — "+p.tag;const m=document.createElement("p");m.className="muted";m.textContent=p.handle;const a=document.createElement("a");a.href=p.link;a.target="_blank";a.className="btn";a.textContent="Follow";b.appendChild(h);b.appendChild(m);b.appendChild(a);card.appendChild(b);grid.appendChild(card)})</script></body></html>
+          H
+
+          cat > privacy.html <<'H'
+          <!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Privacy</title><link rel="stylesheet" href="/app.css"/></head><body class="cosmic"><header class="ps-header"><div class="logo"><img src="/assets/brand/crying-brain.svg"/><div class="wordmark"><h1>Privacy</h1></div></div><nav><a href="/">Home</a></nav></header><main class="doc"><p>We only store what you submit. Journals can be private or public. Clear browser storage to remove local data. For cloud deletion, contact support.</p></main></body></html>
+          H
+
+          cat > terms.html <<'H'
+          <!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Terms</title><link rel="stylesheet" href="/app.css"/></head><body class="cosmic"><header class="ps-header"><div class="logo"><img src="/assets/brand/crying-brain.svg"/><div class="wordmark"><h1>Terms</h1></div></div><nav><a href="/">Home</a></nav></header><main class="doc"><p>Be kind. No harassment, doxxing, or illegal content. Supportive community; not a substitute for medical care.</p></main></body></html>
+          H
+
+          ############## NETLIFY CONFIG ##############
+          cat > netlify.toml <<'TOML'
+          [build]
+            publish = "."
+            functions = "netlify/functions"
+            node_version = "18"
+          [[headers]]
+            for = "/*"
+            [headers.values]
+              X-Frame-Options = "SAMEORIGIN"
+              X-Content-Type-Options = "nosniff"
+              Referrer-Policy = "strict-origin-when-cross-origin"
+              Permissions-Policy = "interest-cohort=()"
+          [[headers]]
+            for = "/.netlify/functions/*"
+            [headers.values]
+              Access-Control-Allow-Origin = "*"
+              Cache-Control = "public, max-age=300, stale-while-revalidate=86400"
+          [[headers]]
+            for = "/assets/*"
+            [headers.values]
+              Cache-Control = "public, max-age=31536000, immutable"
+          TOML
+
+          ############## FUNCTIONS ##############
+          cat > netlify/functions/aggregate.js <<'J'
+          export const handler = async () => {
+            try {
+              const items = [];
+              const [trendRes, chRes, podRes, ttRes] = await Promise.all([
+                fetch("/.netlify/functions/youtube-trending"),
+                fetch("/.netlify/functions/youtube-channels"),
+                fetch("/.netlify/functions/podcast"),
+                fetch("/.netlify/functions/tiktok-curated")
+              ]);
+              const [trend, ch, pod, tt] = await Promise.all([
+                trendRes.json().catch(()=>({items:[]})),
+                chRes.json().catch(()=>({items:[]})),
+                podRes.json().catch(()=>({items:[]})),
+                ttRes.json().catch(()=>({items:[]})),
+              ]);
+              if(trend.items) items.push(...trend.items);
+              if(ch.items) items.push(...ch.items);
+              if(pod.items) items.push(...pod.items);
+              if(tt.items) items.push(...tt.items);
+              items.sort((a,b)=> (new Date(b.published||0)) - (new Date(a.published||0)));
+              return { statusCode:200, headers:{ "Content-Type":"application/json","Access-Control-Allow-Origin":"*" }, body: JSON.stringify({items}) };
+            } catch (e) {
+              return { statusCode:200, headers:{ "Content-Type":"application/json","Access-Control-Allow-Origin":"*" }, body: JSON.stringify({items:[]}) };
+            }
+          };
+          J
+
+          cat > netlify/functions/youtube-trending.js <<'J'
+          export const handler = async () => {
+            try {
+              const key = process.env.YOUTUBE_API_KEY;
+              const region = process.env.YT_REGION || "GB";
+              if (key){
+                const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&regionCode=${encodeURIComponent(region)}&maxResults=30&key=${key}`;
+                const res = await fetch(url); const j = await res.json();
+                const items = (j.items||[]).map(v=>({feed:"trending",provider:"youtube",id:v.id,title:v.snippet?.title||"YouTube",published:v.snippet?.publishedAt,url:`https://www.youtube.com/watch?v=${v.id}`}));
+                return { statusCode:200, headers:{ "Content-Type":"application/json","Access-Control-Allow-Origin":"*" }, body: JSON.stringify({items}) };
+              } else {
+                const host = process.env.INVIDIOUS_INSTANCE || "https://yewtu.be";
+                const res = await fetch(`${host}/api/v1/trending?region=${encodeURIComponent(region)}`); const arr = await res.json();
+                const items = (arr||[]).slice(0,30).map(v=>({feed:"trending",provider:"youtube",id:v.videoId,title:v.title,url:`https://www.youtube.com/watch?v=${v.videoId}`}));
+                return { statusCode:200, headers:{ "Content-Type":"application/json","Access-Control-Allow-Origin":"*" }, body: JSON.stringify({items}) };
+              }
+            } catch(e) { return { statusCode:200, headers:{ "Content-Type":"application/json","Access-Control-Allow-Origin":"*" }, body: JSON.stringify({items:[]}) }; }
+          };
+          J
+
+          cat > netlify/functions/youtube-channels.js <<'J'
+          function parseEntries(xml){
+            const entries=[]; const blocks=xml.split("<entry>").slice(1);
+            for(const b of blocks){
+              const id=(b.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)||b.match(/<id>[^<]*videos\/([^<]+)<\/id>/)||[])[1];
+              const title=(b.match(/<title>([\s\S]*?)<\/title>/)||[])[1]?.trim()||"YouTube Video";
+              const pub=(b.match(/<published>([^<]+)<\/published>/)||[])[1]||null;
+              if(id) entries.push({ feed:"channels", provider:"youtube", id, title, published:pub, url:`https://www.youtube.com/watch?v=${id}` });
+            } return entries;
+          }
+          export const handler = async () => {
+            try {
+              const res = await fetch("/content.config.json"); const cfg = await res.json();
+              const channels = (cfg.sources?.youtube_channels)||[]; const items=[];
+              for(const ch of channels){
+                const r = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${encodeURIComponent(ch)}`);
+                if(!r.ok) continue; const xml = await r.text(); items.push(...parseEntries(xml));
+              }
+              items.sort((a,b)=> (new Date(b.published||0)) - (new Date(a.published||0)));
+              return { statusCode:200, headers:{ "Content-Type":"application/json","Access-Control-Allow-Origin":"*" }, body: JSON.stringify({items}) };
+            } catch(e) { return { statusCode:200, headers:{ "Content-Type":"application/json","Access-Control-Allow-Origin":"*" }, body: JSON.stringify({items:[]}) }; }
+          };
+          J
+
+          cat > netlify/functions/podcast.js <<'J'
+          function parseItems(xml){
+            const items=[];const blocks=xml.split("<item>").slice(1);
+            for(const b of blocks){
+              const title=(b.match(/<title>([\s\S]*?)<\/title>/)||[])[1]?.trim()||"Podcast";
+              const pub=(b.match(/<pubDate>([\s\S]*?)<\/pubDate>/)||[])[1]||null;
+              const enc=(b.match(/<enclosure[^>]*url="([^"]+)"/)||[])[1]||null;
+              items.push({ feed:"podcast", provider:"podcast", title, published:pub, audio:enc, url:enc });
+            } return items;
+          }
+          export const handler = async () => {
+            try{
+              const res = await fetch("/content.config.json"); const cfg = await res.json();
+              const feeds=(cfg.sources?.podcasts)||[]; const items=[];
+              for(const url of feeds){
+                const r=await fetch(url,{headers:{Accept:"application/rss+xml, application/xml;q=0.9"}}); if(!r.ok) continue;
+                const xml=await r.text(); items.push(...parseItems(xml));
+              }
+              items.sort((a,b)=> (new Date(b.published||0)) - (new Date(a.published||0)));
+              return { statusCode:200, headers:{ "Content-Type":"application/json","Access-Control-Allow-Origin":"*" }, body: JSON.stringify({items}) };
+            }catch(e){ return { statusCode:200, headers:{ "Content-Type":"application/json","Access-Control-Allow-Origin":"*" }, body: JSON.stringify({items:[]}) }; }
+          };
+          J
+
+          cat > netlify/functions/tiktok-curated.js <<'J'
+          export const handler = async () => {
+            try{
+              const res = await fetch("/data/tiktok.json"); const data = await res.json();
+              const items = (data.items||[]).map(x=>({ feed:"tiktok", provider:"tiktok", title:x.title||"TikTok", url:x.url }));
+              return { statusCode:200, headers:{ "Content-Type":"application/json","Access-Control-Allow-Origin":"*" }, body: JSON.stringify({items}) };
+            }catch(e){ return { statusCode:200, headers:{ "Content-Type":"application/json","Access-Control-Allow-Origin":"*" }, body: JSON.stringify({items:[]}) }; }
+          };
+          J
+
+          cat > netlify/functions/tiktok-shop.js <<'J'
+          export const handler = async () => {
+            try{
+              const local = await fetch("/data/tiktok_shop.json").then(r=>r.json()).catch(()=>({}));
+              const embed = (process.env.TIKTOK_SHOP_EMBED_URL||local.shop_embed_url||"").trim();
+              const payhip = process.env.PAYHIP_STORE_URL || "https://payhip.com/Pleadingsanity";
+              const products = local.products||[];
+              return { statusCode:200, headers:{ "Content-Type":"application/json","Access-Control-Allow-Origin":"*" }, body: JSON.stringify({ embed, payhip, products }) };
+            }catch(e){
+              const payhip = process.env.PAYHIP_STORE_URL || "https://payhip.com/Pleadingsanity";
+              return { statusCode:200, headers:{ "Content-Type":"application/json","Access-Control-Allow-Origin":"*" }, body: JSON.stringify({ embed:"", payhip, products:[] }) };
+            }
+          };
+          J
+
+          cat > netlify/functions/journal-submit.js <<'J'
+          export const handler = async (event) => {
+            try{
+              if (event.httpMethod !== "POST") return { statusCode:405, body:"Method not allowed" };
+              const { text, mood, is_public } = JSON.parse(event.body||"{}");
+              const url = process.env.SUPABASE_URL;
+              const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+              if(url && key){
+                const res = await fetch(`${url}/rest/v1/journal_entries`, {
+                  method:"POST",
+                  headers:{ "Content-Type":"application/json","apikey":key,"Authorization":`Bearer ${key}`,"Prefer":"return=representation" },
+                  body: JSON.stringify([{ text, mood, is_public: !!is_public, created_at: new Date().toISOString() }])
+                });
+                const j = await res.json();
+                return { statusCode:200, headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ ok:true, data:j }) };
+              }
+              return { statusCode:200, headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ ok:false, message:"Supabase not configured. Saved locally." }) };
+            }catch(e){ return { statusCode:200, headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ ok:false }) }; }
+          };
+          J
+
+          cat > netlify/functions/arron.js <<'J'
+          export const handler = async (event) => {
+            try{
+              const body = JSON.parse(event.body||"{}");
+              const key = process.env.OPENAI_API_KEY;
+              if(!key){
+                return { statusCode:200, headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ reply:"Arron here. Add OPENAI_API_KEY in Netlify env to go online." }) };
+              }
+              const resp = await fetch("https://api.openai.com/v1/chat/completions", {
+                method:"POST", headers:{ "Content-Type":"application/json", "Authorization":`Bearer ${key}` },
+                body: JSON.stringify({ model:"gpt-4o-mini", messages:[{role:"system",content:"You are Arron — supportive, clear. No medical claims."}, ...(body.messages||[])].slice(-12), temperature:0.7 })
+              });
+              const json = await resp.json(); const reply = json.choices?.[0]?.message?.content || "No reply.";
+              return { statusCode:200, headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ reply }) };
+            }catch(e){ return { statusCode:200, headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ reply:"Arron hit an error." }) }; }
+          };
+          J
+
+      - name: Commit & push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Seed: Pleading Sanity — OMEGA MAX (clean + full site)" || echo "No changes"
+          git push
