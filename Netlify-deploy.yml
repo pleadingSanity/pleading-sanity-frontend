@@ -1,0 +1,36 @@
+name: Deploy to Netlify
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Only needed if you later add a real build step (React/Vite/etc.)
+      - name: Detect publish dir
+        id: detect
+        run: |
+          if [ -d dist ]; then echo "dir=dist" >> $GITHUB_OUTPUT;
+          elif [ -d build ]; then echo "dir=build" >> $GITHUB_OUTPUT;
+          elif [ -d public ]; then echo "dir=public" >> $GITHUB_OUTPUT;
+          else echo "dir=." >> $GITHUB_OUTPUT; fi
+
+      - name: Install Netlify CLI
+        run: npm i -g netlify-cli
+
+      - name: Deploy (prod)
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          PUBLISH_DIR: ${{ steps.detect.outputs.dir }}
+        run: |
+          netlify deploy \
+            --dir="${PUBLISH_DIR:-.}" \
+            --prod \
+            --site "$NETLIFY_SITE_ID" \
+            --auth "$NETLIFY_AUTH_TOKEN"

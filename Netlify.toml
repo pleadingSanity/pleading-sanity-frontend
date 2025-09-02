@@ -1,49 +1,119 @@
+# =========================
+# Pleading Sanity — Netlify
+# Static site: HTML/CSS/JS at repo root
+# =========================
+
 [build]
-  # Your site files (index.html, style.css, script.js, assets/) live at repo root
-  publish = "."
-  command = ""  # no build step for a pure static site
+  publish = "."            # serve files from repo root
+  command = ""             # no build step
 
 [build.environment]
   NODE_VERSION = "22.18.0"
 
-# ---------- PLUGINS: stable + safe ----------
-# Minify HTML to speed up page load
+# ---------- Plugins (safe) ----------
+# Minify HTML (small, safe speed win)
 [[plugins]]
   package = "netlify-plugin-minify-html"
 
-# Inline above-the-fold CSS so first paint is fast
+# Inline critical CSS (fast first paint)
 [[plugins]]
   package = "netlify-plugin-inline-critical-css"
 
-# Optimise images on the fly (non-breaking)
-[[plugins]]
-  package = "netlify-plugin-image-optim"
-
-# Copy assets to ensure correct location (avoids missing file paths)
-[[plugins]]
-  package = "netlify-plugin-copy-files"
-  [plugins.inputs]
-    from = "assets"
-    to = "assets"
-
-# Check for broken links (non-fatal; fails only on hard errors)
-[[plugins]]
-  package = "netlify-plugin-checklinks"
-
-# Validate HTML for simple mistakes (non-fatal)
+# Optional: HTML validation during deploy (non-fatal)
 [[plugins]]
   package = "netlify-plugin-html-validate"
 
-# ---------- ROUTING ----------
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Optional: Link checker (warns on broken links; non-fatal)
+[[plugins]]
+  package = "netlify-plugin-checklinks"
 
-# ---------- SECURITY HEADERS ----------
+# NOTE: Avoid exotic plugins that might break deploys.
+# Image optim happens via Netlify CDN; extra plugins not required.
+
+# ---------- Routing ----------
+# No SPA catch-all so multi-page routes work (movement/shop/kids/404)
+# Add SPA rule later only if you move to a front-end router.
+[[redirects]]
+  from = "/index"
+  to = "/"
+  status = 301
+  force  = true
+
+# Convenience pretty routes (optional)
+[[redirects]]
+  from = "/sanityhub"
+  to   = "/sanityhub.html"
+  status = 301
+  force = true
+
+# ---------- Caching ----------
+# Long cache for static assets (images, icons, media) — 1 year
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Vary = "Accept-Encoding"
+
+# Long cache for compiled CSS/JS — 1 year (safe for static file names)
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Vary = "Accept-Encoding"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Vary = "Accept-Encoding"
+
+# Fonts (if you add any under /assets/fonts)
+[[headers]]
+  for = "/assets/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Access-Control-Allow-Origin = "*"
+    Vary = "Accept-Encoding"
+
+# Short cache for HTML so updates go live fast
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=60"
+    Vary = "Accept-Encoding"
+
+# ---------- Security Headers ----------
 [[headers]]
   for = "/*"
   [headers.values]
     Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
-    X-Frame-Options = "SAMEORIGIN"
-    X-Content-Type-Options = "nosniff"
+    X-Frame-Options           = "SAMEORIGIN"
+    X-Content-Type-Options    = "nosniff"
+    Referrer-Policy           = "strict-origin-when-cross-origin"
+    Permissions-Policy        = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    # CSP: generous enough for YouTube-nocookie + TikTok embeds, mailto links.
+    # If you add analytics (e.g., Plausible), whitelist its domain under script-src & connect-src.
+    Content-Security-Policy   = """
+      default-src 'self';
+      script-src 'self' https://www.tiktok.com https://*.tiktokcdn.com 'unsafe-inline';
+      style-src  'self' 'unsafe-inline';
+      img-src    'self' data: https://i.ytimg.com https://*.tiktokcdn.com https://images.unsplash.com;
+      frame-src  https://www.youtube-nocookie.com https://www.tiktok.com;
+      connect-src 'self';
+      font-src   'self' data:;
+      media-src  'self' https://*.tiktokcdn.com;
+      object-src 'none';
+      base-uri   'self';
+      form-action 'self' https://api.netlify.com;
+    """
+
+# ---------- MIME fixes (manifest/icons) ----------
+[[headers]]
+  for = "/site.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json; charset=utf-8"
+
+[[headers]]
+  for = "/assets/icons/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"

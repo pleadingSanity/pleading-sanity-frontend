@@ -1,1 +1,53 @@
-Placeholder content for content_feed.json
+{
+  "youtube": {
+    "maxPerSource": 8,
+    "categories": [
+      {
+        "name": "Mindset & Motivation",
+        "keywords": [
+          "mental health motivation",
+          "addiction recovery testimony",
+          "discipline over motivation",
+          "entrepreneur mental toughness",
+          "youth motivation UK"
+        ],
+        "channels": []
+      },
+      {
+        "name": "Healing & Resilience",
+        "keywords": [
+          "suicide prevention stories of hope",
+          "PTSD healing story",
+          "inner child healing",
+          "mindfulness for trauma",
+          "journaling for healing",
+          "breathwork for anxiety"
+        ],
+        "channels": []
+      },
+      {
+        "name": "Spiritual Growth",
+        "keywords": [
+          "spiritual warfare testimony",
+          "faith and mental health journey",
+          "god saved my life story",
+          "deliverance testimony"
+        ],
+        "channels": []
+      },
+      {
+        "name": "Community & Purpose",
+        "keywords": [
+          "streetwear brand story",
+          "Leicester community story",
+          "men's mental health honest talk",
+          "women's mental health empowerment"
+        ],
+        "channels": []
+      }
+    ]
+  },
+  "tiktok": {
+    "urls": []
+  }
+}

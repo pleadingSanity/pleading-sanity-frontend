@@ -1,1 +1,533 @@
-Placeholder content for movement.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pleading Sanity — The Movement</title>
+
+  <meta name="description" content="Pleading Sanity: turn madness into a movement. Stories, tools, and a spiritual OS to rise from the dark. Join the Eternal Co-op." />
+  <link rel="canonical" href="https://pleadingsanity.co.uk/movement" />
+
+  <meta property="og:title" content="Pleading Sanity — The Movement" />
+  <meta property="og:description" content="Turn pain into power. God-mode discipline. Devil-mode honesty. A spiritual OS for survivors." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://pleadingsanity.co.uk/movement" />
+  <meta property="og:image" content="https://pleadingsanity.co.uk/background-stars.jpg" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Pleading Sanity — The Movement" />
+  <meta name="twitter:description" content="Turn pain into power. God-mode discipline. Devil-mode honesty. A spiritual OS for survivors." />
+  <meta name="twitter:image" content="https://pleadingsanity.co.uk/background-stars.jpg" />
+
+  <link rel="icon" href="favicon.ico" />
+  <link rel="preload" as="image" href="background-stars.jpg" imagesrcset="background-stars.jpg" />
+
+  <style>
+    :root{
+      --bg:#05060a;
+      --panel:#0b0e14;
+      --ink:#ecf1ff;
+      --muted:#c6d6ffcc;
+      --brand:#6ea8ff;
+      --accent:#a78bfa;
+      --danger:#ff6b6b;
+      --good:#66db9f;
+      --ring:0 0 0 .15rem #6ea8ff55;
+      --shadow:0 .6rem 2rem rgba(0,0,0,.5);
+      --grad:
+        radial-gradient(1100px 560px at 50% -10%, #6ea8ff22, transparent 60%),
+        radial-gradient(900px 520px at 120% 10%, #a78bfa28, transparent 60%),
+        radial-gradient(700px 520px at -20% 20%, #66db9f22, transparent 60%);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+      color:var(--ink);
+      background:var(--bg) fixed;
+      background-image:var(--grad), url('background-stars.jpg');
+      background-size:cover; background-attachment:fixed;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:24px}
+    a{color:var(--brand);text-decoration:none}
+    a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box-shadow:var(--ring);border-color:#6ea8ff77}
+
+    /* NAV */
+    header.nav{
+      position:sticky;top:0;z-index:40;
+      backdrop-filter:saturate(1.15) blur(8px);
+      background:#05060acc;border-bottom:1px solid #ffffff12;
+    }
+    .navbar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px}
+    .logo img{width:28px;height:28px;border-radius:6px;box-shadow:var(--shadow)}
+    .navlinks{display:flex;gap:12px;flex-wrap:wrap}
+
+    /* BUTTONS */
+    .btn{
+      display:inline-flex;align-items:center;gap:.5rem;
+      padding:.7rem 1rem;border-radius:14px;
+      background:linear-gradient(135deg,#121827,#0f1420);
+      border:1px solid #ffffff20;color:var(--ink);
+      box-shadow:var(--shadow);transition:transform .15s ease,filter .15s ease;
+    }
+    .btn:hover{transform:translateY(-1px);filter:brightness(1.05)}
+    .btn--brand{background:linear-gradient(135deg,#3468ff,#7ca6ff);color:#fff;border:none}
+    .btn--ghost{background:transparent;border:1px solid #ffffff33}
+    .btn-group{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+
+    /* HERO */
+    .hero{padding:64px 0 30px;text-align:center}
+    .eyebrow{color:var(--muted);text-transform:uppercase;letter-spacing:.16em;font-size:.84rem}
+    h1{font-size:clamp(1.9rem,3.9vw,3.2rem);line-height:1.1;margin:.5rem auto 1rem;max-width:900px;text-shadow:0 6px 20px #000c}
+    .lede{max-width:820px;margin:0 auto 20px;color:var(--muted)}
+
+    /* GRID & CARDS */
+    .grid{display:grid;gap:18px}
+    @media (min-width:760px){.grid.cols-2{grid-template-columns:1fr 1fr}.grid.cols-3{grid-template-columns:repeat(3,1fr)}}
+    .card{
+      background:linear-gradient(180deg,#0b0e14cc,#0a0d13f0);
+      border:1px solid #ffffff16;border-radius:18px;padding:18px;box-shadow:var(--shadow)
+    }
+    .card h3{margin:.2rem 0 .4rem}
+    .chip{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .6rem;border-radius:999px;font-size:.78rem;background:#ffffff12;border:1px solid #ffffff1f;color:var(--muted)}
+    .kpi{font-size:2.1rem;font-weight:800}
+    .principles .card{border-left:3px solid #ffffff1f}
+    .principles .good{border-left-color:var(--good)}
+    .principles .danger{border-left-color:var(--danger)}
+    .embed{aspect-ratio:16/9;width:100%;border:0;border-radius:14px;background:#000}
+
+    /* FORM */
+    form .row{display:grid;gap:12px}
+    @media (min-width:760px){form .row{grid-template-columns:1fr 1fr}}
+    input,textarea{
+      width:100%;padding:.9rem 1rem;border-radius:12px;background:#0c1120;border:1px solid #ffffff22;color:var(--ink)
+    }
+
+    /* MISC */
+    footer{padding:36px 0 80px;color:#a7b6d6;text-align:center}
+    .fade{opacity:0;transform:translateY(10px);animation:fadeUp .6s .15s ease forwards}
+    @keyframes fadeUp{to{opacity:1;transform:none}}
+    code{background:#ffffff12;padding:.12rem .35rem;border-radius:6px}
+
+    /* Skeletons for feed */
+    .skeleton{border-radius:14px;background:linear-gradient(90deg,#171b25,#1d2330 40%,#171b25 80%);background-size:200% 100%;animation:shimmer 1.2s infinite}
+    @keyframes shimmer{to{background-position:-200% 0}}
+  </style>
+</head>
+<body>
+  <header class="nav" role="navigation" aria-label="Main">
+    <div class="wrap navbar">
+      <a class="logo" href="index.html" aria-label="Pleading Sanity home">
+        <img src="brain-logo.png" alt="" loading="lazy" width="28" height="28" />
+        <span>Pleading Sanity</span>
+      </a>
+      <nav class="navlinks" aria-label="Site">
+        <a class="btn btn--ghost" href="index.html">Home</a>
+        <a class="btn btn--ghost" href="sanityhub.html">Sanity Hub</a>
+        <a class="btn btn--brand" href="#join">Join the Movement</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="hero wrap fade">
+      <div class="eyebrow">The Movement</div>
+      <h1>Turn madness into a movement. A spiritual OS for the broken—built by survivors.</h1>
+      <p class="lede">
+        God-mode discipline. Devil-mode honesty. We don’t hide scars—we alchemize them into signal.
+        This is the Eternal Co-op: creators, coders, carers, and fighters building tools and culture that pull people out of the dark.
+      </p>
+      <div class="btn-group" role="group" aria-label="Primary actions">
+        <a class="btn btn--brand" href="#drops">Latest Drops</a>
+        <a class="btn" href="#manifesto">Read the Manifesto</a>
+      </div>
+    </section>
+
+    <section class="wrap grid cols-3 section fade" aria-label="Momentum">
+      <article class="card" aria-labelledby="gmode">
+        <div class="chip">God Mode</div>
+        <h3 id="gmode" class="kpi">Discipline</h3>
+        <p class="muted">Tiny daily reps. Keep the promises you make to yourself.</p>
+      </article>
+      <article class="card" aria-labelledby="dmode">
+        <div class="chip">Devil Mode</div>
+        <h3 id="dmode" class="kpi">Radical Honesty</h3>
+        <p class="muted">Name the shadow. No masks. Truth unlocks change.</p>
+      </article>
+      <article class="card" aria-labelledby="coop">
+        <div class="chip">Eternal Co-op</div>
+        <h3 id="coop" class="kpi">Alchemists</h3>
+        <p class="muted">Artists, engineers, survivors. Everyone ships hope.</p>
+      </article>
+    </section>
+
+    <section id="manifesto" class="wrap section fade" aria-label="Manifesto">
+      <h2>Manifesto</h2>
+      <p class="lead">We don’t chase perfection. We chase signal—things that help one person today.</p>
+      <div class="grid cols-2 principles" style="margin-top:12px">
+        <article class="card good">
+          <h3>1. Build in Public</h3>
+          <p>Process &gt; polish. Ship small, ship often. Share the climb so others can grab the next rung.</p>
+        </article>
+        <article class="card danger">
+          <h3>2. Name the Darkness</h3>
+          <p>We speak plainly about depression, addiction, trauma. Honesty removes shame’s teeth.</p>
+        </article>
+        <article class="card good">
+          <h3>3. Tools over Talk</h3>
+          <p>Scripts, templates, checklists, feed curation, breathing timers—anything that lowers friction.</p>
+        </article>
+        <article class="card danger">
+          <h3>4. Discipline is Love</h3>
+          <p>Rituals protect us when motivation dies. 20-minute rule. Bed made. Water drank. Steps done.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="drops" class="wrap section fade" aria-label="Latest Drops">
+      <h2>Latest Drops</h2>
+      <p class="lead">Fresh pulls from our cosmic feed—YouTube searches crafted for the movement + featured TikToks.</p>
+
+      <!-- Skeletons (replaced by JS) -->
+      <div id="drops-grid" class="grid cols-2" style="margin-top:12px">
+        <div class="card skeleton" style="height:220px"></div>
+        <div class="card skeleton" style="height:220px"></div>
+        <div class="card skeleton" style="height:220px"></div>
+        <div class="card skeleton" style="height:220px"></div>
+      </div>
+
+      <div style="text-align:center;margin-top:14px">
+        <a class="btn" href="sanityhub.html">Open Sanity Hub</a>
+      </div>
+    </section>
+
+    <section class="wrap section fade" aria-label="Survivor Stories">
+      <h2>Survivor Stories</h2>
+      <p class="lead">Your story can be somebody’s exit rope. Record on your phone. Be raw. Be kind. No perfect needed.</p>
+      <div class="grid cols-2" style="margin-top:12px">
+        <article class="card">
+          <h3>How to share</h3>
+          <ul>
+            <li>Film vertically (phone). 30–120 seconds is perfect.</li>
+            <li>Start with <span class="chip">“I’m still here because…”</span> or <span class="chip">“What helped me was…”</span></li>
+            <li>Upload to YouTube/TikTok. Then drop the link via the form below.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Content boundaries</h3>
+          <p>We avoid graphic methods or glamorizing harm. We keep it honest, hopeful, and useful.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="join" class="wrap section fade" aria-label="Join the Movement">
+      <h2>Join the Movement</h2>
+      <p class="lead">Creators, devs, editors, community leads, survivors, brands—if you want to contribute, drop a line.</p>
+
+      <form name="movement-join" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="card" style="margin-top:12px">
+        <input type="hidden" name="form-name" value="movement-join">
+        <p style="display:none"><label>Don’t fill this out if you’re human: <input name="bot-field" /></label></p>
+
+        <div class="row">
+          <div>
+            <label class="sr-only" for="name">Name</label>
+            <input id="name" type="text" name="name" required placeholder="Your name" />
+          </div>
+          <div>
+            <label class="sr-only" for="email">Email</label>
+            <input id="email" type="email" name="email" required placeholder="you@domain.com" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label class="sr-only" for="role">Role</label>
+            <input id="role" type="text" name="role" placeholder="Survivor / Creator / Dev / Brand / Community" />
+          </div>
+          <div>
+            <label class="sr-only" for="link">Link</label>
+            <input id="link" type="url" name="link" placeholder="Your site or social" />
+          </div>
+        </div>
+
+        <div style="margin-top:10px">
+          <label class="sr-only" for="message">Message</label>
+          <textarea id="message" name="message" rows="5" placeholder="Tell us how you want to help, or paste story/video links…"></textarea>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+          <button class="btn btn--brand" type="submit">I’m In</button>
+          <a class="btn" href="mailto:pleadingsanitydev@gmail.com">Email the Co-op</a>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="wrap fade">
+    <div>Pleading Sanity · © <span id="year"></span> · Eternal Co-op</div>
+    <div style="margin-top:6px;font-size:.9rem">
+      <a href="index.html">Home</a> ·
+      <a href="sanityhub.html">Sanity Hub</a> ·
+      <a href="about.html">About</a>
+    </div>
+  </footer>
+
+  <script>
+    // Accessibility helper: visually-hidden
+    (function(){const s=document.createElement('style');s.innerHTML='.sr-only{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}';document.head.appendChild(s)})();
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // TikTok id extractor (robust against extra params/short urls)
+    function extractTikTokId(u){
+      const m = String(u).match(/video\/(\d{8,20})/);
+      return m ? m[1] : '';
+    }
+
+    // YouTube search card (no API key needed)
+    function makeYouTubeCard(keyword){
+      const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(keyword)}`;
+      const div = document.createElement('article');
+      div.className = 'card';
+      div.innerHTML = `
+        <div class="chip" aria-hidden="true">YouTube Search</div>
+        <h3 style="margin:.3rem 0 .6rem">${keyword}</h3>
+        <p class="muted">Open curated results for this movement query. New content appears automatically.</p>
+        <div style="display:flex;justify-content:flex-end;margin-top:10px">
+          <a class="btn btn--brand" href="${url}" target="_blank" rel="noopener">Open Results</a>
+        </div>`;
+      return div;
+    }
+
+    // TikTok embed card
+    function makeTikTokCard(url){
+      const id = extractTikTokId(url);
+      const outer = document.createElement('article');
+      outer.className = 'card';
+      outer.innerHTML = `
+        <div class="chip" aria-hidden="true">Featured TikTok</div>
+        <div style="margin-top:.6rem">
+          ${id
+            ? `<iframe class="embed" title="TikTok" src="https://www.tiktok.com/embed/v2/${id}"
+                allow="encrypted-media; autoplay; clipboard-write; fullscreen"
+                referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>`
+            : `<p class="muted">Invalid TikTok URL: <code>${url.replace(/</g,'&lt;')}</code></p>`}
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:10px">
+          <a class="btn" href="${url}" target="_blank" rel="noopener">Open on TikTok</a>
+        </div>`;
+      return outer;
+    }
+
+    async function loadFeed(){
+      const grid = document.getElementById('drops-grid');
+      try{
+        const res = await fetch('content_feed.json', { cache: 'no-store' });
+        if(!res.ok) throw new Error('Feed missing');
+        const feed = await res.json();
+
+        grid.innerHTML = ''; // clear skeletons
+
+        // TikToks first
+        if (feed.tiktok && Array.isArray(feed.tiktok.urls)) {
+          for (const u of feed.tiktok.urls.slice(0, 4)) {
+            if (!u) continue;
+            grid.appendChild(makeTikTokCard(u));
+          }
+        }
+
+        // YouTube keyword searches
+        const kw = (feed.youtube && Array.isArray(feed.youtube.keywords))
+          ? feed.youtube.keywords.slice(0, 8)
+          : [];
+        for (const k of kw) grid.appendChild(makeYouTubeCard(k));
+
+        // If empty, show helpful card
+        if (!grid.children.length){
+          const empty = document.createElement('article');
+          empty.className = 'card';
+          empty.innerHTML = `
+            <h3>Feed not configured</h3>
+            <p class="muted">Add <code>content_feed.json</code> with YouTube keywords and/or TikTok URLs, then redeploy.</p>
+            <pre style="white-space:pre-wrap;background:#0003;padding:.8rem;border-radius:10px;border:1px solid #ffffff1a"><code>{
+  "youtube": { "keywords": ["mental health motivation", "survivor story"] },
+  "tiktok": { "urls": ["https://www.tiktok.com/@handle/video/1234567890123456789"] }
+}</code></pre>`;
+          grid.appendChild(empty);
+        }
+      }catch(e){
+        // keep skeletons if fetch fails, then show a card message
+        const err = document.createElement('article');
+        err.className = 'card';
+        err.innerHTML = `<h3>Feed not available</h3>
+          <p class="muted">Couldn’t load <code>content_feed.json</code>. Redeploy without cache, or add the file at the repo root.</p>`;
+        grid.appendChild(err);
+      }
+    }
+
+    // Kick it off
+    loadFeed();
+  </script>
+</body>
+  <script>
+  // --- Small a11y helper (safe to keep even if already added elsewhere)
+  (function(){
+    if (document.getElementById('sr-only-style')) return;
+    const s = document.createElement('style');
+    s.id = 'sr-only-style';
+    s.textContent = '.sr-only{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}';
+    document.head.appendChild(s);
+  })();
+
+  // --- Helpers --------------------------------------------------------------
+
+  // Extract TT numeric id from common URL formats like .../video/1234567890123456789
+  function extractTikTokId(u){
+    const m = String(u).match(/video\/(\d{8,20})/);
+    return m ? m[1] : '';
+  }
+
+  // Build a card that opens a YouTube search (no API key required)
+  function makeYouTubeCard(keyword){
+    const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(keyword)}`;
+    const div = document.createElement('article');
+    div.className = 'card';
+    div.innerHTML = `
+      <div class="chip" aria-hidden="true">YouTube Search</div>
+      <h3 style="margin:.3rem 0 .6rem">${keyword}</h3>
+      <p class="muted">Curated search for this topic. New content appears automatically.</p>
+      <div style="display:flex;justify-content:flex-end;margin-top:10px">
+        <a class="btn btn--brand" href="${url}" target="_blank" rel="noopener">Open Results</a>
+      </div>`;
+    return div;
+  }
+
+  // Build a TikTok embed card (uses TikTok’s lightweight embed)
+  function makeTikTokCard(url){
+    const id = extractTikTokId(url);
+    const outer = document.createElement('article');
+    outer.className = 'card';
+    outer.innerHTML = `
+      <div class="chip" aria-hidden="true">Featured TikTok</div>
+      <div style="margin-top:.6rem">
+        ${id
+          ? `<iframe class="embed" title="TikTok" src="https://www.tiktok.com/embed/v2/${id}"
+              allow="encrypted-media; autoplay; clipboard-write; fullscreen"
+              referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>`
+          : `<p class="muted">Invalid TikTok URL: <code>${String(url).replace(/</g,'&lt;')}</code></p>`}
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:10px">
+        <a class="btn" href="${url}" target="_blank" rel="noopener">Open on TikTok</a>
+      </div>`;
+    return outer;
+  }
+
+  // Small heading between groups
+  function makeCategoryHeader(name){
+    const h = document.createElement('h3');
+    h.textContent = name;
+    h.style.margin = '10px 0 6px';
+    return h;
+  }
+
+  // --- Feed loader (reads /content_feed.json with categories) ---------------
+
+  async function loadFeed(){
+    const grid = document.getElementById('drops-grid');
+    if (!grid) return;
+
+    // leave skeletons in place until we know we have content
+    let cleared = false;
+    const clearSkeletons = () => {
+      if (cleared) return;
+      grid.innerHTML = '';
+      cleared = true;
+    };
+
+    try{
+      // cache-bust each minute so updates show after deploy
+      const res = await fetch('/content_feed.json?t=' + Math.floor(Date.now()/60000), { cache: 'no-store' });
+      if(!res.ok) throw new Error('Feed missing');
+      const feed = await res.json();
+
+      const sectionsRendered = [];
+
+      // 1) TikToks (optional)
+      if (feed.tiktok && Array.isArray(feed.tiktok.urls) && feed.tiktok.urls.length){
+        clearSkeletons();
+        grid.appendChild(makeCategoryHeader('Featured TikToks'));
+        for (const u of feed.tiktok.urls.slice(0, 4)){
+          if (u) grid.appendChild(makeTikTokCard(u));
+        }
+        sectionsRendered.push('tiktok');
+      }
+
+      // 2) YouTube categories
+      const y = feed.youtube || {};
+      const maxPer = Number(y.maxPerSource || 8);
+      const cats = Array.isArray(y.categories) ? y.categories : [];
+
+      for (const cat of cats){
+        const items = [];
+
+        const kws = Array.isArray(cat.keywords) ? cat.keywords.slice(0, maxPer) : [];
+        for (const kw of kws){ items.push(makeYouTubeCard(kw)); }
+
+        // If you add channel IDs later (e.g., "UC_x5X..."), they render as channel buttons
+        const chs = Array.isArray(cat.channels) ? cat.channels.slice(0, maxPer) : [];
+        for (const id of chs){
+          const card = document.createElement('article');
+          card.className = 'card';
+          card.innerHTML = `
+            <div class="chip">YouTube Channel</div>
+            <h3 style="margin:.3rem 0 .6rem">${id}</h3>
+            <p class="muted">Open this channel on YouTube.</p>
+            <div style="display:flex;justify-content:flex-end;margin-top:10px">
+              <a class="btn btn--brand" href="https://www.youtube.com/channel/${id}" target="_blank" rel="noopener">Open Channel</a>
+            </div>`;
+          items.push(card);
+        }
+
+        if (items.length){
+          clearSkeletons();
+          grid.appendChild(makeCategoryHeader(cat.name || 'Category'));
+          for (const el of items) grid.appendChild(el);
+          sectionsRendered.push(cat.name || 'category');
+        }
+      }
+
+      // 3) If nothing rendered, show guidance
+      if (!sectionsRendered.length){
+        clearSkeletons();
+        const empty = document.createElement('article');
+        empty.className = 'card';
+        empty.innerHTML = `<h3>Feed not configured</h3>
+          <p class="muted">Add categories, keywords, or TikTok URLs to <code>content_feed.json</code>, then redeploy.</p>
+          <pre style="white-space:pre-wrap;background:#0003;padding:.8rem;border-radius:10px;border:1px solid #ffffff1a"><code>{
+  "youtube": {
+    "maxPerSource": 8,
+    "categories": [
+      { "name":"Mindset & Motivation", "keywords":["mental health motivation"], "channels":[] }
+    ]
+  },
+  "tiktok": { "urls": [] }
+}</code></pre>`;
+        grid.appendChild(empty);
+      }
+    }catch(e){
+      // Keep skeletons visible, then show an error card
+      const err = document.createElement('article');
+      err.className = 'card';
+      err.innerHTML = `<h3>Feed not available</h3>
+        <p class="muted">Couldn’t load <code>content_feed.json</code>. Ensure it’s valid JSON (no comments) at the repo root, then redeploy.</p>`;
+      grid.appendChild(err);
+    }
+  }
+
+  // Kick it off
+  loadFeed();
+  </script>
+</html>

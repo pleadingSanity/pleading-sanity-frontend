@@ -1,0 +1,92 @@
+name: CI & Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+   deploy:
+     runs-on: ubuntu-latest
++    environment:
++      name: github-pages
+
+     steps:
+       - name: Checkout
+         uses: actions/checkout@v3
+       - name: Configure Pages
+         uses: actions/configure-pages@v5
+       - name: Upload Pages Artifact
+         uses: actions/upload-pages-artifact@v3
+         with:
+           path: ./
+       - name: Deploy to GitHub Pages
+         uses: actions/deploy-pages@v4
+  lint-and-test:
+    name: 🧹 Lint & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Node example; swap for your language/toolchain
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run lint       # your linter
+      - run: npm test           # your test suite
+
+  build:
+    name: 🏗️ Build
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run build      # e.g. `jekyll build` or `npm run build`
+      # if you’re using Next.js static export:
+      # - run: npm run export
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: site-artifact
+          path: ./out            # ← change to your build folder
+
+  deploy:
+    name: 🚀 Deploy to Pages
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: site-artifact
+
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out      # ← same as above
+          cname: pleadingsanity.co.uk
+          commit_message: '🛠️ site rebuilt via CI: ${{ github.sha }}'
+
+  notify:
+    name: 📣 Slack Notification
+    runs-on: ubuntu-latest
+    needs: [lint-and-test, build, deploy]
+    if: always()
+    steps:
+      - uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,ref,workflow
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
