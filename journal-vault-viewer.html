@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Journal Vault Viewer — Pleading Sanity | Read & Reflect</title>
+  <meta name="description" content="View, search, export your Journal Vault entries. Your stories. Your voice. Safe, seen, sacred. Write, save, search, export — all yours." />
+  <meta name="author" content="Shane Cooper / Pleading Sanity" />
+  <meta name="robots" content="index, follow" />
+  <meta name="ai-participation" content="active, open, collaborative, movement-aligned" />
+  <link rel="canonical" href="https://pleadingsanity.co.uk/journal-vault-viewer.html" />
+
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#00fff0" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <meta property="og:title" content="Journal Vault Viewer — Pleading Sanity" />
+  <meta property="og:description" content="Revisit your journey. Search your truth. Yours to keep." />
+  <meta property="og:image" content="assets/crying-brain-og.png" />
+  <meta property="og:type" content="website" />
+
+  <style>
+    :root {
+      --cyan: #00fff0; --cyan-deep: #00c8c0; --magenta: #ff00ff; --magenta-deep: #c800c8;
+      --gold: #ffd700; --gold-bright: #ffd000; --orange-gold: #ff9500;
+      --deep: #0d1b2a; --dark: #030712; --deepest: #060014;
+      --text-bright: #eafffd; --text-soft: #b9faff; --text-muted: #7ab8c8; --text-dim: #90a4ae;
+      --glass: rgba(0,255,240,0.06); --border-glow: rgba(0,255,240,0.15);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: var(--font-sans);
+      background: 
+        radial-gradient(circle at 15% 25%, rgba(0,255,240,0.12) 0%, transparent 50%),
+        radial-gradient(circle at 85% 75%, rgba(255,0,255,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 120%, #1a0b3d 0%, var(--deep) 45%, var(--deepest) 100%);
+      color: var(--text-bright); min-height: 100vh; line-height: 1.7; background-attachment: fixed;
+    }
+
+    @media (prefers-color-scheme: light) {
+      body {
+        background: 
+          radial-gradient(circle at 15% 25%, rgba(0,145,204,0.08) 0%, transparent 50%),
+          radial-gradient(circle at 85% 75%, rgba(184,0,158,0.05) 0%, transparent 50%),
+          linear-gradient(135deg, #f0f7ff 0%, #e0edf5 100%) !important;
+        --cyan: #0091cc; --magenta: #b8009e; --deep: #eef4f8; --dark: #ffffff; --deepest: #dce8f0;
+        --text-bright: #0f1e2e; --text-soft: #1e3a5f; --text-muted: #5a7a8a;
+        --glass: rgba(0,145,204,0.06); --border-glow: rgba(0,145,204,0.2);
+      }
+    }
+
+    .skip-link { position: absolute; top: -50px; left: 6px; background: var(--gold); color: #000; padding: 12px 24px; z-index: 10000; font-weight: 700; border-radius: 8px; transition: top 0.25s ease; }
+    .skip-link:focus { top: 12px; }
+
+    a { color: var(--cyan); text-decoration: none; transition: var(--transition); }
+    a:hover { color: var(--magenta); text-shadow: 0 0 8px rgba(255,0,255,0.3); }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: linear-gradient(90deg, var(--cyan) 0%, var(--magenta) 100%);
+      color: #000; font-weight: 800; padding: 0.85rem 1.4rem; border-radius: 50px;
+      border: none; cursor: pointer; font-size: 0.95rem; transition: var(--transition);
+      box-shadow: 0 0 20px rgba(0,255,240,0.25);
+      min-height: 46px; font-family: inherit; gap: 6px;
+    }
+    .btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 0 35px rgba(255,0,255,0.4); color: #000; }
+    .btn-secondary { background: transparent; color: var(--cyan); border: 1px solid var(--cyan); box-shadow: none; }
+    .btn-secondary:hover { background: var(--cyan); color: #000; border-color: var(--cyan); transform: none; }
+
+    .nebula-particle {
+      position: fixed; border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,255,240,0.15), transparent 70%);
+      pointer-events: none; z-index: 0; animation: float 20s infinite ease-in-out;
+    }
+    .nebula-particle.gold-glow { background: radial-gradient(circle, rgba(255,215,0,0.12), transparent 70%); animation-delay: -7s; }
+    @keyframes float {
+      0%,100% { transform: translateY(0) scale(1); opacity: 0.5; }
+      50% { transform: translateY(-40px) scale(1.15); opacity: 0.8; }
+    }
+
+    .page-wrapper { position: relative; z-index: 1; }
+
+    header {
+      position: sticky; top: 0; z-index: 100; text-align: center; padding: 18px 20px 15px;
+      background: rgba(6,0,20,0.8); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-glow); animation: fadeIn 0.8s ease-out both;
+    }
+    @keyframes fadeIn { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+
+    .logo-container { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 10px; flex-wrap: wrap; }
+    .
