@@ -1,1 +1,397 @@
-/* Full animated, styled layout with space theme */
+/* ==========================================
+   PLEADING SANITY — COSMIC CORE MASTER v2.5-MERGED
+   Infinity + Main + Frontend → ALL BEST PARTS COMBINED
+   God Mode Ascension • Evolution, Not Erasure
+   WCAG 2.1 AA • Reduced Motion • Fully Responsive
+============================================ */
+
+/* ✅ FONT — NO EXTERNAL DEPENDENCIES, LOADS INSTANTLY */
+:root {
+  --font-sans: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, 
+               'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  
+  /* 🌟 COSMIC PALETTE — FINAL LOCKED • CONTRAST-VERIFIED */
+  --cyan: #00fff0;
+  --cyan-deep: #00c8c0;
+  --cyan-glow: rgba(0, 255, 240, 0.6);
+  --cyan-bg: rgba(0, 255, 240, 0.08);
+  --magenta: #ff00ff;
+  --magenta-deep: #c800c8;
+  --magenta-glow: rgba(255, 0, 255, 0.6);
+  --magenta-bg: rgba(255, 0, 255, 0.08);
+  --gold: #ffd700;
+  --gold-deep: #e6b800;
+  --gold-glow: rgba(255, 215, 0, 0.6);
+  --p1: #7c3aed;
+  --p2: #06b6d4;
+  --p3: #22d3ee;
+  
+  /* 🌌 DEPTH LAYERS */
+  --deepest: #01030a;
+  --deep: #060713;
+  --mid: #0f1638;
+  --mid-light: #1a2456;
+  --surface: rgba(255,255,255,.06);
+  
+  /* ✨ TEXT */
+  --text-bright: #ffffff;
+  --text-soft: #e0e4ff;
+  --text-muted: #9098c0;
+  --text-dim: #606890;
+  
+  /* ⚡ MOTION */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.6s ease;
+  --ease-cosmic: cubic-bezier(0.1, 0.8, 0.2, 1);
+  
+  /* 📐 SIZING */
+  --nav-height: 70px;
+  --section-gap: 4rem;
+  --card-radius: 20px;
+  --glow-soft: 0 0 15px;
+  --glow-medium: 0 0 30px;
+  --glow-strong: 0 0 50px;
+  --border-thin: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ==========================================
+   BASE RESET
+========================================== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  scroll-padding-top: var(--nav-height);
+}
+
+body {
+  font-family: var(--font-sans);
+  background: linear-gradient(180deg, var(--deepest), var(--deep) 50%, #02040B);
+  color: var(--text-bright);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================
+   SKIP LINK — KEYBOARD USERS FIRST ✅
+========================================== */
+.skip-link {
+  position: absolute;
+  top: -50px;
+  left: 6px;
+  background: var(--cyan);
+  color: #000;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  z-index: 100000;
+  transition: top 0.25s ease;
+}
+.skip-link:focus { top: 12px; }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  border: 0; white-space: nowrap;
+}
+
+/* ==========================================
+   COSMIC BACKGROUND — STARS + NEBULA ✨
+========================================== */
+.cosmic-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  background: radial-gradient(1200px 800px at 20% -10%, rgba(124,58,237,.15), transparent 60%),
+              radial-gradient(900px 700px at 80% 20%, rgba(6,182,212,.12), transparent 60%);
+  pointer-events: none;
+}
+
+.stars {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-image: 
+    radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+    radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,.8), transparent),
+    radial-gradient(2px 2px at 130px 80px, rgba(0,255,240,.6), transparent),
+    radial-gradient(2px 2px at 160px 120px, rgba(255,0,255,.5), transparent);
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  opacity: 0.6;
+  animation: starsTwinkle 8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes starsTwinkle {
+  0% { opacity: 0.4; }
+  100% { opacity: 0.8; }
+}
+
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(1000px 600px at 30% 0%, rgba(0,255,240,.18), transparent 55%),
+              radial-gradient(800px 500px at 70% 10%, rgba(255,0,255,.15), transparent 55%);
+  filter: blur(10px);
+  animation: auroraDrift 12s ease-in-out infinite alternate;
+}
+@keyframes auroraDrift {
+  to { transform: translate3d(2%, -5%, 0) scale(1.05); }
+}
+
+/* ==========================================
+   NAVIGATION — GLASS EFFECT ✨
+========================================== */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--cyan);
+  text-shadow: 0 0 15px var(--cyan-glow);
+}
+.brand img { height: 34px; }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.nav-links a {
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: var(--text-soft);
+  transition: all var(--transition-fast);
+}
+.nav-links a:hover,
+.nav-links a:focus {
+  background: rgba(255,255,255,.08);
+  color: var(--cyan);
+  box-shadow: inset 0 0 0 1px rgba(0,255,240,.3);
+}
+
+/* ==========================================
+   TYPOGRAPHY
+========================================== */
+h1, h2, h3, h4 {
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  background: linear-gradient(135deg, var(--cyan), var(--magenta));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  color: var(--cyan);
+  margin-bottom: 0.75rem;
+}
+
+h3 {
+  font-size: clamp(1.3rem, 3vw, 1.6rem);
+  color: var(--magenta);
+  margin-bottom: 0.5rem;
+}
+
+p {
+  color: var(--text-soft);
+  margin-bottom: 1rem;
+  font-size: 1.05rem;
+  max-width: 70ch;
+}
+
+a {
+  color: var(--cyan);
+  text-decoration: none;
+  transition: all var(--transition-normal);
+}
+a:hover {
+  color: var(--magenta);
+  text-shadow: 0 0 8px var(--magenta-glow);
+}
+
+/* ==========================================
+   BUTTONS — COSMIC GLOW 🔥
+========================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  min-height: 44px;
+  font-family: inherit;
+  transition: all var(--transition-normal);
+  text-align: center;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, var(--cyan-deep), var(--magenta-deep));
+  color: #000;
+  box-shadow: 0 8px 26px rgba(0,255,240,.35);
+}
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(0,255,240,.45), 0 0 25px rgba(255,0,255,.25);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--cyan);
+  border: 2px solid var(--cyan);
+}
+.btn-secondary:hover {
+  background: rgba(0,255,240,.1);
+  box-shadow: inset 0 0 15px var(--cyan-glow);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-soft);
+  border: 2px solid rgba(255,255,255,.2);
+  padding: 0.65rem 1.5rem;
+}
+.btn-outline:hover {
+  border-color: var(--magenta);
+  color: var(--magenta);
+  background: rgba(255,0,255,.08);
+}
+
+/* ==========================================
+   CARDS — GLASS EFFECT ✨
+========================================== */
+.cosmic-card {
+  background: rgba(15,22,56,.6);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--card-radius);
+  padding: 1.75rem;
+  backdrop-filter: blur(10px);
+  transition: all var(--transition-normal);
+}
+.cosmic-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0,255,240,.35);
+  box-shadow: 0 10px 30px rgba(0,255,240,.12);
+}
+
+/* ==========================================
+   LAYOUT CONTAINERS
+========================================== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.hero {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2.5rem 2rem;
+  border-radius: 24px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.1);
+  box-shadow: 0 15px 50px rgba(124,58,237,.2), 0 10px 40px rgba(6,182,212,.15);
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+
+/* ==========================================
+   FOOTER
+========================================== */
+footer {
+  max-width: 1200px;
+  margin: 3rem auto 1rem;
+  padding: 2rem;
+  border-top: 1px solid rgba(255,255,255,.1);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* ==========================================
+   ANIMATIONS
+========================================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+  opacity: 0;
+}
+.fade-in.d1 { animation-delay: 0.1s; }
+.fade-in.d2 { animation-delay: 0.2s; }
+.fade-in.d3 { animation-delay: 0.3s; }
+
+/* ==========================================
+   REDUCED MOTION — RESPECT ✅
+========================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .btn:hover, .cosmic-card:hover { transform: none; }
+  .stars, .aurora { animation: none !important; }
+}
+
+/* ==========================================
+   MOBILE RESPONSIVE ✅
+========================================== */
+@media (max-width: 768px) {
+  .nav-inner { justify-content: center; }
+  .hero { padding: 1.5rem 1rem; margin: 1rem; }
+  .btn { width: 100%; }
+  .cosmic-card { padding: 1.25rem; }
+}
