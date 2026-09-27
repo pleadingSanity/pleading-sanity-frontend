@@ -1,0 +1,56 @@
+name: 🧠 Pleading Sanity — Cosmic Sync & Auto-Fix
+run-name: 🩸 Fusion Heal & Deploy — ${{ github.sha }}
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  fusion_sync_autofix:
+    name: ✨ Sync • Heal • Deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 🧱 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🧠 Configure Git Identity
+        run: |
+          git config user.name "PleadingSanity-AI"
+          git config user.email "pleadingsanitydev@gmail.com"
+
+      - name: 🧰 Install Dependencies
+        run: |
+          if [ -f "package-lock.json" ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: 🧪 Validate Build
+        run: |
+          npm run build
+
+      - name: 💾 Commit & Push Auto-Fixes
+        run: |
+          git add package.json netlify.toml .github/workflows/cosmic-sync.yml
+          git diff --quiet && echo "✅ Nothing to commit" || (
+            git commit -m "🤖 Cosmic Auto-Update — Unified Config ✨"
+            git push origin main
+          )
+
+      - name: 🌐 Trigger Netlify Deploy
+        env:
+          NETLIFY_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+        run: |
+          if [ -n "$NETLIFY_HOOK" ]; then
+            curl -s -X POST -d '{}' "$NETLIFY_HOOK"
+            echo "✅ Netlify deploy triggered"
+          else
+            echo "⚠️ Add NETLIFY_BUILD_HOOK to repo secrets"
+          fi
