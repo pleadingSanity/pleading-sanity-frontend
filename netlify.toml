@@ -1,11 +1,99 @@
-[build]
-  publish = "/"
-  command = ""
+# ==============================================================
+# 🌌 PLEADING SANITY — NETLIFY CONFIG v3.2-STABLE
+# Pure static HTML • Cosmic Security • Arron AI Functions
+# Evolution Not Erasure • One Source • One Family
+# ==============================================================
 
-[functions]
-  directory = "netlify/functions"
+[build]
+  publish = "."
+  command = "echo '✅ Pleading Sanity — Static Site Ready'"
+  functions = "netlify/functions"
+
+# ─── CANONICAL REDIRECTS ───
+[[redirects]]
+  from = "http://www.pleadingsanity.co.uk/*"
+  to = "https://pleadingsanity.co.uk/:splat"
+  status = 301
+  force = true
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "https://www.pleadingsanity.co.uk/*"
+  to = "https://pleadingsanity.co.uk/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://pleadingsanity.co.uk/*"
+  to = "https://pleadingsanity.co.uk/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
   status = 200
+
+# ─── SECURITY HEADERS — Full Cosmic Shield ───
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
+# ─── PWA — Always Fresh ───
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Service-Worker-Allowed = "/"
+
+[[headers]]
+  for = "/manifest.json"
+  [headers.values]
+    Content-Type = "application/manifest+json; charset=utf-8"
+    Cache-Control = "public, max-age=3600"
+
+# ─── ASSETS — Smart Caching ───
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, immutable"
+
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, must-revalidate"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, must-revalidate"
+
+# ─── FUNCTIONS — Arron Always Responsive ───
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Cache-Control = "no-cache"
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
+
+# ─── PRIVATE — Keep Internal Files Hidden ───
+[[headers]]
+  for = "/scripts/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/docs/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = ".github/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
