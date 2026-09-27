@@ -1,14 +1,25 @@
 {
-  "name": "pleading-sanity-frontend",
+  "name": "pleading-sanity",
+  "version": "3.1.0",
   "private": true,
   "type": "module",
+  "description": "Pleading Sanity — Rise From Madness. Cosmic healing hub, Arron AI companion, brain games, frequencies, journal vault.",
   "scripts": {
-    "optimize": "node tools/optimizer.mjs"
+    "optimize": "node tools/optimizer.mjs",
+    "build": "echo '✅ Static site — no build step needed'",
+    "dev": "npx serve . -p 3000"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.128.0",
+    "@netlify/database": "^1.1.0",
+    "@netlify/functions": "^5.3.0",
     "cheerio": "^1.0.0",
     "csso": "^5.0.5",
+    "drizzle-orm": "^1.0.0-beta.22",
     "glob": "^11.0.0",
     "terser": "^5.31.0"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^1.0.0-beta.22"
   }
 }
